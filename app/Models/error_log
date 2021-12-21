@@ -1,0 +1,56 @@
+[28-May-2021 17:54:58 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:54:58 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:54:58 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:54:58 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:54:58 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/detail_blog_contents.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/detail_blog_contents.php on line 8
+[28-May-2021 17:54:59 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:54:59 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:54:59 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:54:59 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:54:59 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/cartItems.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/cartItems.php on line 8
+[28-May-2021 17:55:02 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:55:02 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:55:02 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:55:02 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:55:02 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/Package.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/Package.php on line 8
+[28-May-2021 17:55:03 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:55:03 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:55:03 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:55:03 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:55:03 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/categories.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/categories.php on line 8
+[28-May-2021 17:55:04 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:55:04 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:55:04 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:55:04 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:55:04 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/reviews.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/reviews.php on line 8
+[28-May-2021 17:55:07 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:55:07 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:55:07 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:55:07 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:55:07 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/coursematerial.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/coursematerial.php on line 8
+[28-May-2021 17:55:09 UTC] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0
+[28-May-2021 17:55:09 UTC] PHP Warning:  Module 'pdo_sqlite' already loaded in Unknown on line 0
+[28-May-2021 17:55:09 UTC] PHP Warning:  PHP Startup: Unable to load dynamic library 'sqlite.so' (tried: /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so: cannot open shared object file: No such file or directory), /opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so (/opt/cpanel/ea-php73/root/usr/lib64/php/modules/sqlite.so.so: cannot open shared object file: No such file or directory)) in Unknown on line 0
+[28-May-2021 17:55:09 UTC] PHP Warning:  Module 'pdo_mysql' already loaded in Unknown on line 0
+[28-May-2021 17:55:09 UTC] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Database\Eloquent\Model' not found in /home/devindiit/public_html/researching_dev/app/Models/card_details.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/devindiit/public_html/researching_dev/app/Models/card_details.php on line 8
