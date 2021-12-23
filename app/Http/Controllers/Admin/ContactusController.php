@@ -37,15 +37,11 @@ class ContactusController extends Controller
     }  
 
     public function updatecontact(Request $request){
+
     	$id = $request->contact_id;
         $validator = Validator::make($request->all(),  [
-             'phone1' => 'required',
-             'phone2' => 'required',
              'address1' => 'required',
              'address2' => 'required',
-             'instagram' => 'required',
-             'facebook' => 'required',
-             'youtube' => 'required',
              'longitude1' => 'required',
              'latitude1' => 'required',
              'longitude2' => 'required',
@@ -54,17 +50,26 @@ class ContactusController extends Controller
        
          if ($validator->passes()) {
             $contactus = contactus::findOrFail($id);
-        	$contactus->phonenumber1 = $request->phone1;
-        	$contactus->phonenumber2 = $request->phone2;
         	$contactus->address1 = $request->address1;
         	$contactus->address2 = $request->address2;
-        	$contactus->insta_link = $request->instagram;
-        	$contactus->facebook_link = $request->facebook;
-        	$contactus->youtube_link = $request->youtube;
         	$contactus->longitude1 = $request->longitude1;
         	$contactus->lattitude1 = $request->latitude1;
         	$contactus->longitude2 = $request->longitude2;
         	$contactus->lattitude2 = $request->latitude2;
+
+        	$contactus->phone_title = $request->phone_title;
+        	$contactus->phone_number = $request->phone_number;
+        	$contactus->address_title = $request->address_title;
+        	$contactus->address_details = $request->address_details;
+        	$contactus->email_title = $request->email_title;
+        	$contactus->email_details = $request->email_details;
+        	$contactus->social_title = $request->social_title;
+        	$contactus->social_instagram = $request->social_instagram;
+        	$contactus->social_youtube = $request->social_youtube;
+        	$contactus->social_facebook = $request->social_facebook;
+        	$contactus->que_ans_desc = $request->que_ans_desc;
+        	$contactus->que_ans_title = $request->que_ans_title;
+ 
         	$contactus->save();
         	Session::flash('message', ' Contactus עודכן בהצלחה. ');
         	return response()->json(['success' => true]);

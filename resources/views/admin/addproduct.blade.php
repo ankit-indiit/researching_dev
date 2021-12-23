@@ -243,7 +243,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
 <script type="text/javascript">
    Dropzone.autoDiscover = false;
    $(document).ready(function(){
- $('#bckbtn').click(function(){
+    $('#bckbtn').click(function(){
       window.location.href = '{{route("admin.Productslisting").'/'.$degree_id.'/'.$university_id}}';
     });
     $("#save_product").click(function(e) {

@@ -175,7 +175,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
 <div class="banner-area home-baner" id="homebanner">
    <div id="bootcarousel" class="carousel text-light top-pad text-dark slide animate_text" data-ride="carousel">
       <!-- Wrapper for slides -->
-      <div class="carousel-inner carousel-zoom" style="background-image: url({{ asset('/assets/img/bannerslide.jpg')}});">
+      <div class="carousel-inner carousel-zoom" style="background-image: url({{ asset('/assets/images/'.$homepage->banner_background)}});">
          <!-- <div class="item active bg-cover" style="background-image: url({{ asset('/assets/img/bannerslide.jpg')}});"> -->
          <div class="item active bg-cover">
             <div class="box-table">
@@ -185,15 +185,18 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                         <div class="col-md-6 hidden-xs hidden-sm mobile_view_img">
                            <div class="content-wrap">
                               <div class="bannergirl2 text-center">
-                                 <img src="{{ asset('/assets/img/bannergirl1.png') }}">
+                                 <img src="{{ asset('/assets/images/'.$homepage->banner_mobile_image) }}">
                               </div>
                            </div>
                         </div>
                         <div class="col-md-6 text-right mobilebg" style="float: right;background-image: url({{ asset('/assets/img/mbimg.png')}});">
                            <div class="content dekcontent">
-                              <h2 class="wow fadeInRight" data-wow-duration="1.8s">    הקיטסיטטסה לכ  <span class="textorange">- ןוסרוק</span><br>
-                                 ךלש דומילה ירמוחל 
-                                 <span class="curvehead"> תמאתומ</span>
+                              @php 
+                              $banner_text = json_decode($homepage->banner_text,true);
+                              @endphp 
+                              <h2 class="wow fadeInRight" data-wow-duration="1.8s"> {{ $banner_text['title1'] }} <span class="textorange">{{ $banner_text['title2'] }}</span><br>
+                                 {{ $banner_text['title3'] }}
+                                 <span class="curvehead"> {{ $banner_text['title4'] }} </span>
                               </h2>
                               <!--p data-animation="animated slideInLeft"> לורם איפסום הוא פשוט טקסט דמה של תעשיית ההדפסה והכתיבה. לורם איפסום היה טקסט הדמה הסטנדרטי של התעשייה </p--->
                               <div class="slider-below-sup-wrap search-content">
@@ -268,46 +271,49 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                     </div>
                                  </div>
                                  <div class="col-md-12 p-0">
+                                    @php 
+                                    $banner_list = json_decode($homepage->banner_list,true);
+                                    @endphp 
                                     <ul class="icon_listBaner">
                                        <li>
                                           <div class="icon_listinner" id="icon_listinner1">
                                              <p>
-                                                מערכת מתקדמת ללמידה אונליין
+                                                {{$banner_list[0]['title']}}
                                              </p>
                                              <img src="{{ asset('/assets/img/icon12.png') }}">
                                              <div class="tooltiptext" id="tooltiptext1">
-                                                בעזרת מערכת למידה אישית שתאפשר לך לארגן את הרצאות הקורס, חומרי הלימוד, בחנים וסימולציות של המבחן, תוכל ללמוד בכל זמן ומקום ובקצב שלך
+                                                {{$banner_list[0]['text']}}
                                              </div>
                                           </div>
                                        </li>
                                        <li>
                                           <div class="icon_listinner" id="icon_listinner2">
                                              <p>
-                                                שפר את הציון שלך בבחינה
+                                                {{$banner_list[1]['title']}}
                                              </p>
                                              <img src="{{ asset('/assets/img/icon11.png') }}">
                                              <div class="tooltiptext" id="tooltiptext2">
-                                                בין אם אתה זקוק לחיזוק אינטנסיבי בחומרי הלימוד או מעוניין לשפר את הציון רק בכמה נקודות חשובות, תוכל למצוא לכך מענה טוב באתר. האתר מציע מערך סימולציות שיסייעו לך להבין מהן נקודות החוזקה ומוקדי הקושי בלמידה שלך ולהיערך היטב לקראת הבחינה
+                                                {{$banner_list[1]['text']}}
                                              </div>
                                           </div>
                                        </li>
                                        <li>
                                           <div class="icon_listinner" id="icon_listinner3">
-                                             <p>למד את החומרים בצורה פשוטה </p>
+                                             <p>{{$banner_list[2]['title']}}</p>
                                              <img src="{{ asset('/assets/img/icon-11.png') }}">
                                              <div class="tooltiptext" id="tooltiptext3">
-                                                באתר נארגן ונפשט עבורך את חומרי הלימוד של הקורס ונסביר אותם בעזרת אמצעים ויזואליים שלא מתאפשרים במסגרת הוראה סטנדרטית
+                                                {{$banner_list[2]['text']}}
                                              </div>
                                           </div>
                                        </li>
                                        <li>
                                           <div class="icon_listinner" id="icon_listinner4">
                                              <p>
-                                                למד קורס שלם בעלות של שני שיעורים פרטיים
+                                                {{$banner_list[3]['title']}}
                                              </p>
                                              <img src="{{ asset('/assets/img/save-icon.png') }}">
                                              <div class="tooltiptext" id="tooltiptext4">
-                                                באתר תוכל ללמוד עשרות שעות שיעורים של קורסים המותאמים במיוחד לחומרי הלימוד שלך, וזאת מהמרצים הטובים בתחום. כל זאת, בעלות של כשני שיעורים פרטיים בלבד!
+                                                {{$banner_list[3]['text']}}
                                              </div>
                                           </div>
                                        </li>
@@ -320,12 +326,12 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                         <div class="col-md-6 hidden-xs hidden-sm">
                            <div class="content-wrap">
                               <div class="bannergirl text-center">
-                                 <img src="{{ asset('/assets/img/bannergirl.png') }}">
+                                 <img src="{{ asset('/assets/images/'.$homepage->banner_image) }}">
                               </div>
                               <div class="socialbanner">
-                                 <a href="javascript:void(0)" class="bannericon bannerinstagram"><img src="{{ asset('/assets/img/instagram.png') }}"/></a>
-                                 <a href="javascript:void(0)" class="bannericon bannerfacebook"><img src="{{ asset('/assets/img/facebook1.png') }}"/></a>
-                                 <a href="javascript:void(0)" class="bannericon bannerwhatsapp"><img src="{{ asset('/assets/img/whatsapp.png') }}"/></a>
+                                 <a href="{{ $homepage->banner_insta }}" target="_blank" class="bannericon bannerinstagram"><img src="{{ asset('/assets/img/instagram.png') }}"/></a>
+                                 <a href="{{ $homepage->banner_facebook }}" target="_blank" class="bannericon bannerfacebook"><img src="{{ asset('/assets/img/facebook1.png') }}"/></a>
+                                 <a href="https://web.whatsapp.com/send?phone={{ $homepage->banner_whatsapp }}&text&app_absent=0" target="_blank" class="bannericon bannerwhatsapp"><img src="{{ asset('/assets/img/whatsapp.png') }}"/></a>
                               </div>
                            </div>
                         </div>
@@ -345,8 +351,8 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
             <div class="row">
                <div class="site-heading text-center">
                   <div class="col-md-8 col-md-offset-2">
-                     <h2>השירותים שלנו</h2>
-                     <p> האתר מספק מגוון שירותים ומסלולים שיסייעו לך לעבור את הסמסטר בקלות ובהצלחה.  </p>
+                     <h2>{{ $homepage->service_title }}</h2>
+                     <p> {{ $homepage->service_desc }}  </p>
                   </div>
                </div>
             </div>
@@ -446,13 +452,16 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
    <div class="container">
       <div class="row">
          <div class="about-items ">
+            @php 
+            $success_data = json_decode($homepage->success, true);
+            @endphp 
             <div class="col-md-6 about-info wow fadeInLeft ">
-               <h2>  ללמוד ביחד זה להצליח!    <span>משהו עלינו באתר שלנו</span></h2>
+               <h2> {{ $success_data['title'] }} <span> {{ $success_data['tagline'] }} </span></h2>
                <blockquote> 
-                  נתקעת בנושא מסוים והרגשת שאם רק היה לך מקום בטוח להתייעץ עם חבריך לתואר, היית יכול  להתגבר על אותו נושא בקלות? 
+                  {{ $success_data['text1'] }}
                </blockquote>
                <p> 
-                  אצלנו אתה אף פעם לא לבד! כאן תוכל לחפש את מוסד הלימודים, התואר והקורס שבו אתה לומד, והמערכת שלנו תצוות אותך אל קבוצת וואצאפ עם סטודנטים בדיוק כמוך הלומדים את אותו הקורס כמו  שלך ברמת קושי דומה.  
+                  {{ $success_data['text2'] }}
                </p>
                <div class="row inmbabout">
                    <div class="col-md-4 or2m">
@@ -503,8 +512,8 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
             </div>
             <div class="col-md-6 thumb ">
                <div class="thumb aboutimg">
-                  <img class="aboutbg" src="{{ asset('/assets/img/about/aboutbg.png') }}"/>
-                  <img alt="Thumb" src="{{ asset('/assets/img/about/about1.png') }}"/>
+                  <img class="aboutbg" src="{{ asset('/assets/images/'.$success_data['bg_image']) }}"/>
+                  <img alt="Thumb" src="{{ asset('/assets/images/'.$success_data['front_image']) }}"/>
                   <!-- <a href="https://www.youtube.com/watch?v=DKz_EEoJRs4" class="popup-youtube light video-play-button">
                      <i class="fa fa-play"></i>
                      </a> -->
@@ -522,10 +531,10 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
       <div class="row">
          <div class="site-heading text-center">
             <div class="col-md-8 col-md-offset-2 headtt">
-               <h2> הקורסים באתר 
+               <h2> {{ $homepage->course_title }}
                </h2>
                <p> 
-                  כאן תוכל למצוא את מגוון הקורסים המוצעים לך באתר בהתאם למוסד הלימודים והתואר בו אתה לומד
+                  {{ $homepage->course_description }}
                </p>
             </div>
          </div>
@@ -761,7 +770,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
 </div>
 <!-- Start Fun Factor 
    ============================================= -->
-@if(isset($options['homepage_funfactor']) && $options['homepage_funfactor'] == 1)
+@if(isset($homepage->funfactor) && $homepage->funfactor == 1)
 <div class="fun-factor-area shadow default-padding bottom-less text-center bg-fixed  dark-hard" style="">
    <div class="container">
       <div class="row">

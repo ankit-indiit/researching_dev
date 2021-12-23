@@ -27,9 +27,9 @@
                      <div class="icon">
                         <i class="flaticon-call"></i>
                      </div>
-                     <div class="info">
-                        <h4> תמיכה טכנית (Whatsapp בלבד)   </h4>
-                        <span class="d-block"> 054-7200075</span>
+                     <div class="info"> 
+                        <h4> {{ $info->phone_title }}   </h4>
+                        <span class="d-block"> {{ $info->phone_number }} </span>
                      </div>
                   </div>
                </div>
@@ -39,9 +39,9 @@
                         <i class="flaticon-location"></i>
                      </div>
                      <div class="info">
-                        <h4>כתובת </h4>
+                        <h4> {{ $info->address_title }} </h4>
                         <!-- <span>פול סמואלסון 10, ראש העין</span> -->
-                        <span> מבצע עובדה 27, ראשון לציון      </span>
+                        <span> {{ $info->address_details }} </span>
                      </div>
                   </div>
                </div>
@@ -51,8 +51,8 @@
                         <i class="flaticon-email"></i>
                      </div>
                      <div class="info">
-                        <h4> שלחו מייל לתמיכה   </h4>
-                        <span>support@courson.co.il</span>
+                        <h4> {{ $info->email_title }} </h4>
+                        <span> {{ $info->email_details }} </span>
                      </div>
                   </div>
                </div>
@@ -68,12 +68,18 @@
                         </div>
                      </div>
                      <div class="info">
-                        <h4>עקוב אחרינו ברשתות החברתיות </h4>
+                        <h4>{{ $info->social_title }}</h4>
                         <div class="social-contact">
                            <ul>
-                              <li><a href="" class="social-icon facebook"><i class="fab fa-facebook"></i></a></li>
-                              <li><a href="" class="social-icon youtube"><i class="fab fa-youtube"></i></a></li>
-                              <li><a href="" class="social-icon instagram"><i class="fab fa-instagram"></i></a></li>
+                              @if($info->social_instagram)
+                              <li><a target="_blank" href="{{ $info->social_instagram }}" class="social-icon facebook"><i class="fab fa-facebook"></i></a><li>
+                              @endif
+                              @if($info->social_youtube)
+                              <li><a target="_blank" href="{{ $info->social_youtube }}" class="social-icon youtube"><i class="fab fa-youtube"></i></a></li>
+                              @endif
+                              @if($info->social_facebook)
+                              <li><a target="_blank" href="{{ $info->social_facebook }}" class="social-icon instagram"><i class="fab fa-instagram"></i></a></li>
+                              @endif
                            </ul>
                         </div>
                      </div>
@@ -89,8 +95,8 @@
          <div class="row">
             <div class="col-md-10  col-md-offset-1">
                <div class="site-heading text-center">
-                  <h2>שאלות ותשובות </h2>
-                  <p> לורם איפסום הוא פשוט טקסט דמה של תעשיית ההדפסה והכתיבה. לורם איפסום היה טקס הדמה הסטנדרטי בתעשייה. </p>
+                  <h2> {{ $info->que_ans_title }} </h2>
+                  <p> {{ $info->que_ans_desc }} </p>
                </div>
                <div class="panel-group " id="accordion">
                   @foreach($questions as $key=>$question)
@@ -216,13 +222,13 @@
    </script>
 <script type="text/javascript">
    var locations = [
-     ['Mivtza Uvda Street, Rishon Lezion, Israel', 31.983906, 34.775900, 4],
-     ['Paul Samuelson Street, Rosh Haayin, Israel', 32.089589, 34.971756, 5],
+     ['{{ $info->address1 }}', '{{ $info->longitude1 }}', '{{ $info->lattitude1 }}', 4],
+     ['{{ $info->address2 }}', '{{ $info->longitude2 }}', '{{ $info->lattitude2 }}', 5],
    ];
    
    var map = new google.maps.Map(document.getElementById('map'), {
      zoom: 8,
-     center: new google.maps.LatLng(31.983906, 34.775900),
+     center: new google.maps.LatLng('{{ $info->longitude1 }}', '{{ $info->lattitude1 }}'),
      mapTypeId: google.maps.MapTypeId.ROADMAP
    });
    

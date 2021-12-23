@@ -286,7 +286,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                         </div>
                         <div class="col-8">
                             <div class="text-right mr-2">
-                                <h3 class="text-dark mt-1"><span id="users_count"data-plugin="counterup">{{$registered_users}}</span></h3>
+                                <h3 class="text-dark mt-1"><span id="users_count" data-plugin="counterup">{{$registered_users}}</span></h3>
                                 <p class="text-muted mb-1 text-truncate">משתמשים </p>
                             </div>
                         </div>
@@ -303,7 +303,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                         </div>
                         <div class="col-8">
                             <div class="text-right mr-2">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">1245</span></h3>
+                                <h3 class="text-dark mt-1"><span id="quiz_count" data-plugin="counterup"></span></h3>
                                 <p class="text-muted mb-1 text-truncate">חִידוֹן</p>
                             </div>
                         </div>
@@ -320,11 +320,11 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
 @section('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        
+        graphSegment();
         var startDate = $('#reportrange').data('daterangepicker').startDate.format('Y-MM-DD HH:mm:ss');
         var endDate = $('#reportrange').data('daterangepicker').endDate.format('Y-MM-DD HH:mm:ss'); 
-        
-        fetch_data(startDate , endDate);
+
+        fetch_filter_data(startDate , endDate);
 
         function fetch_data(from_date = '', to_date = '', is_ajax = '') {
             console.log(from_date);
@@ -338,8 +338,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
         }
 
     function fetch_filter_data(from_date = '', to_date = '') {
-       console.log(from_date);
-       console.log(to_date);
+
         $.ajax({
             url:"{{ route('admin.filtered_data')}}" + '/' + from_date + '/' + to_date,
             //  url:"",
@@ -357,6 +356,38 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                 $('#degree_count').text(degree_count);
                 var courses_count = data.courses_count;
                 $('#courses_count').text(courses_count);
+                $('#quiz_count').text(data.quiz_count);
+            }
+        });
+    }
+
+    function graphSegment() {
+        $.ajax({
+            url:"{{ route('admin.graphSegment')}}",
+            success:function(data) {
+                console.log(data);
+                var labels = arrayColumn(data, 'monthname');
+                var data = arrayColumn(data, 'count');
+                var options = {
+                    responsive:true
+                };
+                var graph = {
+                    labels: labels, 
+                    datasets: [
+                        {
+                        label: "Dados primários",
+                        fillColor: "rgba(220,220,220,0.3)",
+                        strokeColor: "#4d90fe",
+                        pointColor: "#4d90fe",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "#4d90fe",
+                        data: data 
+                        }
+                    ]
+                };    
+                var ctx = document.getElementById("Graph").getContext("2d");
+                var LineChart = new Chart(ctx).Line(graph, options);           
             }
         });
     }
@@ -368,5 +399,11 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
         fetch_filter_data(startdate , enddate);
     });
     });
+
+    function arrayColumn(array, columnName) {
+        return array.map(function(value,index) {
+            return value[columnName];
+        })
+    }
 </script>
 @endsection

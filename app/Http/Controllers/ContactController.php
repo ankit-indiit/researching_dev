@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Contact;
+use App\Models\contactus;
 use App\Models\questions;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -25,8 +26,9 @@ class ContactController extends Controller
     //main function to load contact us page
     public function getContact()
     {
+       $info = contactus::find(1);
        $questions = questions::all();
-       return view('includes.contact',compact('questions')); 
+       return view('includes.contact',compact('questions','info')); 
     } 
 
     //save the data of person that wants to ask questions and sending email.
@@ -62,11 +64,11 @@ class ContactController extends Controller
         }
 
         $data = [
-       'name' => $request->contact_name,
-       'email' => $request->contact_email,
-       'phone_number' => $request->contact_phone,
-       'message' => $request->contact_comments
-];
+        'name' => $request->contact_name,
+        'email' => $request->contact_email,
+        'phone_number' => $request->contact_phone,
+        'message' => $request->contact_comments
+        ];
         //sending mail to admin
         Mail::send('includes.contact_email',["data1"=>$data],function($message){
         	$message->to('ruchikagarg764@gmail.com')

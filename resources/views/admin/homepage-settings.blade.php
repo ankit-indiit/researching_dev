@@ -7,7 +7,7 @@ $is_logged_in = session()->get('admin_logged_in');
         
 if(!isset($is_logged_in) && $is_logged_in != '1'){      
     return redirect()->route('admin.adminLogin')->send();
-}
+} 
 
 ?>
 <div class="content-page">

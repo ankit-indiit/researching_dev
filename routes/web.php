@@ -314,6 +314,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/dashboard/{from_date?}/{to_date?}', 'App\Http\Controllers\Admin\DashboardController@dashboard')->name('dashboard');
 
     Route::get('/filtered_data/{from_date?}/{to_date?}', 'App\Http\Controllers\Admin\DashboardController@filtered_data')->name('filtered_data');
+    
+    Route::get('/graphSegment', 'App\Http\Controllers\Admin\DashboardController@graphSegment')->name('graphSegment');
 
     Route::get('/admin_profile','App\Http\Controllers\Admin\DashboardController@adminProfile' )->name('adminprofile');
     //route for updating the profile ofthe user
@@ -390,7 +392,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/homepage', 'App\Http\Controllers\Admin\HomepageController@index' )->name('home.setting');
 	
     Route::post('/homepage', 'App\Http\Controllers\Admin\HomepageController@saveSettings' )->name('home.savesetting');
-	
+    
+    Route::post('/homepage','App\Http\Controllers\Admin\HomepageController@updateHomepage' )->name('update_homepage');
+
     Route::get('/tickets', 'App\Http\Controllers\Admin\TicketController@showtickets')->name('tickets');
 
     Route::get('/tickets/{id}', 'App\Http\Controllers\Admin\TicketController@showDetails')->name('ticketdetails');

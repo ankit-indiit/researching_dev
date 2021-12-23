@@ -35,7 +35,7 @@ class MarathonController extends Controller
             $courseData = Course::where('course_id',$val['mararthon_id'])->get();
             $MarathonQuestion[$key]['instructors'] = $val['user_id'];
             $userData = User::find($val['user_id']);
-            $MarathonQuestion[$key]['course_name'] =  $courseData[0]->course_name;
+            $MarathonQuestion[$key]['course_name'] =  @$courseData[0]->course_name;
             $MarathonQuestion[$key]['first_name'] =  $userData['first_name'];
             $MarathonQuestion[$key]['last_name'] =  $userData['last_name'];
             }

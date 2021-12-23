@@ -40,20 +40,115 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
             ?>
             <input type="hidden" name = 'contact_id' value = "{{$id}}">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <h4 class="headsub">מידע מוביל</h4>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="phone_title">כותרת הטלפון</label>
+                                            <div class="form-group">
+                                                <input type="text" id="phone_title" name ="phone_title" class="form-control" placeholder="הזן שם טלפון" value="{{$value->phone_title}}">
+                                                <span class="text-danger error-text phone_title_err"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6">
+                                            <label for="phone_number">מספר טלפון</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="phone_number" name ="phone_number" class="form-control" placeholder="הזן מספר טלפון" value="{{$value->phone_number}}">
+                                                <span class="text-danger error-text phone_number_err"></span>
+                                            </div>
+                                        </div>                                                                                    
+                                    </div>
+                                </div>   
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="address_title">כותרת כתובת</label>
+                                            <div class="form-group">
+                                                <input type="text" id="address_title" name ="address_title" class="form-control" placeholder="הזן כותרת כתובת" value="{{$value->address_title}}">
+                                                <span class="text-danger error-text address_title_err"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6">
+                                            <label for="address_details">פרטי כתובת</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="address_details" name ="address_details" class="form-control" placeholder="הזן פרטי כתובת" value="{{$value->address_details}}">
+                                                <span class="text-danger error-text address_details_err"></span>
+                                            </div>
+                                        </div>                                                                                    
+                                    </div>
+                                </div> 
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="email_title">כותרת דואר</label>
+                                            <div class="form-group">
+                                                <input type="text" id="email_title" name ="email_title" class="form-control" placeholder="הזן כותרת למייל" value="{{$value->email_title}}">
+                                                <span class="text-danger error-text email_title_err"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6">
+                                            <label for="email_details">פרטי דואר</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="email_details" name ="email_details" class="form-control" placeholder="הזן פרטי מייל" value="{{$value->email_details}}">
+                                                <span class="text-danger error-text email_details_err"></span>
+                                            </div>
+                                        </div>                                                                                    
+                                    </div>
+                                </div>   
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="social_title">חֶברָתִי</label>
+                                            <div class="form-group">
+                                                <input type="text" id="social_title" name="social_title" class="form-control" placeholder="הזן כותרת חברתית" value="{{$value->social_title}}">
+                                                <span class="text-danger error-text social_title_err"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6">
+                                            <label for="social_instagram">אינסטגרם</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="social_instagram" name="social_instagram" class="form-control" placeholder="כנסו לקישור לאינסטגרם" value="{{$value->social_instagram}}">
+                                                <span class="text-danger error-text social_instagram_err"></span>
+                                            </div>
+                                        </div>  
+                                        <div class="col-md-6">
+                                            <label for="social_youtube">יוטיוב</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="social_youtube" name="social_youtube" class="form-control" placeholder="הכנס קישור ליוטיו" value="{{$value->social_youtube}}">
+                                                <span class="text-danger error-text social_youtube_err"></span>
+                                            </div>
+                                        </div>      
+                                        <div class="col-md-6">
+                                            <label for="social_facebook">פייסבוק</label>
+                                            <div class="form-group">
+                                                <input type="tel" id="social_facebook" name="social_facebook" class="form-control" placeholder="הכנס לקישור בפייסבוק" value="{{$value->social_facebook}}">
+                                                <span class="text-danger error-text social_facebook_err"></span>
+                                            </div>
+                                        </div>                                                                                                                                                                
+                                    </div>
+                                </div> 
+                                <div class="col-md-12">
+                                    <h4 class="headsub">שאלות ותשובות</h4>
+                                </div>             
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="phone1">טלפון מספר 1</label>
-                                        <input type="tel" id="phone1" name ="phone1" class="form-control" placeholder="הזן מספר טלפון" value="{{$value->phonenumber1}}">
-                                        <span class="text-danger error-text phone1_err"></span>
+                                        <label for="que_ans_title">כותרת</label>
+                                        <input type="text" id="que_ans_title" name="que_ans_title" class="form-control" placeholder="הזן כותרת" value="{{$value->que_ans_title}}">
+                                        <span class="text-danger error-text que_ans_title_err"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="phone2">טלפון מספר 2</label>
-                                        <input type="tel" id="phone2" name = "phone2" class="form-control" placeholder="הזן מספר טלפון" value="{{$value->phonenumber2}}">
-                                        <span class="text-danger error-text phone2_err"></span>
+                                        <label for="que_ans_desc">תיאור</label>
+                                        <textarea type="text" id="que_ans_desc" name="que_ans_desc" class="form-control" placeholder="הזן תיאור">{{$value->que_ans_desc}}</textarea>
+                                        <span class="text-danger error-text que_ans_desc_err"></span>
                                     </div>
-                                </div>
+                                </div>                                                                                                                                                                                       
+                                <div class="col-md-12">
+                                    <h4 class="headsub">מידע אחר</h4>
+                                </div>     
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="address1">כתובת 1</label>
@@ -66,27 +161,6 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                                         <label for="address2">כתובת 2</label>
                                         <input type="text" id="address2"  name = "address2" class="form-control" placeholder="הכנס כתובת" value="{{$value->address2}}">
                                         <span class="text-danger error-text address2_err"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="instagram">אינסטגרם</label>
-                                        <input type="text" id="instagram" name = "instagram" class="form-control" placeholder="הזן את הקישור שלך" value="{{$value->insta_link}}">
-                                        <span class="text-danger error-text instagram_err"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="youtube">יוטיוב</label>
-                                        <input type="text" id="youtube" name ="youtube" class="form-control" placeholder="הזן את הקישור שלך" value="{{$value->youtube_link}}">
-                                        <span class="text-danger error-text youtube_err"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="facebook">פייסבוק</label>
-                                        <input type="text" id="facebook" name = "facebook" class="form-control" placeholder="הזן את הקישור שלך" value="{{$value->facebook_link}}">
-                                        <span class="text-danger error-text facebook_err"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

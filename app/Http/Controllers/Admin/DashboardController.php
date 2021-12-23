@@ -13,11 +13,14 @@ use App\Models\chatbox;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Degrees;
+use App\Models\quiz;
 use App\Models\visitors;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Session;
 
 
@@ -150,8 +153,63 @@ class DashboardController extends Controller
             $total_income = '-';
         }
        
-        return response()->json(['success'=>true,'visitors' => $visitors,'registered_users' => $registered_users,'count_users' => $count_users,'total_income' => $total_income, 'degree_count' => $degree_count,'courses_count' => $courses_count]); 
+        $quiz_count = quiz::select('course_id')->whereBetween('created_at',[$from_date, $to_date])->distinct()->count();
+        
+        if($quiz_count == '0'){
+            $quiz_count = '-';
+        }     
+
+        return response()->json(['success'=>true,'visitors' => $visitors,'registered_users' => $registered_users,'count_users' => $count_users,'total_income' => $total_income, 'degree_count' => $degree_count,'courses_count' => $courses_count, 'quiz_count'=>$quiz_count]); 
     } 
+
+    public function graphSegment()
+    {
+        $month_array = array(
+           "January",
+           "February",
+           "March",
+           "April",
+           "May",
+           "June",
+           "July",
+           "August",
+           "September",
+           "October",
+           "November",
+           "December"
+        );
+
+        $graph_data = array();
+
+                
+        $data =  orders::select(DB::raw("(COUNT(*)) as count"),DB::raw("MONTHNAME(created_at) as monthname"))
+        ->whereYear('created_at', date('Y'))
+        ->groupBy('monthname')
+        ->orderBy('created_at')
+        ->get()->toArray();
+        
+    
+        $allMonth = array_column($data, 'monthname');
+
+        foreach($month_array as $month){
+
+            if(in_array($month,$allMonth)){
+                $key = array_search($month, array_column($data, 'monthname'));
+                $graph_data[] = array(
+                    "count" => $data[$key]['count'],
+                    "monthname" => $data[$key]['monthname']
+                );               
+            }else{
+                $graph_data[] = array(
+                    "count" => 0,
+                    "monthname" => $month
+                );
+            }
+        }
+
+        return $graph_data;
+
+    }
 
     public function adminProfile(){
     	$countries = DB::table('country')->where('parent',0)->get();

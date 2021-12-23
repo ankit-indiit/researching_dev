@@ -31,7 +31,7 @@
         <div class="container-fluid">
             <ul class="list-unstyled topnav-menu float-left mb-0">
                 <li class="d-none d-lg-block">
-                    <form class="app-search">
+                    {{-- <form class="app-search">
                         <div class="app-search-box dropdown">
                             <div class="input-group">  
                                 <div class="input-group-append">
@@ -42,7 +42,7 @@
                                 <input type="search" class="form-control" placeholder="לחפש..." id="top-search">
                             </div>
                         </div>
-                    </form>
+                    </form> --}}
                 </li>
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">

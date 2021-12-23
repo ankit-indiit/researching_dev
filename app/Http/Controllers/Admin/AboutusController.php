@@ -44,6 +44,7 @@ class AboutusController extends Controller
         $content = [];
         $data = [];
         $id = $request->aboutus_id;
+
         $aboutus = aboutus::findOrFail($id);
         $validator = Validator::make($request->all(),  [
              'a1_title' => 'required',

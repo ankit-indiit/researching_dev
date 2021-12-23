@@ -5,10 +5,9 @@
 <?php 
 $is_logged_in = session()->get('admin_logged_in');
         
-if(!isset($is_logged_in) && $is_logged_in != '1'){
-            
+if(!isset($is_logged_in) && $is_logged_in != '1'){        
     return redirect()->route('admin.adminLogin')->send();
-        }
+}
 
 ?>
 <div class="content-page">
@@ -91,7 +90,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                 <div class="form-group">
                     <label for="description">תיאור</label>
                     <!--<textarea class="summernote-basic" name="a1_description[]">{{!! $value->a1_description !!}}</textarea>-->
-                    <textarea class="form-control" name="a1_description[]" rows="5" cols="33">{{!! $value->a1_description !!}}</textarea>
+                    <textarea class="form-control" name="a1_description" rows="5" cols="33">{!! $value->a1_description !!}</textarea>
                     <span class="text-danger error-text a1_description_err"></span>
                 </div>
             </div>
@@ -153,7 +152,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                 <div class="form-group">
                     <label for="description">תיאור</label>
                     <!--<textarea class="summernote-basic" name="a2_description[]">{{!! $value->a2_description !!}}</textarea>-->
-                    <textarea class="form-control" name="a2_description[]" rows="5" cols="33">{{!! $value->a2_description !!}}</textarea>
+                    <textarea class="form-control" name="a2_description" rows="5" cols="33">{!! $value->a2_description !!}</textarea>
                     <span class="text-danger error-text a2_description_err"></span>
                 </div>
             </div>
