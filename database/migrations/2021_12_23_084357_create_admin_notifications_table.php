@@ -14,7 +14,10 @@ class CreateAdminNotificationsTable extends Migration
     public function up()
     {
         Schema::create('admin_notifications', function (Blueprint $table) {
-            $table->id();     
+            $table->id();
+            $table->integer('user_id')->unsigned();
+            $table->boolean('read_notification')->default(0);
+            $table->text('content');        
             $table->timestamps();
         });
     }

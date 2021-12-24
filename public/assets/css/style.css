@@ -13713,6 +13713,47 @@ font-size: 11px;
     color:#eb871e;
     font-size:30px;
 }
+
+
+.modal.editticket .note-btn.btn {
+  font-size: 11px;
+      padding: 4px 12px;
+      border: none;
+      font-weight: 500;
+  }
+  .modal.editticket .modal-body .form-group input.form-control
+  {text-align: right;
+          border: 1px solid #dddddd;
+      border-radius: 30px;
+      color: #6f7074;
+      height: 50px;
+      font-size: 14px;
+      padding: 0 20px;
+      box-shadow: none;
+      margin-bottom: 20px;
+  }
+  .modal.editticket .modal-body .note-editor.note-frame.panel.panel-default {
+      text-align: right;
+  }
+  .modal.editticket .modal-body .form-group label.uploadtickets {
+      border: 1px dashed #dddddd;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      border-radius: 6px;
+  }
+  .modal.editticket .modal-body .form-group label.uploadtickets 
+   p
+  {
+          margin: 0;
+  }
+  .modal.editticket .modal-body .form-group label.uploadtickets  i
+  {
+      color:#eb871e;
+      font-size:30px;
+  }
+
+  
 .ticketdetails .list-all-chat li.right-msg .msg-ic {
     background: #eb871e;
     color: #fff;

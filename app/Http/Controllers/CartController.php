@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminNotification;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -328,8 +329,8 @@ class CartController extends Controller
                 $notification_data = [
                     'sender_id'=>Auth::user()->id, // sender id as a user id
                     'courses_id'=>$value,
-                    'title'=>'Course Purchase',
-                    'message'=>'Course Purchase',
+                    'title'=>'רכישת קורס',
+                    'message'=>'קורס חדש נרכש',
                     'type'=>'1'
                     ];
                 $notification_res = DB::table('notifications')->insert($notification_data);
@@ -340,9 +341,9 @@ class CartController extends Controller
                     $second_user_notification_data = [
                         'sender_id'=> $User[0],
                         'courses_id'=>$value,
-                        'title'=>'Your coupon code an used',
-                        'message'=>'Your coupon code is used by '.$request->first_name,
-                        'type'=>'1'
+                        'title'=>'קוד הקופון שלך משומש',
+                        'message'=>$request->first_name." קוד הקופון שלך משמש על ידי",
+                        'type'=>'2'
                         ];
                     DB::table('notifications')->insert($second_user_notification_data);
                 }
@@ -369,7 +370,13 @@ class CartController extends Controller
                         $affiliate->status = '0';
                         $affiliate->save();
                     }
-               
+
+                    $notify = new AdminNotification();
+                    $notify->user_id = Auth::user()->id;
+                    $notify->read_notification = 0;
+                    $notify->content = "זה עתה רכש קורס ".Auth::user()->first_name;
+                    $notify->save();
+
                     $courses_id = cartItems::select('course_id')->where('user_id',Auth::user()->id)->get();
                     cartItems::whereIn('course_id',$courses_id)->delete();
 

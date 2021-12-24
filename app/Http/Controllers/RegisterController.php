@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\cartItems;
@@ -44,6 +45,13 @@ class RegisterController extends Controller
         $user->academic_institution = $request->university;
         $user->student_degree = $request->degree;       
         $user->save ();
+        if($user){
+            $notify = new AdminNotification();
+            $notify->user_id = $user->id;
+            $notify->read_notification = 0;
+            $notify->content = "זה עתה נרשם ".$user->first_name;
+            $notify->save();
+        }
         $reffer_code = strtolower($user->first_name).$user->id.rand(100,999);
         $user->reffer_code = $reffer_code;
         $user->save();

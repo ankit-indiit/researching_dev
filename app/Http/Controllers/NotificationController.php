@@ -26,6 +26,7 @@ class NotificationController extends Controller
         $recent_ids = array();
         $user_id = Auth::user()->id;
         $notifications = notifications::select('*')->where('sender_id',$user_id)->get();
+        
         $recent_notifications = notifications::select('*')->where('sender_id',$user_id)->orderBy('id', 'DESC')->limit('2')->get();
        /* pr($notifications);
         pr($recent_notifications);

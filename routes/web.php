@@ -631,6 +631,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
     Route::post('/delete_onlie_recommed','App\Http\Controllers\Admin\RecommendController@delete_onlie_recommed' )->name('delete_onlie_recommed');
     
+    Route::delete('/clearNotification','App\Http\Controllers\Admin\AdminNotification@clearNotification' )->name('clear_notification');
+    
     
     Route::get('/addrecommendation','App\Http\Controllers\Admin\RecommendController@addrecommendation' )->name('addrecommendation');
 

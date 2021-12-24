@@ -47,88 +47,51 @@
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="fe-bell noti-icon"></i>
-                        <span class="badge badge-danger rounded-circle noti-icon-badge">9</span>
+                        <span class="badge badge-danger notificationCount rounded-circle noti-icon-badge">{{ count($admin_notify) }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-left dropdown-lg">
                         <!-- item-->
                         <div class="dropdown-item noti-title">
                             <h5 class="m-0">
                                 <span class="float-right">
-                                    <a href="#" class="text-dark">
+                                    @if(count($admin_notify) > 0 )
+                                    <a href="javascript:void(0);" class="text-dark clearNotification">
                                         <small>נקה הכל</small>
                                     </a>
+                                    @endif
                                 </span>הוֹדָעָה
                             </h5>
                         </div>
-                        <div class="noti-scroll" data-simplebar>
+                        <div class="noti-scroll notificationSec" data-simplebar>
                         <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item active">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('/assets/admin/images/users/user-1.jpg') }}" class="img-fluid rounded-circle" alt="" /> 
-                                </div>
-                                <p class="notify-details">כריסטינה גאווה</p>
-                                <p class="text-muted mb-0 user-msg">
-                                    <small>היי, מה שלומך? מה עם הפגישה הבאה שלנו</small>
-                                </p>
-                            </a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <div class="notify-icon bg-primary">
-                                    <i class="mdi mdi-comment-account-outline"></i>
-                                </div>
-                                <p class="notify-details"> הגיב על מנהל המערכת  כלב פלאקלר
-                                    <small class="text-muted">1 min ago</small>
-                                </p>
-                            </a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('/assets/admin/images/users/user-4.jpg') }}" class="img-fluid rounded-circle" alt="" /> 
-                                </div>
-                                <p class="notify-details">כריסטינה גאווה</p>
-                                <p class="text-muted mb-0 user-msg">
-                                    <small>וואו הלורם הזה נראה פורם ואמט של דולס</small>
-                                </p>
-                            </a>
-                            <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <div class="notify-icon bg-warning">
-                                            <i class="mdi mdi-account-plus"></i>
-                                        </div>
-                                        <p class="notify-details">כריסטינה גאווה
-                                            <small class="text-muted">5 hours ago</small>
-                                        </p>
-                                    </a>
+                            @if(count($admin_notify) > 0 )
+                                @foreach($admin_notify as $notification)
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="notify-icon bg-primary">
+                                        <i class="mdi mdi-comment-account-outline"></i>
+                                    </div>
+                                    <p class="notify-details"> {{ $notification->content }}
+                                        <small class="text-muted">{{ Carbon\Carbon::parse($notification->created_at)->diffForHumans()}} </small>
+                                    </p>
+                                </a>                             
+                                @endforeach
+                                 <!-- All-->
+                                 <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item notify-all">
+                                    
+                                </a>                                 
+                            @else  
+                                <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                    <div class="">
+                                       
+                                    </div>
+                                    <p class="notify-details"> 
+                                        לא נמצאה התראה!
+                                    </p>
+                                </a>                           
+                            @endif
+                        </div>
     
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <div class="notify-icon bg-info">
-                                            <i class="mdi mdi-comment-account-outline"></i>
-                                        </div>
-                                        <p class="notify-details">כריסטינה גאווה
-                                            <small class="text-muted">4 days ago</small>
-                                        </p>
-                                    </a>
-    
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <div class="notify-icon bg-secondary">
-                                            <i class="mdi mdi-heart"></i>
-                                        </div>
-                                        <p class="notify-details">כריסטינה גאווה
-                                            <b>מנהל</b>
-                                            <small class="text-muted">13 days ago</small>
-                                        </p>
-                                    </a>
-                                </div>
-    
-                                <!-- All-->
-                                <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item notify-all">
-                                   צפה בהכל
-                                    <i class="fe-arrow-right"></i>
-                                </a>
-    
-                            </div>
+                    </div>
                         </li>
                          <li class="dropdown notification-list topbar-dropdown">
                             <?php 
@@ -454,6 +417,24 @@ $(function() {
 
     cb(start, end);
 
+});
+
+$(document).on('click','.clearNotification',function(e){
+    e.preventDefault();
+    var result = confirm("Are you sure? Want to clear all notification ?");
+    if (result) {
+        $.ajax({
+            url:"{{ Route('admin.clear_notification') }}",
+            type: 'DELETE',
+            success:function(data) {
+                var html = '<a href="javascript:void(0);" class="dropdown-item notify-item active">'+
+                            '<div class=""></div>'+
+                            '<p class="notify-details"> לא נמצאה התראה!</p></a>';
+                $('.notificationSec').html(html);
+                $('.notificationCount').text(0);
+            }
+        });
+    }
 });
 </script>
 <script type="text/javascript">

@@ -308,9 +308,8 @@
                            <h4>שתף כ</h4>
                         </div>
                         <ul class="socialshare">
-                           <li><a href="" class="social-icon facebook"><i class="fab fa-facebook"></i>Facebook</a></li>
-                           <li><a href="" class="social-icon twitter"><i class="fab fa-twitter"></i>Twitter</a></li>
-                           <li><a href="" class="social-icon instagram"><i class="fab fa-instagram"></i>Instagram</a></li>
+                           <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}&text={{$course_data->course_name}}" target="_blank" class="social-icon facebook"><i class="fab fa-facebook"></i>Facebook</a></li>
+                           <li><a href="http://twitter.com/share?text={{$course_data->course_name}}&url={{ url()->current() }}" target="_blank" class="social-icon twitter"><i class="fab fa-twitter"></i>Twitter</a></li>
                         </ul>
                      </div>
                   </aside>

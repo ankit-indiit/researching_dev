@@ -118,16 +118,13 @@
                      <span class="text-danger error-text description_err pull-right"></span>                      
                   </div>
                   <div class="form-group">
-                     <label for="uploadtickets" class="uploadtickets">
+                     <label for="uploadtickets1" class="uploadtickets">
                         <i class="fas fa-upload"></i>
                         <p>Click to upload</p>
                      </label>
                      <input type="file" id="uploadtickets1" name="uploadtickets" style="display:none"/>
                   </div>
-                  <div class="form-group">
-                     <img src="" id="imgTicket"/>
-                     
-                  </div>
+
             </div>
             <div class="modal-footer">
                <button type="submit" class="btn btn-theme btn-md btn-lt-ht">הגעדכן כרטיס תמיכה</button>
@@ -191,11 +188,15 @@ $(function () {
          $('.uploadtickets p').text('Click to upload');
       }
    }
-   function readURLNew(input) {
+   function readURLEdit(input) {
       if (input.files && input.files[0]) {
          var reader = new FileReader();
          reader.onload = function (e) {
-           $("#imgTicket").attr("src",e.target.result);
+            // $("#imgTicket").attr("src",e.target.result);
+          var img = $('<img>');
+            img.attr('src', e.target.result);
+            img.attr('width','100px');
+            $('.uploadtickets p').html(img);
          }
          reader.readAsDataURL(input.files[0]);
       }else{
@@ -207,7 +208,7 @@ $(function () {
       readURL(this);
    });   
    $("#uploadtickets1").change(function(){
-      readURL(this);
+      readURLEdit(this);
    });   
 
     $('#ticketForm').submit(function (e) {
@@ -249,7 +250,7 @@ $(function () {
 
 
 $(document).on("click",".edit_ticket_cls",function(){
-    $('.uploadtickets p').html('');
+
     $("#edit_subject").val('');
     $("#edit_description").val('');
     $("#ticket_id").val('');
@@ -270,9 +271,13 @@ $(document).on("click",".edit_ticket_cls",function(){
                   $("#ticket_id").val(response.id);
                   $("#edit_subject").val(response.subject);
                   $("#edit_description").val(response.description);
-                  let img = "{{url('/assets/tickets')}}/"+response.image;
-                  $("#imgTicket").attr("src",'');
-                  $("#imgTicket").attr("src",img);
+                  if(response.image){
+                     let img = "{{url('/assets/tickets')}}/"+response.image;
+                     var img_con = $('<img>');
+                     img_con.attr('src', img);
+                     img_con.attr('width','100px');
+                     $('.modal.editticket .uploadtickets p').html(img_con);
+                  }
               }
            }else{
               printErrorMsg(response.error);

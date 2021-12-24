@@ -96,6 +96,7 @@
                               <!-- Single Tab -->
                               <div id="tab1" class="tab-pane fade active in">
                                  <div class="info title">
+                                    @if(count($notifications) > 0)
                                     <?php foreach ($notifications as $key => $notification) {
                                        /*$created_at = DB::table('notification_users')->where('notification_id',$notification->id)->pluck('created_at');
                                        $datetime = new DateTime($created_at[0]);
@@ -106,19 +107,16 @@
 
                                        ?>
                                     <div class="notifications-row">
-                                       <div class="notifications-img">
-                                          <img src="{{ asset('/assets/img/advisor/3.jpg') }}">
-                                       </div>
                                        <div class="notifications-text text-right text-right w-100">
                                           <div class="notifications-heading">
-                                             <h5>{{$notification->title}}</h5>
+                                             <h5>{{$notification->message}}</h5>
                                              <div class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                 <span><i class="ti-angle-down"></i></span>
                                                 </a>
                                                 <ul class="dropdown-menu">
                                                    <li class="">
-                                                      <a class = "remove_notifi"data-id="{{ $notification->id }}"><i class="ti-trash " ></i> Delete this notification </a>
+                                                      <a class="remove_notifi" data-id="{{ $notification->id }}"><i class="ti-trash"></i> Delete this notification </a>
                                                    </li>
                                                    <li class="">
                                                       <a href="#"><i class="ti-close"></i>Stop receving notification like this </a>
@@ -126,35 +124,29 @@
                                                 </ul>
                                              </div>
                                           </div>
-                                          <p><!--$notification->message--></p>
                                           <div>
-                                             <span><i class="ti-time"></i> <!--$day.' '.$month.' '.$year.' '.'at'.' '.$time--> </span>
+                                             <span> {{ Carbon\Carbon::parse($notification->created_at)->diffForHumans()}} </span>
                                           </div>
                                        </div>
                                     </div>
                                  <?php }?>
+                                 @else 
+                                    <p>לא נמצאה התראה!</p>
+                                 @endif 
                                  </div>
                               </div>
                               <!-- End Single Tab -->
                               <!-- Single Tab -->
                               <div id="tab2" class="tab-pane fade">
                                  <div class="info title">
+                                    @if(count($recent_notifications) > 0)
                                     <?php foreach ($recent_notifications as $key => $recent_notification) {
-                                       /*$createdat = DB::table('notification_users')->where('notification_id',$recent_notification->id)->pluck('created_at');
-                                       $datetime1 = new DateTime($createdat[0]);
-                                       $day1 = $datetime1->format('d');
-                                       $month1 = $datetime1->format('M');
-                                       $year1 = $datetime1->format('y');
-                                       $time1 = $datetime1->format('H:i');*/
 
                                        ?>
                                     <div class="notifications-row">
-                                       <div class="notifications-img">
-                                          <img src="{{ asset('/assets/img/advisor/3.jpg') }}">
-                                       </div>
                                        <div class="notifications-text text-right w-100">
                                           <div class="notifications-heading">
-                                               <h5>{{$recent_notification->title}}</h5>
+                                             <h5>{{$recent_notification->title}}</h5>
                                              <div class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                 <span><i class="ti-angle-down"></i></span>
@@ -169,13 +161,15 @@
                                                 </ul>
                                              </div>
                                           </div>
-                                         <p><!--$recent_notification->message--></p>
                                           <div>
-                                             <span><i class="ti-time"></i><!--$day1.' '.$month1.' '.$year1.' '.'at'.' '.$time1--></span>
+                                             <span> {{ Carbon\Carbon::parse($recent_notification->created_at)->diffForHumans()}} </span>
                                           </div>
                                        </div>
                                     </div>
                                     <?php }?>
+                                    @else
+                                       <p>לא נמצאה התראה!</p>
+                                    @endif
                                  </div>
                               </div>
                               <!-- End Single Tab -->

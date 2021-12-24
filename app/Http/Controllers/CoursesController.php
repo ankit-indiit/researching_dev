@@ -121,7 +121,7 @@ class CoursesController extends Controller
     	return view('includes.package-detail',compact('courses_data','syllabus','instructors_data','courses_new_data','questions'));
     }
 
-    public function recentlyViewed($post_title="Some Post",$image, $degree,$university_name,$id) {
+    public function recentlyViewed($post_title="Some Post",$image='', $degree='',$university_name='',$id='') {
         // Configuration Variables
         $num_to_store     =    2; // If there are more than this many stored, delete the oldest one
         $minutes_to_store = 1440; // These cookies will automatically be forgotten after this number of minutes. 1440 is 24 hours.
