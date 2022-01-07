@@ -165,6 +165,8 @@ Route::get('/showcart/{id}', [App\Http\Controllers\CartController::class, 'showC
 //remove item from cart table and session as well
 Route::post('/remove_from_cart', [App\Http\Controllers\CartController::class, 'remove']);
 
+// Order 
+Route::get('/order/invoice/{id}', [App\Http\Controllers\OrderController::class, 'generateInvoice'])->name('order.invoice');
 
 //route to add ratings on purchased courses
 Route::post('/ratings', [App\Http\Controllers\MyCoursesController::class, 'addratings'])->name('ratings');
@@ -632,8 +634,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::post('/delete_onlie_recommed','App\Http\Controllers\Admin\RecommendController@delete_onlie_recommed' )->name('delete_onlie_recommed');
     
     Route::delete('/clearNotification','App\Http\Controllers\Admin\AdminNotification@clearNotification' )->name('clear_notification');
+
+    Route::get('/advance-notification','App\Http\Controllers\Admin\AdminNotification@getAdvanceNotification')->name('advance_notification');
+
+    Route::post('/advance-notification','App\Http\Controllers\Admin\AdminNotification@saveAdvanceNotification')->name('advance_notification.save');
     
-    
+    Route::post('/advanceFilterAjax','App\Http\Controllers\Admin\AdminNotification@advanceNotificationFilter')->name('advance_filter');
+
+    Route::get('/add-notification','App\Http\Controllers\Admin\AdminNotification@addAdvanceNotification')->name('advance_notification.add');
+
     Route::get('/addrecommendation','App\Http\Controllers\Admin\RecommendController@addrecommendation' )->name('addrecommendation');
 
     Route::post('/saverecommend','App\Http\Controllers\Admin\RecommendController@saverecommend' )->name('saverecommend');

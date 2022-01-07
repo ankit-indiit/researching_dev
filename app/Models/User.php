@@ -12,7 +12,7 @@ use App\Notifications\contactsnew;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    protected $appends = ['full_name'];
     /**
      * The attributes that are mass assignable.
      *

@@ -109,7 +109,27 @@
                                     <div class="notifications-row">
                                        <div class="notifications-text text-right text-right w-100">
                                           <div class="notifications-heading">
-                                             <h5>{{$notification->message}}</h5>
+                                             @if($notification->type == 3)
+                                                <h5>{{$notification->message}} 
+                                                   @if($notification->courses_id)
+                                                   <a href="{{ route('front.course.show',$notification->courses_id) }}" target="_blank"> visit - {{ $notification->course->course_name }} </a>
+                                                   @endif
+                                                </h5>
+                                             @elseif($notification->type == 1)
+                                                <h5>
+                                                   {{$notification->message}}
+                                                   @if($notification->manual_id)
+                                                      <a href="{{ route('front.order.invoice',$notification->manual_id) }}">Download Invoice</a>
+                                                   @endif 
+                                                </h5> 
+                                             @elseif($notification->type == 2)
+                                                <h5>
+                                                   {{$notification->message}}
+                                                   <a href="{{ route('front.affiliate') }}">See More</a>
+                                                </h5> 
+                                             @else
+                                                <h5>{{$notification->message}}</h5>
+                                             @endif
                                              <div class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                 <span><i class="ti-angle-down"></i></span>
@@ -118,14 +138,14 @@
                                                    <li class="">
                                                       <a class="remove_notifi" data-id="{{ $notification->id }}"><i class="ti-trash"></i> Delete this notification </a>
                                                    </li>
-                                                   <li class="">
+                                                   {{-- <li class="">
                                                       <a href="#"><i class="ti-close"></i>Stop receving notification like this </a>
-                                                   </li>
+                                                   </li> --}}
                                                 </ul>
                                              </div>
                                           </div>
                                           <div>
-                                             <span> {{ Carbon\Carbon::parse($notification->created_at)->diffForHumans()}} </span>
+                                             <span> {{ Carbon\Carbon::parse($notification->created_at)->format('d F Y, h:i:s A')}} </span>
                                           </div>
                                        </div>
                                     </div>
@@ -146,7 +166,21 @@
                                     <div class="notifications-row">
                                        <div class="notifications-text text-right w-100">
                                           <div class="notifications-heading">
-                                             <h5>{{$recent_notification->title}}</h5>
+                                             @if($recent_notification->type == 1)
+                                                <h5>
+                                                   {{$recent_notification->message}}
+                                                   @if($recent_notification->manual_id)
+                                                      <a href="{{ route('front.order.invoice',$recent_notification->manual_id) }}">Download Invoice</a>
+                                                   @endif 
+                                                </h5> 
+                                             @elseif($recent_notification->type == 2)
+                                             <h5>
+                                                {{$recent_notification->message}}
+                                                <a href="{{ route('front.affiliate') }}">See More</a>
+                                             </h5>                                                 
+                                             @else
+                                                <h5>{{$recent_notification->message}}</h5>
+                                             @endif
                                              <div class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                 <span><i class="ti-angle-down"></i></span>
@@ -155,14 +189,14 @@
                                                    <li class="">
                                                       <a class = "remove_notifi"data-id="{{ $recent_notification->id }}"><i class="ti-trash " ></i> Delete this notification </a>
                                                    </li>
-                                                   <li class="">
+                                                   {{-- <li class="">
                                                       <a href="#"><i class="ti-close"></i>Stop receving notification like this </a>
-                                                   </li>
+                                                   </li> --}}
                                                 </ul>
                                              </div>
                                           </div>
                                           <div>
-                                             <span> {{ Carbon\Carbon::parse($recent_notification->created_at)->diffForHumans()}} </span>
+                                             <span> {{ Carbon\Carbon::parse($recent_notification->created_at)->format('d F Y, h:i:s A')}} </span>
                                           </div>
                                        </div>
                                     </div>

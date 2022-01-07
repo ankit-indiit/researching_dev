@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', ' פרט כמובן   ')
 @section('content')
+<link href="{{ asset('assets/css/videre.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/css/videoapp.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/fonts/ionicons.eot">
 <!-- Start Course Details  -->    
 <div class="course-details-area default-padding-lg1 pb-0" style="direction: rtl;">
    <div class="container">
@@ -26,7 +30,8 @@
                <!-- <img src="assets/img/courses/course_economics_portfolio_feat.jpg" alt="Thumb" class="w-100"> -->      
                <div class="icn">
                   <div class="fluid-width-video-wrapper" >
-                     <iframe src="https://player.vimeo.com/video/80567526?autoplay=0&autopause=0" allowfullscreen ></iframe>
+                     <div id="player"></div>
+                     {{-- <iframe src="https://player.vimeo.com/video/80567526?autoplay=0&autopause=0" allowfullscreen ></iframe> --}}
                   </div>
                </div>
                <!-- Star Tab Info -->
@@ -56,7 +61,7 @@
                   </ul>
                   <!-- End Tab Nav -->
                   <!-- Start Tab Content -->
-                  <div class="tab-content tab-content-info">
+                  <div class="tab-content tab-content-info course-details">
                      <!-- Single Tab -->
                      <div id="tab1" class="tab-pane fade active in">
                         <?php
@@ -745,8 +750,30 @@
      $('html,body').stop();
    });
 </script>
+
+<script src="{{ asset('assets/js/videre.js') }}"></script>
 <script type="text/javascript">
    $( document ).ready(function() {
+      $('#player').videre({
+         video: {
+            quality: [
+               {
+                  label: '720p',
+                  src: 'https://vjs.zencdn.net/v/oceans.mp4?HD'
+               },
+               {
+                  label: '360p',
+                  src: 'https://vjs.zencdn.net/v/oceans.mp4?SD'
+               },
+               {
+                  label: '240p',
+                  src: 'https://vjs.zencdn.net/v/oceans.mp4?SD'
+               }
+            ],
+            title: 'jQueryScript.Net'
+         },
+         dimensions: 512
+      });
       $('#user_university').change(function(){
             var university_id = $(this).val();
             $.ajax({

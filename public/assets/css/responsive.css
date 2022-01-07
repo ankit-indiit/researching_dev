@@ -5,7 +5,7 @@
 
 /* Tablet Layout: 768px.*/
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 991px) { 
   /* Topbar Area */
   .top-bar-area .row {
     justify-content: center;
@@ -2181,7 +2181,9 @@ display:none !important;
 .info p {
   height: 65px;
 }
-
+.course-details .info p {
+  height: auto !important;
+}
 .deservecart.bg-gray {
   display: none;
 }
