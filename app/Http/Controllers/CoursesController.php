@@ -63,7 +63,7 @@ class CoursesController extends Controller
         $recommendations = array();
         $users_data = array();
     	$courses_data = Course::select('*')->where('course_id',$id)->get();
-    	
+        $related_course = Course::where('degree_id',$courses_data[0]->degree_id)->whereNotIn('course_id', [$id])->get();
     	foreach ($courses_data as $value) {
     		$syllabus = array();
             $courseid = $value->course_id;
@@ -87,9 +87,8 @@ class CoursesController extends Controller
         $cource_image = $courses_data[0]->image;
         $cource_degree = $courses_data[0]->degrees->degree_name;
         $university_name = $courses_data[0]->university->university_name;
-        
         $this->recentlyViewed($cource_title,$cource_image,$cource_degree,$university_name,$id);
-        return view('includes.course-detail',compact('courses_data','syllabus','instructors_data','questions','recommendations','users_data'));
+        return view('includes.course-detail',compact('related_course','courses_data','syllabus','instructors_data','questions','recommendations','users_data'));
     }
 
     /**

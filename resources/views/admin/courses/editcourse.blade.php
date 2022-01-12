@@ -108,7 +108,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                   <label for="description">תיאור</label>
-                <textarea class="summernote-basic" name="description">{{!! $course_data->description !!}}</textarea>
+                <textarea class="summernote-basic" name="description">{!! $course_data->description !!}</textarea>
                   <span class="text-danger error-text description_err"></span>
                 </div>
             </div>

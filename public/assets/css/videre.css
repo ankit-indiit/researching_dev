@@ -27,6 +27,11 @@ button {
   background-color: transparent;
   border: none;
   cursor: pointer; }
+/* Track video */
+.vid-wrapper .vid-refrenceno-layer {
+  position: absolute;
+  z-index: 3;
+  width: 100%; }
 
 /* components end */
 .vid-wrapper {

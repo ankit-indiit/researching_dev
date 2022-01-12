@@ -89,14 +89,14 @@
                                  </a>
                                  <?php 
                                     if(strlen($course->description) > 400){ ?>
-                                 <span>{{ substr($course->description, 0, 400) }}</span>
+                                 <span>{{ substr(strip_tags($course->description), 0, 400) }}</span>
                                  <span class="read-more-show hide_content">קרא עוד...</span>
                                  <span class="read-more-content"> 
-                                 {{ substr($course->description, 400,strlen($course->description)) }} 
+                                 {{ substr(strip_tags($course->description), 400,strlen(strip_tags($course->description))) }} 
                                  <span class="read-more-hide hide_content">תקרא פחות </span> 
                                  </span>
                                  <?php }else{?>
-                                 {{$course->description}}
+                                 {{strip_tags($course->description)}}
                                  <?php }?>
                                  <div class="footer-meta">
                                     <?php 

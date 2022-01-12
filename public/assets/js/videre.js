@@ -36,6 +36,8 @@ if (typeof Object.create !== "function") {
 		return (count === 0 || count != 1) ? string + 's' : string;
 	}
 
+	var tracktimer = null;
+
 	var Video = {
 		
 		init : function (options, el) {
@@ -67,10 +69,10 @@ if (typeof Object.create !== "function") {
 								'</div>'+
 								'<div class="vid-toggle-layer"></div>'+
 								'<div class="vid-shadow-layer"></div>'+
+								'<div class="vid-refrenceno-layer"></div>'+
 								'<div class="vid-info-layer">'+
 									'<div class="vid-info-wrapper flex align-end">'+
 										'<div class="main-info">'+
-											'<p>You\'re watching</p>'+
 											'<h1>'+base.options.video.title+'</h1>'+
 										'</div>'+
 										'<div class="view-count">'+
@@ -102,7 +104,7 @@ if (typeof Object.create !== "function") {
 									'<div class="progress-fg"></div>'+
 								'</div>'
 							);
-			template ='';
+			
 			currentQuality = base.options.video.quality.indexOf(base.options.video.quality[0]);
 			$(el).css('width', dimensions[base.options.dimensions][0]+'px');
 			$(el).addClass('vid-wrapper videre-container mouse-entered');
@@ -142,18 +144,29 @@ if (typeof Object.create !== "function") {
 				var qualityArray = $(
 										'<button data-index="'+i+'">'+base.options.video.quality[i].label+'</button>'
 									);
-				//qualitySelectorTemplate.append(qualityArray);
+				qualitySelectorTemplate.append(qualityArray);
 			};
 
 			media.volume = 0.5;
 
-			$(el).append(qualitySelectorTemplate);
+			//$(el).append(qualitySelectorTemplate);
 			$(el).find('.vid-duration').text(duration);
 
 			setInterval(function(){
 				base.renderProgress();
 			}, 10);
-
+			setInterval(function(){
+				if(media.paused == false){
+					var bottom = Math.floor(Math.random() * 90) + 1;
+					var right = Math.floor(Math.random() * 90) + 1;
+					jQuery('.vid-refrenceno-layer').css('bottom',bottom+"%");
+					jQuery('.vid-refrenceno-layer').css('right',right+"%");
+					jQuery('.vid-refrenceno-layer').text('ASHUJOSHI');
+					setTimeout(function(){
+						jQuery('.vid-refrenceno-layer').empty();
+					}, 400);
+				}
+			}, 12000);
 			base.setControls();
 			base.setQuality();
 		},
@@ -180,10 +193,12 @@ if (typeof Object.create !== "function") {
 				currentTime = base.toHHMMSS(media.currentTime);
 
 		 	base.options.currentTime = media.currentTime;
+			 
 			$('.vid-current-time').text(currentTime);
 			$('.progress-fg').css('width', (100 / media.duration) * media.currentTime+'%');
 			if (media.duration)
 				$('.progress-loaded').css('width', (100 / media.duration) * media.buffered.end(0)+'%');
+				
 		},
 
 		setControls : function () {
