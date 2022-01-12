@@ -55,6 +55,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                   </tr>
                 </thead>
                 <tbody>
+                  @if(count($manual_notification) > 0)
                   <?php 
                   foreach ($manual_notification as $key=>$manual) {
                   ?>
@@ -65,6 +66,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                     <td>{{count(json_decode($manual->sender_id,true))}}</td>
                   </tr>
                 <?php  }?>
+                @endif
                 </tbody>
               </table>
             </div>
