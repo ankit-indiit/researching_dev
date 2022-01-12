@@ -25,7 +25,7 @@ class orders extends Model
 
     public function course()
     {
-        return $this->belongsTo(course::class,'ordered_courses','course_id');
+        return $this->belongsTo(Course::class,'ordered_courses','course_id');
     }
 
     public function getFullNameAttribute() 
