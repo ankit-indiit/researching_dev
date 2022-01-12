@@ -326,16 +326,17 @@ class CartController extends Controller
                     'created_at' => date("Y/m/d h:i:s"),
                 );
                 
+                $insert = DB::table('orders')->insert($pay_data);
+                $id = DB::getPdo()->lastInsertId();
                 $notification_data = [
                     'sender_id'=>Auth::user()->id, // sender id as a user id
                     'courses_id'=>$value,
                     'title'=>'רכישת קורס',
                     'message'=>'קורס חדש נרכש',
-                    'type'=>'1'
-                    ];
-                $notification_res = DB::table('notifications')->insert($notification_data);
-                $insert = DB::table('orders')->insert($pay_data);
-                
+                    'type'=>'1',
+                    'manual_id'=>$id
+                ];
+                DB::table('notifications')->insert($notification_data);                
                 if(!empty($request->coupon_code_hidden)){
                     $User = User::where('reffer_code',$request->coupon_code_hidden)->pluck('id');
                     $second_user_notification_data = [

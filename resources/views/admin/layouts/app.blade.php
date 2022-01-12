@@ -315,10 +315,16 @@
                             </li>              
                             <li>
                                 <a href="{{route('admin.marathon.questions')}}">
-                                    <i data-feather="book-open"></i>
+                                    <i data-feather="alert-circle"></i>
                                     <span>שאלות למרתון</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{route('admin.advance_notification')}}">
+                                    <i data-feather="alert-octagon"></i>
+                                    <span>התראות</span>
+                                </a>
+                            </li>                            
                             </ul>
                     </div>
                     <div class="clearfix"></div>
@@ -365,6 +371,8 @@
 <div class="rightbar-overlay"></div>
 <!--extra ends -->
 <!-- jQuery Frameworks -->
+<link href="{{ asset('assets/admin/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+
 <script src="{{ asset('assets/admin/js/jquery-3.2.1.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/vendor.min.js') }}"></script>
 <script src="{{ asset('assets/admin/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>

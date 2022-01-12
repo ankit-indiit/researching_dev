@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('title', ' פרט כמובן   ')
 @section('content')
-<!-- Start Course Details  -->    
+<link href="{{ asset('assets/css/videre.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/css/videoapp.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> Start Course Details  -->    
 <div class="course-details-area default-padding-lg1 pb-0" style="direction: rtl;">
    <div class="container">
       <div class="row sidebar-sec">
@@ -23,11 +25,10 @@
                      </div>
                   </div>
                </div>
+               
                <!-- <img src="assets/img/courses/course_economics_portfolio_feat.jpg" alt="Thumb" class="w-100"> -->      
-               <div class="icn">
-                  <div class="fluid-width-video-wrapper" >
-                     <iframe src="https://player.vimeo.com/video/80567526?autoplay=0&autopause=0" allowfullscreen ></iframe>
-                  </div>
+               <div class="icn course-video">
+                  <div id="player"></div>
                </div>
                <!-- Star Tab Info -->
                <div class="tab-info">
@@ -56,7 +57,7 @@
                   </ul>
                   <!-- End Tab Nav -->
                   <!-- Start Tab Content -->
-                  <div class="tab-content tab-content-info">
+                  <div class="tab-content tab-content-info course-details">
                      <!-- Single Tab -->
                      <div id="tab1" class="tab-pane fade active in">
                         <?php
@@ -66,12 +67,8 @@
                               <h2 class="mb-0 ">{{$course_data->course_name}} – מאקרו</h2>
                               <h3> מַדְרִיך: ר רותי פלד   </h3>
                            </div>
-                           <h4 class="mt-30"> מנהיגים עסקיים של מחר </h4>
-                           <p>{{$course_data->description}}</p>
-                           <p>{{$course_data->description}}</p>
-                           <p>{{$course_data->description}}</p>
-                           <h4>בנה את העתיד שלך באמצעות</h4>
-                           <p>{{$course_data->description}}</p>
+                           <h4 class="mt-30"> סקירה כללית </h4>
+                           <p>{!! $course_data->description !!}</p>
                            <div class="course-main d-block mt-30">
                               <?php } ?>
                               <h2><b>סילבוס הקורס</b></h2>
@@ -234,10 +231,11 @@
                <div  class="sidebar1 "  id="sidebartop">
                   <a href="{{Route('front.showDegree',['id'=> $courses_data[0]->degree_id])}}" class="btn btn-md d-block outline-btn">עבור לעמוד שאר הקורסים </a>
                   <aside id="sidebar1">
-                     <div class="sidebar-item purschase-box">
-                        <h2 class="text-center"><span class="purchase-del">$500</span><span class="purchase-ins">$400</span></h2>
-                        <a href="#" class="btn btn-theme effect btn-md d-block"  data-toggle="modal" data-target="#loginModal">קנה עכשיו </a>
-                        <a href="#" class="btn btn-md d-block outline-btn">הוסף לעגלה  </a>
+                     {{-- <div class="sidebar-item purschase-box"> --}}
+                     <div class="sidebar-item">
+                        <h2 class="text-center"><!---<span class="purchase-del">$500</span>---><span class="purchase-ins">${{$courses_data[0]->price}}</span></h2>
+                        <a href="{{route('front.buycourse',['type' => 0 ,'courseid' => $courses_data[0]->course_id])}}" class="btn btn-theme effect btn-md d-block">קנה עכשיו </a>
+                        <a href="{{route('front.cart.show',['type' => 0 ,'id' => $courses_data[0]->course_id])}}" class="btn btn-md d-block outline-btn">הוסף לעגלה  </a>
                         <h5>לִכלוֹל :</h5>
                         <ul>
                            <li><i class="ti-alarm-clock"></i>  <span>00:02:28 שעות לפי דרישה  </span></li>
@@ -338,7 +336,7 @@
       <div class="row">
          <div class="col-md-12">
             <div class="tab-content tab-content-info">
-               <div class="tabcourses">
+               {{-- <div class="tabcourses">
                   <ul class="nav nav-pills  justify-content-center">
                      <li class="btnglow"> <a data-toggle="tab" href="#tab22" aria-expanded="false">
                         חבילות במבצע
@@ -349,135 +347,35 @@
                         </a> 
                      </li>
                   </ul>
-               </div>
+               </div> --}}
                <!-- Single Tab -->
                <div id="tab11" class="tab-pane fade active in">
                   <div class="top-course-items courses-carousel owl-carousel owl-theme corpara">
+                     @if(count($related_course) > 0)
+                     @foreach ($related_course as $related)
                      <div class="item text-right">
-                        <a class="thumb">
-                        <img src="{{ asset('/assets/img/courses/course_economics_portfolio_feat.jpg') }}" alt ="Thumb">
+                        <a href="{{route('front.course.show',['id' => $related->course_id])}}" class="thumb">
+                        <img src="{{ asset('/assets/images') }}/{{ $related->image }}" alt ="Thumb">
+                        {{-- <img src="{{ asset('/assets/img/courses/course_economics_portfolio_feat.jpg') }}" alt ="Thumb"> --}}
                         </a>
                         <div class="info">
                            <h4>
-                              <a href="#">כַּלכָּלָנוּת  </a>
+                              <a href="{{route('front.course.show',['id' => $related->course_id])}}">{{ $related->course_name }}</a>
                            </h4>
-                           <!-- <div class="meta">
-                              <ul>
-                                 <li>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                 </li>
-                              </ul>
-                           </div> -->
                            <p>
-                              המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
+                              {{ \Illuminate\Support\Str::limit(strip_tags($related->description), 150, $end='...') }}
                            </p>
                            <div class="footer-meta">
-                              <h4>$23.00</h4>
+                              <h4>${{ $related->price }}</h4>
                               <div class="btn-btm">
-                                 <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                 <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
+                                 <a class="btn btn-theme effect btn-sm" href="{{route('front.buycourse',['type' => 0 ,'courseid' => $related->course_id])}}">קנה עכשיו  </a>
+                                 <a class="btn btn-theme btnoutline effect btn-sm" href="{{route('front.cart.show',['type' => 0 ,'id' => $related->course_id])}}">הוסף לעגלה    </a>
                               </div>
                            </div>
                         </div>
                      </div>
-                     <div class="item text-right">
-                        <a class="thumb">
-                        <img src="{{ asset('/assets/img/courses/course_biology_portfolio_feat.jpg') }}" alt ="Thumb">
-                        </a>
-                        <div class="info">
-                           <h4>
-                              <a href="#">עביולוגיה </a>
-                           </h4>
-                           <!-- <div class="meta">
-                              <ul>
-                                 <li>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                 </li>
-                              </ul>
-                           </div> -->
-                           <p>
-                              המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                           </p>
-                           <div class="footer-meta">
-                              <h4>$23.00</h4>
-                              <div class="btn-btm">
-                                 <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                 <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <!-- Single Item -->
-                     <div class="item text-right">
-                        <a class="thumb">
-                        <img src="{{ asset('/assets/img/courses/course_graphic_design_portfolio_feat.jpg') }}" alt ="Thumb">
-                        </a>
-                        <div class="info">
-                           <h4>
-                              <a href="#">עיצוב גרפי  </a>
-                           </h4>
-                           <!-- <div class="meta">
-                              <ul>
-                                 <li>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                 </li>
-                              </ul>
-                           </div> -->
-                           <p>
-                              המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                           </p>
-                           <div class="footer-meta">
-                              <h4>$23.00</h4>
-                              <div class="btn-btm">
-                                 <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                 <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="item text-right">
-                        <a class="thumb">
-                        <img src="{{ asset('/assets/img/courses/course_music_portfolio_feat.jpg') }}" alt ="Thumb">
-                        </a>
-                        <div class="info">
-                           <h4>
-                              <a href="#">הפקה מוזיקלית </a>
-                           </h4>
-                           <!-- <div class="meta">
-                              <ul>
-                                 <li>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                 </li>
-                              </ul>
-                           </div> -->
-                           <p>
-                              המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                           </p>
-                           <div class="footer-meta">
-                              <h4>$23.00</h4>
-                              <div class="btn-btm">
-                                 <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                 <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
+                     @endforeach
+                     @endif
                   </div>
                </div>
                <div id="tab22" class="tab-pane fade">
@@ -745,8 +643,23 @@
      $('html,body').stop();
    });
 </script>
+
+<script src="{{ asset('assets/js/videre.js') }}"></script>
 <script type="text/javascript">
    $( document ).ready(function() {
+      var video_link = "{{ $courses_data[0]->video_link}}";
+      var title = "{{ $courses_data[0]->course_name}}";
+      $('#player').videre({
+         video: {
+            quality: [
+               {
+                  src: video_link
+               }
+            ],
+            title: title
+         },
+         dimensions: 768
+      });
       $('#user_university').change(function(){
             var university_id = $(this).val();
             $.ajax({
@@ -769,7 +682,7 @@
       innerWrapperSelector: '#sidebartop'
     });
    
-         $('#uploadfile').change(function() {
+      $('#uploadfile').change(function() {
         $('#image_title').text(this.files && this.files.length ? this.files[0].name : '');
       });
       $("#upload_docs_btn").click(function(e) {
@@ -782,12 +695,12 @@
             $.ajax({
               url: '{{ route('front.upload_docs') }}',
               type: 'POST',
-                data:new FormData($("#upload-docs-form")[0]),
-                dataType:'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-              success: function(data) {
+               data:new FormData($("#upload-docs-form")[0]),
+               dataType:'JSON',
+               contentType: false,
+               cache: false,
+               processData: false,
+               success: function(data) {
                     window.location.reload();
                 }
             });
@@ -796,8 +709,6 @@
             }
    
           });
-   
    });
-   
 </script>
 @endsection

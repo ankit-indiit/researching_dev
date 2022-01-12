@@ -10,6 +10,7 @@ use App\Models\Degrees;
 use App\Models\Universities;
 use App\Models\notifications;
 use App\Models\notification_user;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -25,9 +26,8 @@ class NotificationController extends Controller
         $notification_ids = array();
         $recent_ids = array();
         $user_id = Auth::user()->id;
-        $notifications = notifications::select('*')->where('sender_id',$user_id)->get();
-        
-        $recent_notifications = notifications::select('*')->where('sender_id',$user_id)->orderBy('id', 'DESC')->limit('2')->get();
+        $notifications = notifications::select('*')->with('course')->where('sender_id',$user_id)->orderBy('id', 'DESC')->get();
+        $recent_notifications = notifications::select('*')->where('sender_id',$user_id)->where('type','!=',3)->orderBy('id', 'DESC')->whereDate('created_at', Carbon::today())->get();
        /* pr($notifications);
         pr($recent_notifications);
         die;*/

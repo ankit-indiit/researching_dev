@@ -41,8 +41,8 @@ class ProductsController extends Controller
     
     //function for listing of products page
     public function listing($id ="",$inst_id=""){
-        $simple_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->where('course_type','0')->limit(25)->get();
-        $marathon_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->where('course_type',1)->limit(25)->get();
+        $simple_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->limit(25)->get();
+        $marathon_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->limit(25)->get();
         $degree_id = $id;
         $university_id = $inst_id;
         return view('admin.products',compact('simple_courses_data','marathon_courses_data','degree_id','university_id'));
