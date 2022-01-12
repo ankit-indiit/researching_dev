@@ -62,7 +62,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                   <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$manual->message}}</td>
-                    <td>{{$manual->course->course_name}}</td>
+                    <td>{{ @$manual->course->course_name}}</td>
                     <td>{{count(json_decode($manual->sender_id,true))}}</td>
                   </tr>
                 <?php  }?>
