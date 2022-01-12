@@ -23,6 +23,6 @@ class NotificationManuals extends Model
     
     public function course()
     {
-        return $this->belongsTo(course::class,'courses_id','course_id');
+        return $this->belongsTo(Course::class,'courses_id','course_id');
     }
 }
