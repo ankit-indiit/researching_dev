@@ -3,7 +3,9 @@
 @section('title', ' פרט הקורס שלי   ') 
 
 @section('content')
-
+<link href="{{ asset('assets/css/videre.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/css/videoapp.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> 
 <?php // pr($courses_data[0]->course_name); die;  ?>
 <div class="breadcrumb-inner-area pt-92">
     <div class="container">
@@ -32,7 +34,7 @@
 						 	    {{ $courses_data[0]->course_name }}
 							    <!--מבוא לסטטיסטיקה-->
 							</h2>
-						 	<div class="course-meta">
+						 	<div class="course-meta" id="course-details-panel">
 	<!--						<p>בשיעור זה, נלמד:</p>
 							  	<p>מהו מדגם?</p>
                                 <p>מהי אוכלוסיה?</p>
@@ -65,8 +67,9 @@
 									<li><span>סטטיסטיקה היסקית<br></span></li>
 								</ul>https://www.youtube.com/embed/-SFcIUEvNOQ  336812686 -->
 						 	</div>
-						 	<div class="fluid-width-video-wrapper">
-							<iframe src="http://player.vimeo.com/video/80567526?autoplay=1&autopause=0&loop=1" allowfullscreen allow=autoplay id="topic_url_video"></iframe>
+						 	<div class="fluid-course-video">
+								<div id="player" class="vid-wrapper videre-container"></div>
+							{{-- <iframe src="http://player.vimeo.com/video/80567526?autoplay=1&autopause=0&loop=1" allowfullscreen allow=autoplay id="topic_url_video"></iframe> --}}
 							</div>
 							<button class="btn btn-theme btn-circle2 mt-20"> <i class="fa fa-download"></i> 
 							</button>
@@ -161,9 +164,9 @@
                     			  				    <i class="fa fa-youtube-play"></i>
                     								<i class="flagicon fa fa-flag-o"></i>
                     							</span>
-                    							<span class="lecture-name topic_video_url" 
+                    							<span class="lecture-name topic_video_url" topic-video-title="{{$topic_video_val['topic_video_title']}}" 
                     							topic-video-url="<?php echo (!empty($topic_video_val['topic_video_url']))?$topic_video_val['topic_video_url']:'http://player.vimeo.com/video/80567526?autoplay=1&autopause=0&loop=1';  ?>">
-                    							<?php echo (!empty($topic_video_val['topic_video_title']))?$topic_video_val['topic_video_title']:''; ?>	   
+                    							<?php echo (!empty($topic_video_val['topic_video_title']))? $topic_video_val['topic_video_title'] : ''; ?>	   
                     							</span>
                     						</span>
                     					    <span class="bookmark"><i class="bookmarkicon fa fa-bookmark-o"></i></span>
@@ -202,7 +205,7 @@
                                 	  	</span>
                                         <span class="lecture-name">
                                 			<?php echo (!empty($quiz_val['quizTopic'])) ?$quiz_val['quizTopic']:''; ?>
-                                			(<? echo (!empty($quiz_data && count($quiz_data) >0))?count($quiz_data):'0'; ?>  שאלות )
+                                			<?php echo (!empty($quiz_data && count($quiz_data) >0))?count($quiz_data):'0'; ?>  שאלות 
                                 	    </span>
                                 	</div>
                                   </a>
@@ -895,8 +898,8 @@
       <!-- End Footer -->
      @endsection
      @section('scripts') 
+	 <script src="{{ asset('assets/js/videre.js') }}"></script>
      <script type="text/javascript">
-
 	 $(document).on('click', '.flagicon', function () {
 			 $(this).removeClass("fa-flag-o");
 			   $(this).addClass("fa-flag");
@@ -955,6 +958,10 @@ var x = setInterval(function() {
  
 }, 1000);
 $(document).ready(function(){
+	var user_id = "{{ Auth::id() }}";
+	window.user_id = Math.floor(1000 + Math.random() * 9000)+'ID'+user_id;
+	var vid_width = document.getElementById("course-details-panel").offsetWidth;
+	init_vid_player('{{$courses_data[0]->video_link}}','{{ $courses_data[0]->course_name }}',vid_width);
 	$('#uploadfile').change(function() {
       $('#image_title').text(this.files && this.files.length ? this.files[0].name : '');
     });
@@ -1036,7 +1043,10 @@ $(document).ready(function(){
 
 $(document).on("click",".topic_video_url",function(){
     let topic_video_url = $(this).attr('topic-video-url');
-    $('#topic_url_video').attr('src', topic_video_url);
-});
+    let topic_video_title = $(this).attr('topic-video-title');
+    //$('#topic_url_video').attr('src', topic_video_url);
+	var vid_width = document.getElementById("course-details-panel").offsetWidth;
+	init_vid_player(topic_video_url,topic_video_title,vid_width);
+}); 
 </script>
  @endsection
