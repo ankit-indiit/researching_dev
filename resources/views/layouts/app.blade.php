@@ -385,7 +385,22 @@
     });
   </script>
 <script>
+function init_vid_player(video_link,title,width){
+  $('#player').empty();
+  $('#player').videre({
+      video: {
+        quality: [
+            {
+              src: video_link
+            }
+        ],
+        title: title
+      },
+      width: width
+  });  
+}
 $(document).ready(function(){
+  window.user_id = null;
   $("#forgot_password").click(function(){
     $("#password_form").toggle();
   });

@@ -3,7 +3,8 @@
 @section('content')
 <link href="{{ asset('assets/css/videre.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/css/videoapp.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> Start Course Details  -->    
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> 
+
 <div class="course-details-area default-padding-lg1 pb-0" style="direction: rtl;">
    <div class="container">
       <div class="row sidebar-sec">
@@ -13,7 +14,7 @@
                <!--h2>
                   כלכלה – מאקרו
                   </h2-->
-               <div class="course-meta">
+               <div class="course-meta" id="course-details-panel">
                   <div class=" instutemain">
                      <div class="item category instuteinfo">
                         <h4>פְּסִיכוֹלוֹגִיָה </h4>
@@ -649,6 +650,7 @@
    $( document ).ready(function() {
       var video_link = "{{ $courses_data[0]->video_link}}";
       var title = "{{ $courses_data[0]->course_name}}";
+      var vid_width = document.getElementById("course-details-panel").offsetWidth;
       $('#player').videre({
          video: {
             quality: [
@@ -658,7 +660,7 @@
             ],
             title: title
          },
-         dimensions: 768
+         width: vid_width
       });
       $('#user_university').change(function(){
             var university_id = $(this).val();

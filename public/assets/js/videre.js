@@ -45,14 +45,16 @@ if (typeof Object.create !== "function") {
 				el = el[0];
 
             base.options = $.extend({}, $.fn.videre.options, options);
+			base.options.horizental = base.options.width;
+			base.options.vertical = (base.options.width * 56)/100;
 
-			if ($.inArray(base.options.dimensions, dimensions[base.options.dimensions]) === 0) {
-				$('html head').append('</script><script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>');
-				base.wrapPlayer(el);
+			if (base.options.width == '' || base.options.width == null || base.options.width == 'undefined') {
+				alert("Width is not added while initilization.");
 			} else {
-				alert("Dimension isn't included in Videre");
+				$('html head').append('</script><script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>');
+				base.wrapPlayer(el);				
 			};
-
+			
 		},
 
 		wrapPlayer : function (el) {
@@ -65,7 +67,7 @@ if (typeof Object.create !== "function") {
 				pluralizeView = pluralize('view', base.options.video.viewCount);
 				template = $(
 								'<div class="vid-html5">'+
-									'<video src="'+base.options.video.quality[0].src+'" id="html-player" style="width: '+dimensions[base.options.dimensions][0]+'px; height: '+dimensions[base.options.dimensions][1]+'px;"></video>'+
+									'<video src="'+base.options.video.quality[0].src+'" id="html-player" style="width: '+base.options.horizental+'px; height: '+base.options.vertical+'px;"></video>'+
 								'</div>'+
 								'<div class="vid-toggle-layer"></div>'+
 								'<div class="vid-shadow-layer"></div>'+
@@ -106,7 +108,7 @@ if (typeof Object.create !== "function") {
 							);
 			
 			currentQuality = base.options.video.quality.indexOf(base.options.video.quality[0]);
-			$(el).css('width', dimensions[base.options.dimensions][0]+'px');
+			$(el).css('width', base.options.horizental+'px');
 			$(el).addClass('vid-wrapper videre-container mouse-entered');
 			$(el).append(template);
 			base.decodeMedia(el);
@@ -161,10 +163,10 @@ if (typeof Object.create !== "function") {
 					var right = Math.floor(Math.random() * 90) + 1;
 					jQuery('.vid-refrenceno-layer').css('bottom',bottom+"%");
 					jQuery('.vid-refrenceno-layer').css('right',right+"%");
-					jQuery('.vid-refrenceno-layer').text('ASHUJOSHI');
+					jQuery('.vid-refrenceno-layer').text(window.user_id);
 					setTimeout(function(){
 						jQuery('.vid-refrenceno-layer').empty();
-					}, 400);
+					}, 800);
 				}
 			}, 12000);
 			base.setControls();

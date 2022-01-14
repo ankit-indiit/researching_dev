@@ -87,7 +87,6 @@ class MyCoursesController extends Controller
         $coursematerialdata =  coursematerial::select('*')->where('course_id',$id)->get();
         $courses_data = Course::select('*')->where('course_id',$id)->get();
         $topics = Topics::where('course_id',$course_id)->get()->toArray();
-        
         if(!empty($topics)){
             $quizCount = [];
             foreach($topics as $key =>$topic){
@@ -107,6 +106,7 @@ class MyCoursesController extends Controller
             $quizCount = array_sum($quizCount);
             
         }
+        
         /*echo "<pre>";
         print_r(array_sum($quizCount));
         die;*/
