@@ -25,7 +25,7 @@ class AdminLoginController extends Controller
                     Session::put('admin_logged_in', '1');
                     Session::put('id', $check_login->id);
                     Session::put('admin_name', $check_login->name);
-                    Auth::logout();
+                    // Auth::logout();
                     $data['status'] = 1;
                 }
                 else{
@@ -125,8 +125,11 @@ class AdminLoginController extends Controller
     }
 
     public function logout(){
-        Session::flush();
-        Auth::logout();
+        Session::forget('admin_logged_in');
+        Session::forget('id');
+        Session::forget('admin_name');
+        // Session::flush();
+        // Auth::logout();
         return redirect()->route('admin.adminLogin');
         }
         

@@ -165,6 +165,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Spatie\Newsletter\NewsletterServiceProvider::class,
+        Owenoj\LaravelGetId3\GetId3ServiceProvider::class,
+
 
         /*
          * Package Service Providers...

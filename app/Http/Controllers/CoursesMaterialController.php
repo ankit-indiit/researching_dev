@@ -41,4 +41,15 @@ class CoursesMaterialController extends Controller
         $file->save();
         return response()->json(['success' => true]);
     }
+    
+    
+    public function stroedata(Request $request){
+        $coursematerial =  new coursematerial;
+        $input = $request->all();
+        $coursematerial->name = $input['original_image_name'];
+        $coursematerial->file_path = '/assets/courseMaterials/'.$input['courseMaterialimg'];
+        $coursematerial->course_id = $input['docs_course_id'];
+        $coursematerial->save();
+        return response()->json(['success' => true]);
+    }
 }

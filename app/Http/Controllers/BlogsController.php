@@ -99,11 +99,12 @@ class BlogsController extends Controller
 				<span class="readingtime">משך זמן הקריאה הוא '.$result->reading_time.' דקות</span>
 								<p>'.$blog_content.'</p>
 								
-				<a href='.route("front.blog.show",["slug" => $result->slug]).'>Read More</a>
+				
 			</div>
 		  </div>
 			</div>
 				  ';
+          // <a href='.route("front.blog.show",["slug" => $result->slug]).'>Read More</a>
 		}
 		}else{
 			$output .= "No more records found";

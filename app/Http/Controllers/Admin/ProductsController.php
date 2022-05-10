@@ -6,15 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use DB;
+use Illuminate\Support\Arr;
 use App\Models\admins;
 use App\Models\User;
 use App\Models\Degrees;
 use App\Models\Course;
+use App\Models\coursematerial;
 use App\Models\question_answer;
 use App\Models\Lectures;
 use App\Models\TopicVideos;
 use App\Models\recommendations;
 use App\Models\Topics;
+use App\Models\TopicQuiz;
+use App\Models\TopicsPdf;
+use App\Models\TopicQuizQuestions;
 use App\Models\Universities;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +46,7 @@ class ProductsController extends Controller
     
     //function for listing of products page
     public function listing($id ="",$inst_id=""){
+        
         $simple_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->limit(25)->get();
         $marathon_courses_data = Course::select('*')->where('degree_id',$id)->where('university_id',$inst_id)->limit(25)->get();
         $degree_id = $id;
@@ -134,7 +140,7 @@ class ProductsController extends Controller
             return response()->json(['success' => true]);
          }else{
             return response()->json(['error'=>$validator->errors()]);
-    }
+        }
     }
 
     //function to call view edit products
@@ -149,8 +155,119 @@ class ProductsController extends Controller
         $lectures = Lectures::select('*')->where('course_id',$courseid)->get();
         $topics = Topics::select('*')->where('course_id',$courseid)->get();
         $questions_data = question_answer::select('*')->where('course_id',$courseid)->get();
+        // pr($topics->toArray());
         return view('admin.showcourse',compact('courseid','degreeid','universityid','course_data','lectures','topics','questions_data'));
     }
+    
+    public function editChapter($topic_id){
+        
+        $highest_number  = $this->getlastOrderValue($topic_id);
+        
+        $topics = Topics::select('*')->where('id',$topic_id)->first();
+        $topic_video = TopicVideos::select('*')->where('topic_id',$topic_id)->get();
+        $topics_pdf = TopicsPdf::select('*')->where('topic_id',$topic_id)->get()->toArray();
+        $topic_quiz = TopicQuiz::select("*")->where('topic_id',$topic_id)->get();
+        
+        $topic_video_new = TopicVideos::select('topic_video_title as name','order_id','type','id')->where('topic_id',$topic_id)->get()->toArray();
+        $topics_pdf_new = TopicsPdf::select('topic_pdf_title as name','order_id','type','id')->where('topic_id',$topic_id)->get()->toArray();
+        $topic_quiz_new = TopicQuiz::select('quiz_title as name','order_id','type','id')->where('topic_id',$topic_id)->get()->toArray();
+        
+        $fullarray = array_merge($topic_video_new,$topics_pdf_new);
+        $newfullarray = array_merge($fullarray,$topic_quiz_new);
+        
+        $orderData = array_column($newfullarray, 'order_id');
+        array_multisort($orderData, SORT_ASC, $newfullarray);
+        
+        //$questions_data = question_answer::select('*')->where('course_id',$courseid)->get();
+        return view('admin.edit-chapter',compact('topics','topic_video','topic_id','topics_pdf','topic_quiz','highest_number','orderData','newfullarray'));
+    }
+    
+    // Re arragen the chapter element by Admin. 
+    public function reArrangeChapterElements(Request $request){
+        $input = $request->all();
+        
+        if(!empty($input)){
+            
+            if(count($input['dragable_arr']) > 0){
+                
+                foreach($input['dragable_arr'] as $key=>$val){
+                    
+                    if($val['table-type'] == 1){
+                        $table = 'topic_pdf';
+                    }else if($val['table-type'] == 2){
+                        $table = 'topic_videos';
+                    }else{
+                        $table = 'topic_quiz';
+                    }
+                    $where['id'] = $val['table-id'];
+                    $data['order_id'] = $key+1;
+                    $result['status'] = $this->changeElementOrder($table,$where,$data);
+                }
+                if($result['status'] > 0){
+                    return json_encode($result);
+                }
+            }
+        }
+    }
+    
+    public function changeElementOrder($table,$where,$data){
+       return DB::table($table)->where($where)->update($data);
+    }
+    
+    public function getlastOrderValue($topic_id){
+        
+        $topic_video_order  = TopicVideos::where('topic_id', $topic_id)->max('order_id');
+        $topics_pdf_order   = TopicsPdf::where('topic_id', $topic_id)->max('order_id');
+        $topic_quiz_order   = TopicQuiz::where('topic_id', $topic_id)->max('order_id');
+        $highest_number     = max(array($topic_video_order, $topics_pdf_order,$topic_quiz_order));
+        return $highest_number = $highest_number+1;
+    }
+    
+    public function topic_pdf(Request $request){
+        
+        $input = $request->all();   
+        $file = $request->file('file');
+        if(!empty($file)){
+            $destinationPath = public_path().'/assets/topic_pdf/';
+            $original_name = $file->getClientOriginalName();
+            $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+            
+            if($file->move($destinationPath,$file_name)){
+               $image_name = $file_name;
+               $data['status'] = 1;
+               $data['image_name'] = $image_name;
+               $data['original_image_name'] = $file->getClientOriginalName();
+            }
+            else{
+               $data['status'] = 0;
+            }
+       }
+       return json_encode($data);
+    }
+    
+    //function to add the topic pdf
+    public function add_topic_pdf(Request $request){
+        
+        $validator = Validator::make($request->all(),[
+            'topic_pdf_title' => 'required',
+        ]);
+        if ($validator->passes()) {
+            
+            $input = $request->all();
+            $TopicsPdf_arr['topic_id'] = $input['chapter_id'];
+            $TopicsPdf_arr['topic_pdf_title'] = $input['topic_pdf_title']; 
+            $TopicsPdf_arr['order_id'] = $this->getlastOrderValue($input['chapter_id']);
+            $TopicsPdf_arr['topic_pdf_url'] = $input['pdfimageName'];
+            $lastInsertId = TopicsPdf::create($TopicsPdf_arr)->id;
+            return response()->json(['success' => true]);
+            
+        }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }
+    
+    
+    
     
     //function to call view edit products
     public function editintensiveproducts($id="",$degree_id="",$uni_id=""){
@@ -248,7 +365,7 @@ class ProductsController extends Controller
             return response()->json(['success' => true]);
          }else{
             return response()->json(['error'=>$validator->errors()]);
-    }  
+        }
     }
 
     //function to add lectures for particular selected course in db
@@ -258,19 +375,19 @@ class ProductsController extends Controller
              'get_title' => 'required',
              'get_duration' => 'required',
              'get_price' => 'required',
-
         ]);
         if ($validator->passes()) {
             $Lectures->title = $request->get_title;
             $Lectures->price = $request->get_price;
             $Lectures->duration = $request->get_duration;
+            $Lectures->topic_id = $request->topic_id;
             $Lectures->course_id = $request->course_id;
             $Lectures->save();
             Session::flash('message', ' תארים נוספו בהצלחה ');
             return response()->json(['success' => true]);
          }else{
             return response()->json(['error'=>$validator->errors()]);
-    }
+        }
     }
 
     //function to save edit lectures in db
@@ -327,27 +444,27 @@ class ProductsController extends Controller
         $topicVideos = new TopicVideos;
         $validator = Validator::make($request->all(),  [
              'topic_title' => 'required',
-             'topic_duration' => 'required'
-
+             /*'topic_duration' => 'required',*/
+             'topic_price' => 'required',
         ]);
         if ($validator->passes()) {
-            
             $topics->topic_name = $request->topic_title;
-            $topics->topic_duration = $request->topic_duration;
-            $topics->lecture_id = $request->topic_lecture_id;
+            $topics->topic_duration = 1;
+            $topics->topic_price = $request->topic_price;
+            //$topics->lecture_id = $request->topic_lecture_id;
             $topics->course_id = $request->topic_course_id;
             $topics->save();
             $topic_id = $topics->id;
-            if(!empty($request->topic_video_url) && count($request->topic_video_url) > 0){
+            // if(!empty($request->topic_video_url) && count($request->topic_video_url) > 0){
                 
-                for($i=0;$i<count($request->topic_video_url);$i++){
-                    $topic_video_data = ['topic_video_url'=>$request->topic_video_url[$i],'topic_video_title'=>$request->topic_video_title[$i],'topic_id'=>$topic_id];
-                    TopicVideos::create($topic_video_data);
-                }
-                /*$topicVideos->topic_id = $topic_id;
-                $topicVideos->topic_video_url = $request->topic_video_url;
-                $topicVideos->save();*/
-            }
+            //     for($i=0;$i<count($request->topic_video_url);$i++){
+            //         $topic_video_data = ['topic_video_url'=>$request->topic_video_url[$i],'topic_video_title'=>$request->topic_video_title[$i],'topic_id'=>$topic_id];
+            //         TopicVideos::create($topic_video_data);
+            //     }
+            //     /*$topicVideos->topic_id = $topic_id;
+            //     $topicVideos->topic_video_url = $request->topic_video_url;
+            //     $topicVideos->save();*/
+            // }
             Session::flash('message', ' תארים נוספו בהצלחה ');
             return response()->json(['success' => true]);
          }else{
@@ -355,48 +472,109 @@ class ProductsController extends Controller
     }
     }
 
+    public function saveVideoByTopic(Request $request){
+        $topics = new Topics;
+        $topicVideos = new TopicVideos;
+        $validator = Validator::make($request->all(),  [
+             'topic_video_title' => 'required',
+             'topic_video_url' => 'required',
+        ]);
+        if ($validator->passes()) {
+            $topic_id = $request->chapter_id;
+            if(!empty($request->topic_video_url) && count($request->topic_video_url) > 0){
+                for($i=0;$i<count($request->topic_video_url);$i++){
+                    $topic_video_data = [
+                            'topic_video_url'=>$request->topic_video_url[$i],
+                            'topic_video_title'=>$request->topic_video_title[$i],
+                            'topic_video_duration'=>$request->topic_video_duration[$i],
+                            'topic_id'=>$topic_id,
+                            'order_id'=>$this->getlastOrderValue($topic_id),
+                            'topic_video_description'=>$request->topic_video_description
+                            ];
+                    TopicVideos::create($topic_video_data);
+                }
+               
+            }
+            Session::flash('message', ' תארים נוספו בהצלחה ');
+            return response()->json(['success' => true]);
+         }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }
+    
+    public function editVideoByTopic(Request $request){
+        
+        $topics = new Topics;
+        $topicVideos = new TopicVideos;
+        $validator = Validator::make($request->all(),  [
+             'topic_video_title' => 'required',
+             'topic_video_url' => 'required',
+             
+        ]);
+        if ($validator->passes()) { 
+            $video_id = $request->edit_video_id;
+            $topic_id = $request->chapter_id;
+            
+            if(!empty($request->topic_video_url) && count($request->topic_video_url) > 0){
+                for($i=0;$i<count($request->topic_video_url);$i++){
+                    $topic_video_data = [
+                        'topic_video_url'=>$request->topic_video_url[$i],
+                        'topic_video_title'=>$request->topic_video_title[$i],
+                        'topic_id'=>$topic_id,
+                        'topic_video_duration'=>$request->topic_video_duration[$i],
+                        'topic_video_description'=>$request->topic_video_description[$i]
+                        ];
+                    TopicVideos::where('id',$video_id)->update($topic_video_data);
+                }
+               
+            }
+            Session::flash('message', ' תארים נוספו בהצלחה ');
+            return response()->json(['success' => true]);
+         }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }
     //function to update edited topic in db
     public function edit_topic(Request $request){
-       /* echo "<pre>";
-        print_r($request->all());
-        die;*/
+        
+       
         $id = $request->topic_id;
-        $lecture_id = $request->topic_lecture_id1;
-        $course_id = $request->topic_course_id1;
+        
         $validator = Validator::make($request->all(),  [
              'edit_topic_title' => 'required',
-             'edit_topic_duration' => 'required'
-
+             // 'edit_topic_duration' => 'required'
         ]);
         if ($validator->passes()) {
             $topic_data = array(
                     'topic_name' => $request->edit_topic_title,
-                    'topic_duration' => $request->edit_topic_duration
+                    //'topic_duration' => $request->edit_topic_duration
             );
-            $insert = DB::table('topics')->where('id',$id)->where('lecture_id',$lecture_id)->where('course_id',$course_id)->update($topic_data);
-            
-            if(isset($request->topic_video_title) && !empty($request->topic_video_title) && $request->topic_video_title[0] !=''){
-                    TopicVideos::where('topic_id',$id)->delete();
-                for($i=0;$i<count($request->topic_video_title);$i++){
-                    $topic_video_data = ['topic_video_url'=>$request->topic_video_url[$i],'topic_video_title'=>$request->topic_video_title[$i],'topic_id'=>$id];
-                    TopicVideos::create($topic_video_data);
-                }
-            }else{
-                TopicVideos::where('topic_id',$id)->delete();
-            }
+            $insert = DB::table('topics')->where('id',$id)->update($topic_data);
             Session::flash('message', ' תארים נוספו בהצלחה ');
             return response()->json(['success' => true]);
          }else{
             return response()->json(['error'=>$validator->errors()]);
-    }
+        }
     }
 
     
     public function get_topic_data(Request $request){
+        
         $id = $request->id;
-        $courseid = $request->course_id;
-        $lecture_id = $request->lecture_id;
-        $edit_topic_data = Topics::select('*')->where('id',$id)->where('course_id',$courseid)->where('lecture_id',$lecture_id)->get();
+        $getTopicData = TopicVideos::find($id);
+        if(!empty($getTopicData)){
+            $data['chapterId'] = $id;
+            $data['video_id'] = $getTopicData['id'];
+            $data['topic_video_title'] = (!empty($getTopicData['topic_video_title']) && $getTopicData['topic_video_title'] != NULL)?$getTopicData['topic_video_title']:'';
+            $data['topic_video_url'] = (!empty($getTopicData['topic_video_url']) && $getTopicData['topic_video_url'] != NULL)?$getTopicData['topic_video_url']:'';
+            $data['topic_video_duration'] = (!empty($getTopicData['topic_video_duration']) && $getTopicData['topic_video_duration'] != NULL)?$getTopicData['topic_video_duration']:'0';
+            $data['topic_video_description'] = (!empty($getTopicData['topic_video_description']) && $getTopicData['topic_video_description'] != NULL)?$getTopicData['topic_video_description']:'0';
+            $data['status'] = '1';
+        }else{
+            $data['status'] = '0';
+        }
+        /*$courseid = $request->course_id;
+        $edit_topic_data = Topics::select('*')->where('id',$id)->where('course_id',$courseid)->get();
         foreach ($edit_topic_data as $key=>$value) {
             $topic_data = $value;
             $topicvideodata = TopicVideos::select('*')->where('topic_id',$value['id'])->get()->toArray();
@@ -434,11 +612,22 @@ class ProductsController extends Controller
                             </div>";
                 }
         }
-        $data['status'] = '1';
+        
         $data['data'] = $topic_data;
+        $data['status'] = '1';*/
         return json_encode($data);
     }
 
+    public function deleteCourseMaterial(Request $request)
+    {
+        $id = $request->deleted_course_material_id;
+        $coursematerial = coursematerial::findOrFail($id);
+        $coursematerial->delete();
+        $data['status'] = 1;
+        $data['msg'] ='deleted'; 
+        return json_encode($data);
+    }
+    
     public function deletetopic(Request $request)
     {
         $id = $request->deleted_id;
@@ -448,30 +637,65 @@ class ProductsController extends Controller
         $data['msg'] ='deleted'; 
         return json_encode($data);  
     }
+    
+    public function deleteVideo(Request $request)
+    {
+        $id = $request->deleted_id;
+        $topicvideo = TopicVideos::findOrFail($id);
+        $topicvideo->delete();
+        $data['status'] = 1;
+        $data['msg'] ='deleted'; 
+        return json_encode($data);  
+    }
+    
+    public function deletePdf(Request $request)
+    {
+        $id = $request->deleted_id;
+        $topicpdf = TopicsPdf::findOrFail($id);
+        $topicpdf->delete();
+        $data['status'] = 1;
+        $data['msg'] ='deleted'; 
+        return json_encode($data);  
+    }
+    public function deleteTopicQuiz(Request $request)
+    {
+        $id = $request->deleted_id;
+        $topicpdf = TopicQuiz::findOrFail($id);
+        $topicpdf->delete();
+        $data['status'] = 1;
+        $data['msg'] ='deleted'; 
+        return json_encode($data);  
+    }
+    public function deleteTopicQuestion(Request $request)
+    {
+        $id = $request->deleted_id;
+        $topicpdf = TopicQuizQuestions::findOrFail($id);
+        $topicpdf->delete();
+        $data['status'] = 1;
+        $data['msg'] ='deleted'; 
+        return json_encode($data);  
+    }
 
     public function savecourseqstn(Request $request){
         
-        
         $courseid = $request->course_id;
-        
         $q_a = new question_answer;
         $validator = Validator::make($request->all(),  [
              'add_answer' => 'required',
              'add_qustn' => 'required',
-             'lecture_id' => 'required',
-             
+             //'lecture_id' => 'required',
         ]);
         if ($validator->passes()) {
             $q_a->questions = $request->add_qustn;
             $q_a->answers = $request->add_answer;
-            $q_a->lecture_id = $request->lecture_id;
+            //$q_a->lecture_id = $request->lecture_id;
             $q_a->course_id = $courseid;
             $q_a->save();
             Session::flash('message', ' תארים נוספו בהצלחה ');
             return response()->json(['success' => true]);
          }else{
             return response()->json(['error'=>$validator->errors()]);
-    }
+        }
     }
 
     public function get_qa_data(Request $request){
@@ -543,7 +767,70 @@ class ProductsController extends Controller
            $data['status'] = 0;
        }
        return json_encode($data);
-        
-       
     }
+    
+    //function to add Quiz with topic id. 
+    public function saveTopicQuiz(Request $request){
+        $topicQuiz = new TopicQuiz;
+        $validator = Validator::make($request->all(),  [
+             'quizTitle' => 'required',
+        ]);
+        if ($validator->passes()) {
+            $highest_number  = $this->getlastOrderValue($request->chapter_id);
+            $topicQuiz->quiz_title = $request->quizTitle;
+            $topicQuiz->order_id = $highest_number;
+            $topicQuiz->topic_id = $request->chapter_id;
+            $topicQuiz->save();
+            Session::flash('message', ' תארים נוספו בהצלחה ');
+            return response()->json(['success' => true]);
+         }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }
+    //function to Eidt Quiz . 
+    public function updateTopicQuiz(Request $request){
+        
+        $validator = Validator::make($request->all(),  [
+             'editquizTitle' => 'required',
+        ]);
+        if ($validator->passes()) {
+            $topicQuiz['quiz_title'] = $request->editquizTitle;
+            TopicQuiz::where("id",$request->quiz_id)->update($topicQuiz);
+            Session::flash('message', ' תארים נוספו בהצלחה ');
+            return response()->json(['success' => true]);
+         }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }
+    
+    public function getTopicQuiz(Request $request){
+        
+        $input = $request->all();
+        $topicQuizData = TopicQuiz::find($input['quiz_id']);
+        if(!empty($topicQuizData)){
+            $data['quiz_title'] = $topicQuizData['quiz_title'];
+            $data['status'] = '1';
+        }else{
+            $data['status'] = '0';
+        }
+        return json_encode($data);
+        
+    }
+    /*public function saveTopicQuiz(Request $request){
+        $topicQuiz = new TopicQuiz;
+        $validator = Validator::make($request->all(),  [
+             'quizTitle' => 'required',
+        ]);
+        if ($validator->passes()) {
+            $highest_number  = $this->getlastOrderValue();
+            $topicQuiz->quiz_title = $request->quizTitle;
+            $topicQuiz->order_id = $highest_number;
+            $topicQuiz->topic_id = $request->chapter_id;
+            $topicQuiz->save();
+            Session::flash('message', ' תארים נוספו בהצלחה ');
+            return response()->json(['success' => true]);
+         }else{
+            return response()->json(['error'=>$validator->errors()]);
+        }
+    }*/
 }

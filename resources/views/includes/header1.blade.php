@@ -22,7 +22,23 @@
     <ul>
                      <!-- <li class="search"><a href="#"><i class="ti-search"></i></a></li> -->
                       <li class="dropdown search progressdrop">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="progressiveloader">70%</span></a>
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="progressiveloader" style="
+                          @if (userProgress() < 25)
+                            border-top: 5px solid #eb871e;
+                          @elseif (userProgress() < 50)
+                            border-top: 5px solid #eb871e;
+                            border-right: 5px solid #eb871e;
+                          @elseif (userProgress() < 75)
+                            border-top: 5px solid #eb871e;
+                            border-right: 5px solid #eb871e;
+                            border-bottom: 5px solid #eb871e;
+                          @else
+                            border-top: 5px solid #eb871e;
+                            border-right: 5px solid #eb871e;
+                            border-bottom: 5px solid #eb871e;
+                            border-left: 5px solid #eb871e;
+                          @endif                         
+                        ">{{userProgress()}}%</span></a>
                         <ul class="dropdown-menu shopping-cart-items">
                          <li class="clearfix">
                              <a href="javascript:void(0)">שיעורים - 3/15</a>
@@ -82,7 +98,7 @@
                   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                   <i class="fa fa-bars"></i>
                   </button>
-                  <a class="navbar-brand" href="index.html">
+                  <a class="navbar-brand" href="{{ route('front.index') }}">
                     <img src="{{ asset('/assets/img/logo-light.png') }}" class="logo logo-display" alt="Logo">
                     <img src="{{ asset('/assets/img/logo.png') }}" class="logo logo-scrolled" alt="Logo">
                   </a>

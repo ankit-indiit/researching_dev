@@ -93,7 +93,7 @@
                   </div>
                 </div>
                 <div class="col-md-12">
-                  <div class="form-group col-lg-12">
+                  <div class="form-group">
                     <label for="url">
                   מחיר
                     </label>
@@ -108,7 +108,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                   <label for="description">תיאור</label>
-                <textarea class="summernote-basic" name="description">{!! $course_data->description !!}</textarea>
+                <textarea class="summernote-basic" name="description">{{ $course_data->description }}</textarea>
                   <span class="text-danger error-text description_err"></span>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                 </div>
               </div>
               
-              <!--**********************-->
+              <!--**********************
             <div class="col-md-6">
               <div class="form-group">
                 <label for="tagline1">שורת תיוג</label>
@@ -189,7 +189,7 @@
                 <span class="text-danger error-text tagline5_err"></span>
               </div>
             </div>
-            <!--**********************-->
+            **********************-->
             
             </div>
           <div class="row mt-3">

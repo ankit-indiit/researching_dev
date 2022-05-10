@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\GoogleSocialiteController;
 use App\Http\Controllers\IndexController;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +18,12 @@ use App\Http\Controllers\IndexController;
 |
 */
 //Clear Cache facade value:
-Route::get('/clear-cache', function() {
+Route::get('/clear', function() {
     $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('optimize');
+    $exitCode = Artisan::call('route:cache');
+    $exitCode = Artisan::call('route:clear');
+    $exitCode = Artisan::call('view:clear');
     return '<h1>Cache facade value cleared</h1>';
 });
 
@@ -63,6 +68,9 @@ Auth::routes();
 //route for signup/registration controller
 Route::post('/signup', [App\Http\Controllers\RegisterController::class, 'doSignup'])->name('signup');
 
+
+Route::get('/verify_email/{token}', [App\Http\Controllers\RegisterController::class, 'verify_email'])->name('verify_email'); 
+
 //get degree listing for signup form
 Route::post('/getdegree', [App\Http\Controllers\DegreeController::class, 'getdegree'])->name('getdegree');
 
@@ -73,10 +81,10 @@ Route::post('/get_degree', [App\Http\Controllers\DegreeController::class, 'get_d
 //route for login controller
 Route::post('/loginpage', [App\Http\Controllers\RegisterController::class, 'doLogin'])->name('loginpage');
 
-Route::get('/Logout', [App\Http\Controllers\RegisterController::class, 'logout'])->name('Logout');
+Route::any('/Logout', [App\Http\Controllers\RegisterController::class, 'logout'])->name('Logout');
 
 //Route for forgot password
-Route::get('/forgot-password', [App\Http\Controllers\RegisterController::class,'showforgot'])->name('forgotpassword');    
+Route::get('/forgot-password', [App\Http\Controllers\RegisterController::class,'showforgot'])->name('forgotpassword');
 Route::post('/forgot-password', [App\Http\Controllers\RegisterController::class,'do_forgot'])->name('do_forgotpassword');
 Route::get('/reset-password/{token}', [App\Http\Controllers\RegisterController::class,'resetPassword'])->name('resetpassword');
 Route::post('/set-password', [App\Http\Controllers\RegisterController::class,'setPassword'])->name('setpassword');
@@ -141,8 +149,6 @@ Route::post('/blog_instructor_detail', [App\Http\Controllers\BlogsController::cl
 //route to get listing of courses for courses page.
 Route::get('/courses', [App\Http\Controllers\CoursesController::class, 'index'])->name('courses');
 
-//route to show particular course basically course detail on the basis of courseid
-Route::get('/courses/show/{id}', [App\Http\Controllers\CoursesController::class, 'showCourse'])->name('course.show');
 
 //route to upload docs for particular course and package
 Route::post('/upload_docs', [App\Http\Controllers\CoursesMaterialController::class, 'storedocs'])->name('upload_docs');
@@ -159,13 +165,15 @@ Route::post('/contact-us', [App\Http\Controllers\ContactController::class, 'save
 //route method to add items in the cart
 Route::get('/cart/{type}/{id}', [App\Http\Controllers\CartController::class, 'addToCart'])->name('cart.show');
 
+Route::get('/topic-cart/{course_id}/{topic_id}', [App\Http\Controllers\CartController::class, 'topicAddtoCart'])->name('topic-cart.topicAddtoCart');
+
 //route method to sow item detail on cart page.
 Route::get('/showcart/{id}', [App\Http\Controllers\CartController::class, 'showCart'])->name('display.cart');
 
 //remove item from cart table and session as well
 Route::post('/remove_from_cart', [App\Http\Controllers\CartController::class, 'remove']);
 
-// Order 
+// Order
 Route::get('/order/invoice/{id}', [App\Http\Controllers\OrderController::class, 'generateInvoice'])->name('order.invoice');
 
 //route to add ratings on purchased courses
@@ -174,7 +182,7 @@ Route::post('/ratings', [App\Http\Controllers\MyCoursesController::class, 'addra
 //route to get listing of instructors for instructors page
 Route::get('/instructors', [App\Http\Controllers\InstructorController::class, 'index'])->name('instructor');
 
-//route to get detail of particular instructor 
+//route to get detail of particular instructor
 Route::post('/instructor_detail', [App\Http\Controllers\InstructorController::class, 'get_details']);
 
 //route for checking out for order
@@ -204,8 +212,6 @@ Route::get('/search_courses/{ids}/{type}', [App\Http\Controllers\SearchCoursesCo
 
 //route to get simulation/quiz page.
 Route::get('/simulation', [App\Http\Controllers\SimulationController::class, 'index'])->name('simulation');
-
-Route::get('/simulation/{cid?}/{id?}', [App\Http\Controllers\SimulationController::class, 'show_simulation'])->name('simulation.show');
 
 //route for saving chatbox data in db from mycourse detail page and cart page
 Route::post('/download_study_course', [App\Http\Controllers\MyCoursesController::class, 'download'])->name('download_study_course');
@@ -250,6 +256,13 @@ Route::post('/marathonquestion','App\Http\Controllers\MarathonController@storeQu
 
 Route::name('front.')->middleware('authuser')->group(function() {
 
+Route::get('/quiz-question/{cid?}/{topic_id?}/{id?}', [App\Http\Controllers\MyCoursesController::class, 'show_quiz_question'])->name('quiz-question');
+Route::get('/quiz-detail', [App\Http\Controllers\MyCoursesController::class, 'quizDetail'])->name('quiz-detail');
+Route::post('showQuizResult', [App\Http\Controllers\MyCoursesController::class, 'showQuizResult'])->name('showQuizResult');
+
+//route to show particular course basically course detail on the basis of courseid
+Route::get('/courses/show/{id}', [App\Http\Controllers\CoursesController::class, 'showCourse'])->name('course.show');
+
 //route for user choose the mcq answwer save in db.
 Route::post('/chooseAnswer', [App\Http\Controllers\SimulationController::class, 'chooseAnswer'])->name('chooseAnswer');
 
@@ -266,8 +279,18 @@ Route::post('/home', [App\Http\Controllers\HomeController::class, 'updateProfile
 Route::get('/my-courses', [App\Http\Controllers\MyCoursesController::class, 'index'])->name('my-courses');
 
 //route to sow my course detail page when user wnats to see my course detail page
-Route::get('/my-courses/{id}', [App\Http\Controllers\MyCoursesController::class, 'showMyCourse'])->name('mycourse.show');
+// Route::get('/my-courses/{id}', [App\Http\Controllers\MyCoursesController::class, 'showMyCourse'])->name('mycourse.show');
+Route::get('/my-courses/{id}', [App\Http\Controllers\MyCoursesController::class, 'newShowMyCourse'])->name('mycourse.show');
+Route::get('/my-chapter/{id}', [App\Http\Controllers\MyCoursesController::class, 'showMyChapter'])->name('mychapter.show');
+Route::post('get_video_url', [App\Http\Controllers\MyCoursesController::class, 'get_video_url'])->name('get_video_url');
 
+Route::post('user_progress', [App\Http\Controllers\MyCoursesController::class, 'user_progress'])->name('user_progress');
+Route::post('last_watched_topic_element', [App\Http\Controllers\MyCoursesController::class, 'last_watched_topic_element'])->name('last_watched_topic_element');
+
+Route::post('topicElementRepeat', [App\Http\Controllers\MyCoursesController::class, 'topicElementRepeat'])->name('topicElementRepeat');
+Route::post('element-section', [App\Http\Controllers\MyCoursesController::class, 'showElementVideoSection'])->name('element-section');
+
+Route::post('/searchChapter', [App\Http\Controllers\MyCoursesController::class, 'searchChapterElement'])->name('searchChapter');
 //route to show single lecture questions answers lists
 //Route::get('question_answers/{course_id?}/{lecture_id?}',[App\Http\Controllers\MyCoursesController::class, 'showMyCourse'])->name('question_answers');
 
@@ -292,13 +315,13 @@ Route::post('/deleteTicket', [App\Http\Controllers\TicketController::class, 'del
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    
+
     Route::get('/', 'App\Http\Controllers\Admin\AdminLoginController@admin_login')->name('adminLogin');
-    
+
     Route::post('/admin_do_login', 'App\Http\Controllers\Admin\AdminLoginController@admin_do_login')->name('admin_login');
-    
+
     Route::get('/admin_forgot_password', 'App\Http\Controllers\Admin\AdminLoginController@adminforgotpassword')->name('adminforgotpassword');
-    
+
     Route::post('/admin_do_forgotpassword', 'App\Http\Controllers\Admin\AdminLoginController@admin_do_forgotpassword')->name('admin_do_forgotpassword');
 
     Route::post('/admin_user_forgotpassword', 'App\Http\Controllers\Admin\UsersListController@admin_user_forgotpassword')->name('admin_user_forgotpassword');
@@ -306,34 +329,34 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/resetuserpassword/{id?}', 'App\Http\Controllers\Admin\UsersListController@admin_user_resetpassword')->name('admin_user_resetpassword');
 
     Route::post('/set_user_password', 'App\Http\Controllers\Admin\UsersListController@set_user_password')->name('set_user_password');
-    
+
     Route::get('/resetpassword/{token}', 'App\Http\Controllers\Admin\AdminLoginController@admin_resetpassword')->name('admin_resetpassword');
-    
+
     Route::post('/set_password', 'App\Http\Controllers\Admin\AdminLoginController@admin_set_password')->name('admin_set_password');
-    
+
     Route::get('/logout', 'App\Http\Controllers\Admin\AdminLoginController@logout')->name('logout');
-    
+
     Route::get('/dashboard/{from_date?}/{to_date?}', 'App\Http\Controllers\Admin\DashboardController@dashboard')->name('dashboard');
 
     Route::get('/filtered_data/{from_date?}/{to_date?}', 'App\Http\Controllers\Admin\DashboardController@filtered_data')->name('filtered_data');
-    
+
     Route::get('/graphSegment', 'App\Http\Controllers\Admin\DashboardController@graphSegment')->name('graphSegment');
 
     Route::get('/admin_profile','App\Http\Controllers\Admin\DashboardController@adminProfile' )->name('adminprofile');
     //route for updating the profile ofthe user
     Route::post('/admin_profile', 'App\Http\Controllers\Admin\DashboardController@updateProfile')->name('update_profile');
-    
+
     Route::post('/admin_profile/password', 'App\Http\Controllers\Admin\DashboardController@changepassword')->name('update_password');
-    
+
     Route::get('/users','App\Http\Controllers\Admin\UsersListController@listing' )->name('userslisting');
 
     Route::get('/adduser','App\Http\Controllers\Admin\UsersListController@adduser' )->name('adduser');
-    
-    Route::post('/adduser','App\Http\Controllers\Admin\UsersListController@saveuser' )->name('saveuser'); 
 
-    Route::get('/edituser/{id?}','App\Http\Controllers\Admin\UsersListController@edituser' )->name('edituser'); 
+    Route::post('/adduser','App\Http\Controllers\Admin\UsersListController@saveuser' )->name('saveuser');
 
-    Route::get('/refunduser/{id?}','App\Http\Controllers\Admin\UsersListController@refunduser' )->name('refunduser'); 
+    Route::get('/edituser/{id?}','App\Http\Controllers\Admin\UsersListController@edituser' )->name('edituser');
+
+    Route::get('/refunduser/{id?}','App\Http\Controllers\Admin\UsersListController@refunduser' )->name('refunduser');
 
     //route for updating the user
     Route::post('/updateuser', 'App\Http\Controllers\Admin\UsersListController@updateUser')->name('updateuser');
@@ -356,19 +379,23 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::post('/addproductcategory','App\Http\Controllers\Admin\ProductCategoryController@saveproductcategory' )->name('saveproductcategory');
 
     Route::get('/editproductcategory/{id?}','App\Http\Controllers\Admin\ProductCategoryController@editproductcategory' )->name('editproductcategory');
-    
+
     Route::post('/updateproductcategory','App\Http\Controllers\Admin\ProductCategoryController@updateproductcategory')->name('updateproductcategory');
-   
+
     Route::put('/universitystatusupdate','App\Http\Controllers\Admin\ProductCategoryController@universityStatusUpdate')->name('universityStatusUpdate');
 
     Route::post('/deleteproductcategory','App\Http\Controllers\Admin\ProductCategoryController@deleteproductcategory')->name('deleteproductcategory');
-    
+
     Route::post('/uploadfiles','App\Http\Controllers\Admin\ProductCategoryController@uploadfiles')->name('uploadfiles');
+
+    Route::post('/stroedata','App\Http\Controllers\CoursesMaterialController@stroedata')->name('stroedata');
+
+    Route::post('/uploadCourseMaterialFile','App\Http\Controllers\Admin\ProductCategoryController@uploadCourseMaterialFile')->name('uploadCourseMaterialFile');
 
     Route::get('/degrees/{id?}','App\Http\Controllers\Admin\DegreesController@listing' )->name('degreeslisting');
 
-    Route::get('/adddegrees/{id?}','App\Http\Controllers\Admin\DegreesController@adddegrees' )->name('adddegrees'); 
-    
+    Route::get('/adddegrees/{id?}','App\Http\Controllers\Admin\DegreesController@adddegrees' )->name('adddegrees');
+
     Route::post('/adddegrees','App\Http\Controllers\Admin\DegreesController@savedegree' )->name('savedegree');
 
     Route::get('/editdegrees/{id?}','App\Http\Controllers\Admin\DegreesController@editdegrees' )->name('editdegrees');
@@ -381,26 +408,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/questions','App\Http\Controllers\Admin\QuestionsController@listing' )->name('questionlisting');
 
     Route::get('/addquestions','App\Http\Controllers\Admin\QuestionsController@addquestions' )->name('addquestions');
-    
-    Route::post('/savequestions','App\Http\Controllers\Admin\QuestionsController@savequestions' )->name('savequestions'); 
 
-    Route::get('/editquestions/{id?}','App\Http\Controllers\Admin\QuestionsController@editquestions' )->name('editquestions'); 
+    Route::post('/savequestions','App\Http\Controllers\Admin\QuestionsController@savequestions' )->name('savequestions');
+
+    Route::get('/editquestions/{id?}','App\Http\Controllers\Admin\QuestionsController@editquestions' )->name('editquestions');
 
     //route for updating the user
     Route::post('/updatequestions', 'App\Http\Controllers\Admin\QuestionsController@updatequestions')->name('updatequestions');
 
     Route::post('/deletequestions','App\Http\Controllers\Admin\QuestionsController@deletequestions')->name('deletequestions');
-    
+
     Route::get('/homepage', 'App\Http\Controllers\Admin\HomepageController@index' )->name('home.setting');
-	
+
     Route::post('/homepage', 'App\Http\Controllers\Admin\HomepageController@saveSettings' )->name('home.savesetting');
-    
+
     Route::post('/homepage','App\Http\Controllers\Admin\HomepageController@updateHomepage' )->name('update_homepage');
 
     Route::get('/tickets', 'App\Http\Controllers\Admin\TicketController@showtickets')->name('tickets');
 
     Route::get('/tickets/{id}', 'App\Http\Controllers\Admin\TicketController@showDetails')->name('ticketdetails');
-   
+
     Route::post('/tickets', 'App\Http\Controllers\Admin\TicketController@updateMessage')->name('ticket.update');
 
     Route::post('/ticketstatus', 'App\Http\Controllers\Admin\TicketController@updateStatus')->name('ticket.status');
@@ -418,19 +445,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::delete('/packages/{id}', 'App\Http\Controllers\Admin\PackageController@packageDelete')->name('package.delete');
 
     Route::post('/packagescourse', 'App\Http\Controllers\Admin\PackageController@packageCourseDelete')->name('package.course.delete');
-    
+
     Route::get('/aboutus','App\Http\Controllers\Admin\AboutusController@getabout' )->name('get_aboutus');
-    
+
     Route::post('/aboutus','App\Http\Controllers\Admin\AboutusController@updateabout' )->name('update_aboutus');
-    
+
     Route::get('/contactus','App\Http\Controllers\Admin\ContactusController@getcontact' )->name('get_contactus');
-    
+
     Route::post('/contactus','App\Http\Controllers\Admin\ContactusController@updatecontact' )->name('update_contactus');
 
     Route::get('/instructors','App\Http\Controllers\Admin\InstructorsController@listing' )->name('instructorlisting');
 
     Route::get('/addinstructor','App\Http\Controllers\Admin\InstructorsController@addinstructor' )->name('addinstructor');
-    
+
     Route::post('/addinstructor','App\Http\Controllers\Admin\InstructorsController@saveinstructor' )->name('saveinstructor');
 
     Route::get('/editinstructor/{id?}','App\Http\Controllers\Admin\InstructorsController@editinstructor' )->name('editinstructor');
@@ -443,10 +470,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/coupons','App\Http\Controllers\Admin\CouponsController@listing' )->name('couponslisting');
 
     Route::get('/addcoupon','App\Http\Controllers\Admin\CouponsController@addcoupon' )->name('addcoupon');
-    
-    Route::post('/addcoupon','App\Http\Controllers\Admin\CouponsController@savecoupon' )->name('savecoupon'); 
 
-    Route::get('/editcoupon/{id?}','App\Http\Controllers\Admin\CouponsController@editcoupon' )->name('editcoupon'); 
+    Route::post('/addcoupon','App\Http\Controllers\Admin\CouponsController@savecoupon' )->name('savecoupon');
+
+    Route::get('/editcoupon/{id?}','App\Http\Controllers\Admin\CouponsController@editcoupon' )->name('editcoupon');
 
     //route for updating the user
     Route::post('/updatecoupon', 'App\Http\Controllers\Admin\CouponsController@updatecoupon')->name('updatecoupon');
@@ -456,12 +483,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/products/{id?}/{inst_id?}','App\Http\Controllers\Admin\ProductsController@listing' )->name('Productslisting');
 
     Route::get('/addproducts/{id?}/{university_id?}','App\Http\Controllers\Admin\ProductsController@addproduct' )->name('addproduct');
-    
-    Route::post('/addproducts','App\Http\Controllers\Admin\ProductsController@saveproduct' )->name('saveproduct'); 
 
-    Route::get('/editproducts/{id?}/{degree_id?}/{uni_id?}','App\Http\Controllers\Admin\ProductsController@editproduct' )->name('editproduct'); 
-    
-    Route::get('/editintensiveproducts/{id?}/{degree_id?}/{uni_id?}','App\Http\Controllers\Admin\ProductsController@editintensiveproducts' )->name('editintensiveproducts'); 
+    Route::post('/addproducts','App\Http\Controllers\Admin\ProductsController@saveproduct' )->name('saveproduct');
+
+    Route::get('/editproducts/{id?}/{degree_id?}/{uni_id?}','App\Http\Controllers\Admin\ProductsController@editproduct' )->name('editproduct');
+
+    Route::get('/editChapter/{topic_id?}','App\Http\Controllers\Admin\ProductsController@editChapter' )->name('editChapter');
+
+    Route::get('/editintensiveproducts/{id?}/{degree_id?}/{uni_id?}','App\Http\Controllers\Admin\ProductsController@editintensiveproducts' )->name('editintensiveproducts');
 
     //route for updating the user
     Route::post('/updateproducts', 'App\Http\Controllers\Admin\ProductsController@updateproduct')->name('updateproduct');
@@ -471,13 +500,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::post('/deleteproducts','App\Http\Controllers\Admin\ProductsController@deleteproduct')->name('deleteproduct');
 
+    Route::post('topic_pdf','App\Http\Controllers\Admin\ProductsController@topic_pdf')->name('topic_pdf');
+
     Route::match(array('GET','POST'),'/blogs','App\Http\Controllers\Admin\BlogsController@listing' )->name('blogslisting');
 
     Route::get('/addblogs','App\Http\Controllers\Admin\BlogsController@addblog' )->name('addblog');
-    
-    Route::post('/addblogs','App\Http\Controllers\Admin\BlogsController@saveblog' )->name('saveblog'); 
 
-    Route::get('/editblog/{id?}','App\Http\Controllers\Admin\BlogsController@editblog' )->name('editblog'); 
+    Route::post('/addblogs','App\Http\Controllers\Admin\BlogsController@saveblog' )->name('saveblog');
+
+    Route::get('/editblog/{id?}','App\Http\Controllers\Admin\BlogsController@editblog' )->name('editblog');
 
     //route for updating the user
     Route::post('/updateblog', 'App\Http\Controllers\Admin\BlogsController@updateblog')->name('updateblog');
@@ -489,10 +520,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::post('/course_Uploadfiles','App\Http\Controllers\Admin\ProductsController@course_Uploadfiles')->name('course_Uploadfiles');
 
     Route::get('/categories','App\Http\Controllers\Admin\BlogsController@categorylisting' )->name('categorylisting');
-    
-    Route::post('/addcategory','App\Http\Controllers\Admin\BlogsController@savecategory' )->name('savecategory'); 
 
-    Route::post('/editcategory','App\Http\Controllers\Admin\BlogsController@editcategory' )->name('editcategory'); 
+    Route::post('/addcategory','App\Http\Controllers\Admin\BlogsController@savecategory' )->name('savecategory');
+
+    Route::post('/editcategory','App\Http\Controllers\Admin\BlogsController@editcategory' )->name('editcategory');
 
     Route::post('/deletecategory','App\Http\Controllers\Admin\BlogsController@deletecategory')->name('deletecategory');
 
@@ -514,11 +545,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('/addeventcourses/{id?}', 'App\Http\Controllers\Admin\EventsController@addeventcourses')->name('addeventcourse');
 
-    Route::get('/editevent/{id?}','App\Http\Controllers\Admin\EventsController@editevent' )->name('editevent'); 
+    Route::get('/editevent/{id?}','App\Http\Controllers\Admin\EventsController@editevent' )->name('editevent');
 
     //route for updating the user
     Route::post('/updateevent', 'App\Http\Controllers\Admin\EventsController@updateevent')->name('updateevent');
-    
+
     //route for updating the user
     Route::post('/addeventcourses', 'App\Http\Controllers\Admin\EventsController@addeventcourse')->name('addeventcourses');
 
@@ -555,6 +586,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //route for updating the user
     Route::post('/updateappstatus', 'App\Http\Controllers\Admin\ApplicationController@updateappstatus')->name('updateappstatus');
 
+    //Route::post('/uploadCourseMaterialFile', 'App\Http\Controllers\CoursesMaterialController\@uploadCourseMaterialFile')->name('uploadCourseMaterialFile');
+
     //route for updating the user
     Route::post('/update_manager', 'App\Http\Controllers\Admin\ApplicationController@update_manager')->name('update_manager');
 
@@ -566,11 +599,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('/payment-history-category','App\Http\Controllers\Admin\TransactionsController@showhistorycategory' )->name('showhistorycategory');
 
-    Route::get('/quiz/{topic_id?}/{lecture_id?}/{course_id?}','App\Http\Controllers\Admin\QuizController@quizlisting' )->name('quizlisting');
+    Route::get('/quiz/{lecture_id?}/{topic_id?}/{course_id?}','App\Http\Controllers\Admin\QuizController@quizlisting' )->name('quizlisting');
 
     Route::get('/addquiz','App\Http\Controllers\Admin\QuizController@addquiz' )->name('addquiz');
 
-    Route::post('/savequiz','App\Http\Controllers\Admin\QuizController@savequiz' )->name('savequiz'); 
+    Route::post('/savequiz','App\Http\Controllers\Admin\QuizController@savequiz' )->name('savequiz');
 
     Route::get('/editquiz/{id?}','App\Http\Controllers\Admin\QuizController@editquiz' )->name('editquiz');
 
@@ -579,21 +612,35 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::post('/deletequiz','App\Http\Controllers\Admin\QuizController@deletequiz')->name('deletequiz');
 
-    Route::get('/addquizquestions/{id?}','App\Http\Controllers\Admin\QuizController@addquizquestions' )->name('addquizquestions');
+    //Route::get('/addquizquestions/{id?}','App\Http\Controllers\Admin\QuizController@addquizquestions' )->name('addquizquestions');
+
+    Route::get('/listquizquestions/{id?}','App\Http\Controllers\Admin\QuizController@listquizquestions' )->name('listquizquestions');
 
     Route::get('/addquizoptions/{id?}','App\Http\Controllers\Admin\QuizController@addquizoptions' )->name('addquizoptions');
 
-    Route::post('/savequizquestions','App\Http\Controllers\Admin\QuizController@savequizquestions' )->name('savequizquestions'); 
+    Route::post('/savequizquestions','App\Http\Controllers\Admin\QuizController@savequizquestions' )->name('savequizquestions');
 
-    Route::post('/updatequizquestions','App\Http\Controllers\Admin\QuizController@updatequizquestions' )->name('updatequizquestions'); 
+    Route::post('/updateTopicQuestion','App\Http\Controllers\Admin\QuizController@updateTopicQuestion' )->name('updateTopicQuestion');
+
+    Route::post('/savetopicquestions','App\Http\Controllers\Admin\QuizController@savetopicquestions' )->name('savetopicquestions');
+
+    Route::post('/updatequizquestions','App\Http\Controllers\Admin\QuizController@updatequizquestions' )->name('updatequizquestions');
 
     Route::post('/deletequizquestion','App\Http\Controllers\Admin\QuizController@deletequizquestion')->name('deletequizquestion');
 
     Route::get('/editquizoptions/{id?}','App\Http\Controllers\Admin\QuizController@editquizoptions' )->name('editquizoptions');
 
-    Route::post('/savelectures','App\Http\Controllers\Admin\ProductsController@savelectures' )->name('savelectures'); 
+    Route::get('/editTopicQuestion/{id?}/{topic_id?}','App\Http\Controllers\Admin\QuizController@editTopicQuestion')->name('editTopicQuestion');
 
-    Route::post('/get_lecture_data','App\Http\Controllers\Admin\ProductsController@get_lecture_data' )->name('get_lecture_data'); 
+    Route::post('/savelectures','App\Http\Controllers\Admin\ProductsController@savelectures' )->name('savelectures');
+
+    Route::post('/saveTopicQuiz','App\Http\Controllers\Admin\ProductsController@saveTopicQuiz' )->name('saveTopicQuiz');
+
+    Route::post('/updateTopicQuiz','App\Http\Controllers\Admin\ProductsController@updateTopicQuiz' )->name('updateTopicQuiz');
+
+    Route::post('/reArrangeChapterElements','App\Http\Controllers\Admin\ProductsController@reArrangeChapterElements' )->name('reArrangeChapterElements');
+
+    Route::post('/get_lecture_data','App\Http\Controllers\Admin\ProductsController@get_lecture_data' )->name('get_lecture_data');
 
     Route::post('/edit_lecture','App\Http\Controllers\Admin\ProductsController@edit_lecture' )->name('edit_lecture');
 
@@ -601,44 +648,62 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::post('/savetopic','App\Http\Controllers\Admin\ProductsController@savetopic')->name('savetopic');
 
+    Route::post('/saveVideoByTopic','App\Http\Controllers\Admin\ProductsController@saveVideoByTopic')->name('saveVideoByTopic');
+
+    Route::post('/add_topic_pdf','App\Http\Controllers\Admin\ProductsController@add_topic_pdf')->name('add_topic_pdf');
+
+    Route::post('/editVideoByTopic','App\Http\Controllers\Admin\ProductsController@editVideoByTopic')->name('editVideoByTopic');
+
+    Route::post('/deleteVideo','App\Http\Controllers\Admin\ProductsController@deleteVideo')->name('deleteVideo');
+
+    Route::post('/deletePdf','App\Http\Controllers\Admin\ProductsController@deletePdf')->name('deletePdf');
+
+    Route::post('/deleteTopicQuestion','App\Http\Controllers\Admin\ProductsController@deleteTopicQuestion')->name('deleteTopicQuestion');
+
+    Route::post('/deleteTopicQuiz','App\Http\Controllers\Admin\ProductsController@deleteTopicQuiz')->name('deleteTopicQuiz');
+
+    Route::get('/getTopicQuiz','App\Http\Controllers\Admin\ProductsController@getTopicQuiz' )->name('getTopicQuiz');
+
     Route::post('/edit_topic','App\Http\Controllers\Admin\ProductsController@edit_topic')->name('edit_topic');
 
     Route::post('/get_topic_data','App\Http\Controllers\Admin\ProductsController@get_topic_data' )->name('get_topic_data');
 
-    Route::post('/deletetopic','App\Http\Controllers\Admin\ProductsController@deletetopic')->name('deletetopic'); 
+    Route::post('/deletetopic','App\Http\Controllers\Admin\ProductsController@deletetopic')->name('deletetopic');
 
-    Route::post('/savecourseqstn','App\Http\Controllers\Admin\ProductsController@savecourseqstn')->name('savecourseqstn'); 
+    Route::post('/deleteCourseMaterial','App\Http\Controllers\Admin\ProductsController@deleteCourseMaterial')->name('deleteCourseMaterial');
+
+    Route::post('/savecourseqstn','App\Http\Controllers\Admin\ProductsController@savecourseqstn')->name('savecourseqstn');
 
     Route::post('/get_qa_data','App\Http\Controllers\Admin\ProductsController@get_qa_data' )->name('get_qa_data');
 
     Route::post('/edit_qa','App\Http\Controllers\Admin\ProductsController@edit_qa' )->name('edit_qa');
 
     Route::post('/deleteqa','App\Http\Controllers\Admin\ProductsController@deleteqa')->name('deleteqa');
-    
+
     Route::get('/pendingmessage','App\Http\Controllers\Admin\AdminLoginController@pendingmessage' )->name('pendingmessage');
-    
+
     Route::get('/programmingerror','App\Http\Controllers\Admin\AdminLoginController@programmingerror' )->name('programmingerror');
-    
+
     Route::get('/paymentmanagement','App\Http\Controllers\Admin\AdminLoginController@paymentmanagement' )->name('paymentmanagement');
-    
+
     Route::get('/responseconfirmation','App\Http\Controllers\Admin\AdminLoginController@responseconfirmation' )->name('responseconfirmation');
-    
+
     Route::get('/recommendation','App\Http\Controllers\Admin\RecommendController@recommendation' )->name('recommendation');
-    
+
     Route::get('/viewrecommendation/{id?}','App\Http\Controllers\Admin\RecommendController@viewrecommendation' )->name('viewrecommendation');
-    
+
     Route::get('/editrecommendation/{id?}','App\Http\Controllers\Admin\RecommendController@editrecommendation' )->name('editrecommendation');
-    
+
     Route::post('/upd_online_recommend','App\Http\Controllers\Admin\RecommendController@upd_online_recommend' )->name('upd_online_recommend');
-    
+
     Route::post('/delete_onlie_recommed','App\Http\Controllers\Admin\RecommendController@delete_onlie_recommed' )->name('delete_onlie_recommed');
-    
+
     Route::delete('/clearNotification','App\Http\Controllers\Admin\AdminNotification@clearNotification' )->name('clear_notification');
 
     Route::get('/advance-notification','App\Http\Controllers\Admin\AdminNotification@getAdvanceNotification')->name('advance_notification');
 
     Route::post('/advance-notification','App\Http\Controllers\Admin\AdminNotification@saveAdvanceNotification')->name('advance_notification.save');
-    
+
     Route::post('/advanceFilterAjax','App\Http\Controllers\Admin\AdminNotification@advanceNotificationFilter')->name('advance_filter');
 
     Route::get('/add-notification','App\Http\Controllers\Admin\AdminNotification@addAdvanceNotification')->name('advance_notification.add');
@@ -676,3 +741,4 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/marathon/{id}','App\Http\Controllers\Admin\MarathonController@showMarathon')->name('marathon.show');
     Route::get('/marathonquestions','App\Http\Controllers\Admin\MarathonController@showQuestions')->name('marathon.questions');
 });
+Route::get('/test','App\Http\Controllers\Controller@test')->name('test');

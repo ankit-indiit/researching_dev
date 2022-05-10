@@ -35,7 +35,8 @@ class User extends Authenticatable
         'avatar',
         'status',
         'reffer_by',
-        'reffer_code'
+        'reffer_code',
+        'verify_email',
     ];
 
     /**

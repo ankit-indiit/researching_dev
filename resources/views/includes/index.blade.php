@@ -8,11 +8,11 @@
   left: 0;
   width: 100%;
   max-height: 310px;
-  overflow-y: auto;
-  border-radius: 3px;
+  border-radius: 20px;
+      padding: 10px;
   -webkit-box-shadow: 0 21px 30px 0 rgba(59, 59, 59, 0.5);
           box-shadow: 0 21px 30px 0 rgba(59, 59, 59, 0.5);
-  background-color: #f8f8f8;
+  background-color: #ffffffdb;
   -webkit-transform: translateY(20px);
           transform: translateY(20px);
   z-index: -1;
@@ -23,6 +23,11 @@
   transition: transform 0.15s ease, opacity 0.15s ease;
   transition: transform 0.15s ease, opacity 0.15s ease, -webkit-transform 0.15s ease;
 }
+   form.qz-search-form div.categories-select ul, .whatsapp-search div.categories-select ul {
+	   
+	       max-height: 290px;
+    overflow-y: auto;
+   }
 
 form.qz-search-form div.categories-select.open, .whatsapp-search div.categories-select.open{
   z-index: 99;
@@ -48,6 +53,8 @@ form.qz-search-form div.categories-select ul li, .whatsapp-search div.categories
   padding: 2px 12px;
   color: #000;
   cursor: pointer;
+  justify-content: flex-end;
+  text-align: right;
 }
 
 form.qz-search-form div.categories-select ul li a, .whatsapp-search div.categories-select ul li a{
@@ -91,8 +98,8 @@ div.search-terms {
   font-size: 17px;
   opacity: 0.86;
   border-radius: 0 7px 7px 0;
-  -webkit-box-shadow: 0 7px 23px 0 rgba(173, 173, 173, 0.5);
-  box-shadow: 0 7px 23px 0 rgba(173, 173, 173, 0.5);
+  /* -webkit-box-shadow: 0 7px 23px 0 rgba(173, 173, 173, 0.5);
+  box-shadow: 0 7px 23px 0 rgba(173, 173, 173, 0.5); */
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -119,11 +126,11 @@ div.search-terms div.search-badges {
 
 div.search-terms div.search-badges span.badge {
   width: auto;
-  padding: 2px 2px;
+  padding: 6px 13px;
   border-radius: 3rem;
-  background-color: #e3e3e3;
+  background-color: #ea861e;;
   text-align: center;
-  color: #939393;
+  color: #fff;
   font-weight: normal;
   margin: 2px 2px 2px 2px;
   display: -webkit-box;
@@ -144,7 +151,7 @@ div.search-terms div.search-badges span.badge .close-badge {
   position: relative;
   top: -1px;
   margin-left: 5px;
-  color: #000;
+  color: #fff;
   cursor: pointer;
 }
 
@@ -170,9 +177,106 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
   outline: none;
 }
 
+#homebanner .carousel-inner {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#homebanner a.btn-banner {
+    padding: 29px 12px;
+	font-weight: 600;
+}
+
+#private_university_chosen , #marathon_university_chosen {
+    border: 2px solid #ddd;
+    border-radius: 50px;
+}
+
+#private_university_chosen ul.chosen-choices , #marathon_university_chosen ul.chosen-choices {
+    border: 0 !important;
+}
+
+#private_university_chosen ul.chosen-results li.active-result , #marathon_university_chosen ul.chosen-results li.active-result{
+    display: flex !important;
+    min-height: 40px;
+    align-items: center;
+    padding: 2px 12px !important;
+    color: #000;
+    cursor: pointer !important;
+    justify-content: flex-end;
+    font-family: 'Varela Round', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+#private_university_chosen  .chosen-choices li.search-choice , #marathon_university_chosen  .chosen-choices li.search-choice {
+    padding: 6px 26px 6px 10px;
+    margin: 13px 5px 14px 0;
+}
+
+#private_university_chosen .chosen-choices li.search-choice .search-choice-close , #marathon_university_chosen .chosen-choices li.search-choice .search-choice-close {
+    top: 7px;
+}
+
+
+#private_university_chosen .chosen-drop , #marathon_university_chosen .chosen-drop {
+    position: absolute;
+    top: 110%;
+    z-index: 1010;
+    width: 100%;
+    border: 1px solid #aaa;
+    background: #fff;
+    -webkit-box-shadow: 0 21px 30px 0 rgb(59 59 59 / 50%);
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 21px 30px 0 rgb(59 59 59 / 50%);
+}
+#private_university_chosen ul.chosen-results li.result-selected , #marathon_university_chosen ul.chosen-results li.result-selected {
+    text-align: right;
+}
+
+.whatsapp-search div.categories-select ul {
+    direction: ltr;
+}
+
+.whatsapp-search .search-terms {
+    border: 2px solid #ddd;
+    border-radius: 50px !important;
+    height: 50px !important;
+    width: 100% !important;
+    overflow: hidden;
+    flex-direction: row-reverse;
+}
+
+.whatsapp-search input[type="text"] {
+    height: 45px;
+}
+
+.whatsapp-search .search-badges span.close-badge {
+    float: right;
+    margin-left: 3px;
+}
+a.btn.btn-join.whatsapp-join-btn {
+    height: 50px;
+    line-height: 38px;
+    padding: 5px 25px;
+    min-width: 145px;
+}
+#marathon_university_chosen ul.chosen-choices {
+	padding: 0 20px;
+}
+html[lang="en"] .popular-courses-area.weekly-top-items.tag-lists:before {
+    height: 120px;
+    top: -25px;
+}
+.whatsapp-search {
+    position: relative;
+    width: 100%;
+}
 </style>
 <!-- Start Banner -->
 <div class="banner-area home-baner" id="homebanner">
+        
    <div id="bootcarousel" class="carousel text-light top-pad text-dark slide animate_text" data-ride="carousel">
       <!-- Wrapper for slides -->
       <div class="carousel-inner carousel-zoom" style="background-image: url({{ asset('/assets/images/'.$homepage->banner_background)}});">
@@ -204,7 +308,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                     <div class="boxequal">
                                        <form action="#" class="qz-search-form">
                                           <div class="row">
-                                             <div class="col-md-9 col-sm-8 col-xs-12 or1">
+                                             <div class="col-md-8 col-sm-8 col-xs-12 or1">
                                                 <div class="input-wraper">
                                                    <span class="icon-wrapper"> 
                                                    <span><i class="ti-search"></i>
@@ -212,7 +316,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                                    </span>
                                                    </span>
                                                    <div class="search-terms">
-                                                      <input type="text" placeholder="בחר אוניברסיטה ...">
+                                                      <input type="text" class="text-right" placeholder="בחר אוניברסיטה ...">
                                                       <div class="search-badges">
                                                          
                                                       </div>
@@ -222,7 +326,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                                    <ul></ul>
                                                </div>
                                              </div>
-                                             <div class="col-md-3 col-sm-4 col-xs-12 or2" id = 'get_course_detail'>
+                                             <div class="col-md-4 col-sm-4 col-xs-12 or2" id = 'get_course_detail'>
                                                 <a href="#videoModal" data-toggle="modal" class="btn-banner searchbtn-glow mbshow">
                                                    איך מתחילים? <img src="{{ asset('/assets/img/palybt.png') }}">
                                                 </a>
@@ -234,7 +338,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                              $university_data = DB::table('universities')->get();
                                              ?>
                                           <div class="row">
-                                             <div class="col-md-9 col-sm-8 col-xs-12 or1">
+                                             <div class="col-md-8 col-sm-8 col-xs-12 or1">
                                                 <div class="input-wraper">
                                                    <span class="icon-wrapper"> 
                                                    <span><i class="ti-search"></i>
@@ -256,7 +360,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                                                    </span>
                                                 </div>
                                              </div>
-                                             <div class="col-md-3 col-sm-4 col-xs-12 or2" id = 'get_course_detail'>
+                                             <div class="col-md-4 col-sm-4 col-xs-12 or2" id = 'get_course_detail'>
                                                 <!-- <a href="{{route('front.courses')}}" class="btn-banner searchbtn-glow mbshow">
                                                    איך מתחילים? <img src="{{ asset('/assets/img/palybt.png') }}">
                                                 </a> -->
@@ -411,7 +515,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                </div>
                <div class="equal-height col-md-3 col-sm-6 col-lg-20 ">
                   <div class="item malachite">
-                     <a href="#whtsapp">
+                     <a href="#whtsapp" class="js-anchor-link">
                         <div class="infoicon">
                            <h4>קבוצת למידה בוואצאפ</h4>
                            <div class="icon">  <span><img src="{{ asset('/assets/img/icon/whatsapp.png') }}"></span> </div>
@@ -424,7 +528,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                </div>
                <div class="equal-height col-md-3 col-sm-6 col-lg-20 ">
                   <div class="item casablanca ">
-                     <a href="#homebanner">
+                     <a href="#homebanner" class="js-anchor-link">
                         <div class="infoicon">
                            <h4>קורסים מותאמים אישית</h4>
                            <div class="icon"> <span><img src="{{ asset('/assets/img/icon/book.png') }}"></span> </div>
@@ -450,63 +554,76 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
    ============================================= -->
 <div class="about-area toppad"  id="whtsapp"  style="direction: rtl;">
    <div class="container">
+       
       <div class="row">
          <div class="about-items ">
             @php 
             $success_data = json_decode($homepage->success, true);
             @endphp 
             <div class="col-md-6 about-info wow fadeInLeft ">
-               <h2> {{ $success_data['title'] }} <span> {{ $success_data['tagline'] }} </span></h2>
+               <h2> {{ $success_data['title'] }} {{-- <span> {{ $success_data['tagline'] }} </span> --}}</h2>
                <blockquote> 
                   {{ $success_data['text1'] }}
                </blockquote>
                <p> 
                   {{ $success_data['text2'] }}
                </p>
-               <div class="row inmbabout">
-                   <div class="col-md-4 or2m">
-                     <a class="btn circle btn-theme effect btn-md btn-lt-ht" href="#videoModal" data-toggle="modal">איך זה עובד</a> 
-                  </div>
-                  <div class="col-md-8 aboutsearch or1m">
-                     <div class="form-group">
-                        <div class="input-group whatsapp-search">
-                           <div class="input-wraper ">
-                              <div class="search-terms">
-                                 <input type="text" placeholder="בחר אוניברסיטה ...">
-                                 <div class="search-badges">
-                                    
-                                 </div>
-                             </div>                                                  
-                           </div>
-                           <div class="categories-select"> 
-                              <ul></ul>
-                          </div>                           
-                           {{-- <input type="text" name="" placeholder="לחפש.." class="form-control">  --}}
-                           {{-- <select id="universities1" class="search-multi" data-placeholder=" בחר מוסד לימודים" name = "universities1" multiple="multiple">
-                              @foreach($university_data as $university)
-                              <option data-id = "{{ $university->id}}" data-type = "0" value="{{ $university->university_name }}">{{ $university->university_name }}</option>
-                              @endforeach
-                           </select>                            --}}
-                        </div>
-                     </div>
-                     <div class="wa_group">
-                     </div>
-                     <div class="wa-response">
+               <div class="inmbabout">
+						<div class="row">
+							  <div class="col-md-4 or2m">
+								 <a class="btn circle btn-theme effect btn-md btn-lt-ht" href="#videoModal" data-toggle="modal">איך זה עובד</a> 
+							  </div>
+							  <div class="col-md-8 aboutsearch or1m">
+									 <div class="form-group">
+										<div class="input-group whatsapp-search">
+										   <div class="input-wraper ">
+											  <div class="search-terms">
+												 <input type="text" placeholder="בחר אוניברסיטה ...">
+												 <div class="search-badges">
+													
+												 </div>
+											 </div>                                                  
+										   </div>
+										   <div class="categories-select"> 
+											  <ul></ul>
+										  </div>                           
+										   {{-- <input type="text" name="" placeholder="לחפש.." class="form-control">  --}}
+										   {{-- <select id="universities1" class="search-multi" data-placeholder=" בחר מוסד לימודים" name = "universities1" multiple="multiple">
+											  @foreach($university_data as $university)
+											  <option data-id = "{{ $university->id}}" data-type = "0" value="{{ $university->university_name }}">{{ $university->university_name }}</option>
+											  @endforeach
+										   </select>                            --}}
+										</div>
+									 </div>
+									 <div class="wa_group">
+									 </div>
+									 <div class="wa-response">
 
-                     </div>
-                     <div class="form-group checkout-form border-0 p-0 mt-0">
-                        <span class="checkbox-wrap">
-                        <label class="container mb-0">
-                        <input value="1" type="checkbox">
-                        <span class="checkmark"></span>
-                        אני מסכים עם כל תנאי השימוש
-                        </label>
-                        </span>
-                     </div>
-                     <a href="" class="btn btn-join disabled whatsapp-join-btn">
-                     הצטרף
-                     </a>
-                  </div>
+									 </div>
+								
+									
+								  </div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<a href="" class="btn btn-join disabled whatsapp-join-btn" id="whatsappJoinBtn" style="display: none;">
+									 הצטרף
+									 </a>
+							</div>
+							<div class="col-md-8">	 
+									<div class="form-group checkout-form border-0 p-0 mt-0">
+										<span class="checkbox-wrap">
+										<label class="container mb-0">
+										<input value="1" type="checkbox" id="termAndConditions">
+										<span class="checkmark"></span>
+										<a href="javascript:void(0);"> אני מסכים עם כל תנאי השימוש</a>
+										</label>
+										</span>
+									 </div>
+							</div>
+						</div>
+                 
+               
                   <div class="col-md-4 or2m"></div>
                </div>
             </div>
@@ -667,6 +784,8 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                <div class="content tab-carousel owl-carousel owl-theme pl-0">
                         <?php
                            if(count($online_recommendation) > 0){
+                            $image2 = '';
+                            $username2 = '';
                             foreach($online_recommendation as $key=>$val){
                                 $user_data2 = DB::table('users')->where('id',$val['user_id'])->get();
                                 foreach ($user_data2 as $data2) {
@@ -1086,7 +1205,7 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                      $university_data = DB::table('universities')->get();
                      ?>
                   <div class="form-group">
-                     <select id = "marathon_university" name = "marathon_university"class="form-control  chosen-select" data-placeholder="לחפש " multiple>
+                     <select id = "marathon_university" name = "marathon_university"class="form-control  chosen-select" data-placeholder="חפש מורה פרטי בשבילך" multiple>
                         @foreach($university_data as $university)
                         <option data-id = "{{ $university->id}}" data-type = "0" value="{{ $university->university_name }}">{{ $university->university_name }}</option>
                         @endforeach  
@@ -1133,6 +1252,11 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
 @endsection
 @section('scripts')
 <script type="text/javascript">
+
+  $(document).on('click', '#termAndConditions', function(){
+    $('#whatsappJoinBtn').css("display", "block");
+  });
+
    $('#simulation_terms').change(function() { 
           if ($('#simulation_terms').is(":checked") == true) { 
             $('#simulation_terms').val('1'); 
@@ -1319,7 +1443,6 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                 type:type1
             },
             success: function(data) {
-                
                if(data.degrees.length != 0){
                   var degrees_list = data.degrees;
                   var selected_type = data.type;
@@ -1354,7 +1477,8 @@ form.qz-search-form input[type="text"], .whatsapp-search input[type="text"] {
                    $('#private_university').html('');
                    $('#private_university').html(data.html);
                    $('#private_university').chosen();
-                }
+                }              
+                // $('#private_university_chosen').addClass('chosen-with-drop chosen-container-active');
               }
           });
         
@@ -1572,7 +1696,7 @@ $(document).ready(function () {
          this.selected.push(term_id);
          this.updateCategories(term_id,name);
 
-         var categoryBadge = $('<span class="badge" data-name="'+name+'" data-cat-id="' + term_id + '" data-idx="' + this.selected.length + '">' + '<span class="close-badge">x</span>' + "<span>" + title + "</span>" + "</span>");
+         var categoryBadge = $('<span class="badge" data-name="'+name+'" data-cat-id="' + term_id + '" data-idx="' + this.selected.length + '">' + "<span>" + title + "</span>" + '<span class="close-badge">x</span>' + "</span>");
 
          homeCategoryBadges.append(categoryBadge);
       },
@@ -1586,7 +1710,7 @@ $(document).ready(function () {
       },
       showCourseList: function (){
          this.courses.forEach(function (value) {
-            var url = '{{ route("front.course.show", [ "id" => ":id" ] ) }}';
+            var url = '{{ route("front.mycourse.show", [ "id" => ":id" ] ) }}';
             url = url.replace(':id', value.course_id);        
             var categoryOption = $('<a class="course_link" href="'+url+'"><li data-name="course" data-cat-id="' + value.course_id + '">' + value.course_name + "</li></a>");
             homeCategoryList.append(categoryOption);
@@ -1947,4 +2071,16 @@ $("#icon_listinner4").click(function(){
   });
 /****************************/
 </script>
+
+<script>
+	$('.js-anchor-link').click(function(e){
+	  e.preventDefault();
+	  var target = $($(this).attr('href'));
+	  if(target.length){
+		var scrollTo = target.offset().top;
+		$('body, html').animate({scrollTop: scrollTo+'px'}, 1200);
+	  }
+	});
+</script>
+
 @endsection

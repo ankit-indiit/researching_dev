@@ -1,0 +1,68 @@
+===========================
+Project : "researching_dev"
+===========================
+
+Project Details
+
+Web URL - http://dev.indiit.solutions/researching_dev/public/
+User Login:
+e - ashutoshindiit@gmail.com
+p - Ashu@123
+
+
+Admin Url
+http://dev.indiit.solutions/researching_dev/public/admin
+e - admin@gmail.com
+p - admin123
+
+
+
+
+Video Url:
+1) https://drive.google.com/file/d/18ENs-uGkYyQKQ_0GY2jZc8i7YP-Ti0W4/view
+2) https://drive.google.com/file/d/18Dh6YJurI1RdrY_-OEf5LK5z_zB2wJ-g/view
+
+
+
+
+1) http://dev.indiit.solutions/researching_dev/public/about-us
+2) http://dev.indiit.solutions/researching_dev/public/instructor-recommendation/1
+3) http://dev.indiit.solutions/researching_dev/public/
+   section("Learning together")
+
+
+
+   Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+
+   });
+
+
+
+
+
+https://dev.indiit.solutions/reserve-chalet/dev/
+demouser085@gmail.com
+Indiit@123
+
+
+
+
+
+Date:- 19-November-2021
+=========================
+Project : "memorialbook"
+=========================
+
+Inner Page change the text, for language accordingly.
+1) Profile Page text ,
+==================
+Project: "eventProject"
+===================
+Resolve the html popup issues.
+1) https://drive.google.com/file/d/1yNL-SKYKYYH-cbUxkgdnETGxp2zOCPNG/view?usp=sharing
+======================
+Project: "reserve-chalet/dev"
+======================
+1) Multiple post favourites,
+2) Now select the posts creating the pdf to attach the pdf with mail.
+----------------------------------------------------

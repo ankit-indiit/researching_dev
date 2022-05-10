@@ -47,7 +47,6 @@ class CoursesController extends Controller
             $ordered_courses = orders::select('*')->where('user_id',$user_id)->where('course_type','0')->pluck('ordered_courses');
             $ordered_packages = orders::select('*')->where('user_id',$user_id)->where('course_type','1')->pluck('ordered_packages');
         }
-        
     	return view('includes.courses',compact('courses','packages','ordered_courses','ordered_packages'));
     }
 
@@ -64,15 +63,24 @@ class CoursesController extends Controller
         $users_data = array();
     	$courses_data = Course::select('*')->where('course_id',$id)->get();
         $related_course = Course::where('degree_id',$courses_data[0]->degree_id)->whereNotIn('course_id', [$id])->get();
+        $ordered_chapter = orders::where('user_id',Auth::user()->id)->where('course_type','3')->get()->toArray(); // Get chapter where user have purchased
+        $payed_chapters_list =[];
+        if(!empty($ordered_chapter)){
+            foreach($ordered_chapter as $key=>$val){
+                array_push($payed_chapters_list,$val['ordered_courses']);
+            }
+        }
     	foreach ($courses_data as $value) {
     		$syllabus = array();
             $courseid = $value->course_id;
-            $lectures_data = Lectures::select('*')->where('course_id',$courseid)->get();
-            $syllabus['lectures'] = $lectures_data;
-            foreach($lectures_data as $lecture){
-                $lectureid = $lecture->id;
-                $topics_data = Topics::select('*')->where('lecture_id',$lectureid)->get();
-                $lecture['topics'] = $topics_data;
+            
+            $topics_data = Topics::select('*')->where('course_id',$courseid)->get();
+            $syllabus['topics'] = $topics_data;
+           
+            foreach($topics_data as $topic){
+                $topicid = $topic->id;
+                $lectures_data = Lectures::select('*')->where('topic_id',$topicid)->get();
+                $topic['lectures'] = $lectures_data;
             }
     	}
     	$instructors_data = Instructors::select('*')->where('instructor_course_id',$id)->get();
@@ -88,7 +96,7 @@ class CoursesController extends Controller
         $cource_degree = $courses_data[0]->degrees->degree_name;
         $university_name = $courses_data[0]->university->university_name;
         $this->recentlyViewed($cource_title,$cource_image,$cource_degree,$university_name,$id);
-        return view('includes.course-detail',compact('related_course','courses_data','syllabus','instructors_data','questions','recommendations','users_data'));
+        return view('includes.course-detail',compact('related_course','courses_data','syllabus','instructors_data','questions','recommendations','users_data','payed_chapters_list'));
     }
 
     /**

@@ -23,6 +23,7 @@
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
+        "owen-oj/laravel-getid3": "^2.0",
         "pragmarx/countries": "^0.7.2",
         "pragmarx/tracker": "^4.0",
         "pusher/pusher-php-server": "^6.1",
@@ -32,6 +33,7 @@
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
+        "kitloong/laravel-migrations-generator": "^5.2",
         "laravel/sail": "^0.0.5",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",

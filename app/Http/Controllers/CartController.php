@@ -11,6 +11,7 @@ use App\Models\Blog;
 use App\Models\Course;
 use App\Models\cartItems;
 use App\Models\Ticket;
+use App\Models\Topics;
 use App\Models\orders;
 use App\Models\joinus;
 use App\Models\referrals;
@@ -143,8 +144,77 @@ class CartController extends Controller
             }
        }
 }
+
+    public function topicAddtoCart($course_id,$topic_id){
+       
+       if(Auth::check()){
+            $userid = Auth::user()->id;
+        }else{
+            //chk tmp id or not
+            $guest_user = session()->get('guest_user');
+            if(!empty($guest_user)){
+                $userid = $guest_user;
+            }else{
+                $userid = uniqid();
+                if(!$guest_user) {
+                    session(['guest_user'=> $userid]);
+                }
+                //add session 
+            }    
+        }
+        $topicData = Topics::select('*')->where('id',$topic_id)->get();
+        $course = Course::select('*')->where('course_id',$course_id)->get();
+        
+        foreach ($topicData as $key=>$topicData) {
+            $cart = session()->get('cart.items');
+            // if item not exist in cart then add to cart with quantity = 1
+            if(!$cart) {
+            $cart = [
+                $topic_id => [
+                    "name" => $topicData->topic_name,
+                    "quantity" => 1,
+                    "price" => $topicData->topic_price,
+                    "photo" => $course[0]->image,
+                    "description" =>$course[0]->description,
+                    "course_id" => $course_id,
+                    "topic_id" => $topic_id,
+                    "user_id" => $userid,
+                    "item_type" => 3
+                ]
+            ];
+            session()->put('cart.items', $cart);
+        }
+        // if item not exist in cart then add to cart with quantity = 1
+            $cart[$topic_id] = [
+                "name" => $topicData->topic_name,
+                "quantity" => 1,
+                "price" => $topicData->topic_price,
+                "photo" => $course[0]->image,
+                "description" => $course[0]->description,
+                "course_id" => $course_id,
+                "topic_id" => $topic_id,
+                "user_id" => $userid,
+                "item_type" => 3
+            ];
+            session()->put('cart.items', $cart);
+            $cart_data = new cartItems;
+            $cart_data->user_id = $userid;
+            $cart_data->course_id = $course_id;
+            $cart_data->topic_id = $topic_id;
+            $cart_data->name = $topicData->topic_name;
+            $cart_data->description = $course[0]->description;
+            $cart_data->quantity = 1;
+            $cart_data->price = $topicData->topic_price;
+            $cart_data->image = $course[0]->image;
+            $cart_data->item_type = 3;
+            $cart_data->save();
+            return redirect(route('front.courses'));
+        }
+    }
+    
     //load and show cart items items page.
     public function showCart($id){
+    
         $current_user_id = $id;
         $cart_data = array();
         $user_ids = array();
@@ -160,8 +230,7 @@ class CartController extends Controller
         }else{
             $cart_data = cartItems::select('*')->where('user_id',$id)->get();
         }
-        
-         foreach ($cart_data as $value) {
+        foreach ($cart_data as $value) {
             $recommendations = recommendations::select('*')->where('course_id',$value->course_id)->where('status',1)->get();
         }
         foreach ($recommendations as $recommendation) {
@@ -180,14 +249,11 @@ class CartController extends Controller
         if(Auth::check()){
             $user_id = Auth::user()->id;
             $user_detail = User::find($user_id);
-            
             $ticketData = DB::table('tickets')->where('user_id',$user_id)->get()->toArray();
-            
             return view('includes.cart',compact('cart_data','user_detail','recommendations','users_data','questions','urls','current_user_id','code','ticketData'));
         }else{
             return view('includes.cart',compact('cart_data','recommendations','users_data','questions','urls','current_user_id','code'));
         }
-        
     }
 
     //function to remove items from cart and db also.
@@ -301,8 +367,10 @@ class CartController extends Controller
             $course_data = explode(',',$request->courses_id);
             $Prices = explode(',', $request->grand_total);
             $types = explode(',',$request->course_type);
+            
             $orderno = uniqid();
             foreach ($course_data as $keys => $value) {
+                
                 foreach ($Prices as $key => $prices) {
                     $price[$key] = $prices;
                 }
@@ -336,6 +404,8 @@ class CartController extends Controller
                     'type'=>'1',
                     'manual_id'=>$id
                 ];
+                
+                
                 DB::table('notifications')->insert($notification_data);                
                 if(!empty($request->coupon_code_hidden)){
                     $User = User::where('reffer_code',$request->coupon_code_hidden)->pluck('id');
@@ -348,19 +418,20 @@ class CartController extends Controller
                         ];
                     DB::table('notifications')->insert($second_user_notification_data);
                 }
+                
                 //if status active ends
-                //insert start       
+                //insert start
                 if($insert){
                     $card_reffer = session()->get('cart.refer');
                     if($card_reffer){
-
+                        
                         // For using reffer code assign 10% discunt to refferal user
                         $refferal_data = array(
-                            'refferal_code' => $card_reffer['refferal_code'],
+                            'refferal_code' => $card_reffer['refferal_code'],   
                             'reffered_by' => $card_reffer['reffered_by'],
                             'reffered_to' =>   Auth::user()->id,
-                            'discount_value' => $card_reffer['discount_value'],
-                            'status' => 1 // status = 1 means code is used.
+                            'discount_value' => $card_reffer['discount_value'], 
+                            'status' => 1 // status = 1 means code is used.     
                         );
                         referrals::create($refferal_data);    
                         
@@ -371,13 +442,13 @@ class CartController extends Controller
                         $affiliate->status = '0';
                         $affiliate->save();
                     }
-
+                    
                     $notify = new AdminNotification();
                     $notify->user_id = Auth::user()->id;
                     $notify->read_notification = 0;
                     $notify->content = "זה עתה רכש קורס ".Auth::user()->first_name;
                     $notify->save();
-
+                    
                     $courses_id = cartItems::select('course_id')->where('user_id',Auth::user()->id)->get();
                     cartItems::whereIn('course_id',$courses_id)->delete();
 
@@ -395,7 +466,7 @@ class CartController extends Controller
                     //         'status' => 0 //is code used or not for status = 0 means code not used.
                     //     );
                     //     $data['code'] = $res;
-                    //     $insert1 = DB::table('referrals')->insert($refferal_data);
+                    //     $insert1 = DB::table('referrals')->insert($refferal_data);   
 
                     // }
                     session()->forget('cart');
@@ -409,7 +480,8 @@ class CartController extends Controller
                         $data['status'] = 0;
                     }//check for customer ends
                 
-                }}//try end
+                }}
+                //try end
                 //catch start
                 catch (Exception $e) {
                     $data['msg'] = $e->getMessage();

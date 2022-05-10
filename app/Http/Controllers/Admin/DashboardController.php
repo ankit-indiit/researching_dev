@@ -42,6 +42,8 @@ class DashboardController extends Controller
 
     public function dashboard($from_date = "", $to_date=""){
         $paid_ids = array();
+
+        //dd(Session::all());
         
         $visitors = visitors::select('ip')->whereBetween('created_at',[$from_date, $to_date])->distinct()->count();
         /*echo "<pre>";

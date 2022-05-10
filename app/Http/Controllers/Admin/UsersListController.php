@@ -40,7 +40,7 @@ class UsersListController extends Controller
     }
     
     public function listing(){
-        $users_data = User::select('*')->get();
+        $users_data = User::select('*')->where('verify_email','1')->orderBy('id', 'DESC')->get();
         foreach ($users_data as $key => $value) {
             $id = $value->id;
             $paid_users[] = orders::select('*')->where('user_id',$id)->get();

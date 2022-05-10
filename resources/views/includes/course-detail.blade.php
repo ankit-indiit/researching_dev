@@ -9,7 +9,7 @@
    <div class="container">
       <div class="row sidebar-sec">
          <!-- Start Course Info -->
-         <div class="col-md-8" style="">  
+         <div class="col-md-8" style="">
             <div class="courses-info">
                <!--h2>
                   כלכלה – מאקרו
@@ -40,11 +40,11 @@
                         פרטי הקורס
                         </a>
                      </li>
-                     <li>
+                     <!--<li>
                         <a data-toggle="tab" href="#tab2" aria-expanded="false">
                         חומרי לימוד לקורס
                         </a>
-                     </li>
+                     </li>-->
                      <!--li>
                         <a data-toggle="tab" href="#tab4" aria-expanded="false">
                         סטודנטים ממליצים
@@ -76,36 +76,42 @@
                               <div class="course-list-items acd-items acd-arrow">
                                  <div class="panel-group symb" id="accordion">
                                     <?php
-                                       $count = 0; 
-                                       foreach ($syllabus as $lecture => $get_data) {
-                                         foreach ($get_data as $data) {
-                                           $count += 1;
-                                        ?>
+                                        $count = 0;
+                                        foreach ($syllabus as $topics => $get_data) {
+                                            foreach ($get_data as $data) {
+                                            $count += 1;
+                                    ?>
                                     <div class="panel panel-default">
-                                       <div class="panel-heading">
+                                        <div class="panel-heading">
                                           <h4 class="panel-title">
                                              <a data-toggle="collapse" data-parent="#accordion" href="#ac1{{$data->id}}" aria-expanded="false" class="collapsed">
-                                             <span class="pull-left lesson-duration">52:39 דק’</span>
-                                             <span class="purchasecost">$50</span>
-                                             <strong>{{$count}}</strong> {{$data->title}}
-                                             </a>
+                                             <span class="pull-left lesson-duration">{{$data->topic_duration}} דק’</span>
+            `                               @if(!empty($payed_chapters_list))
+                                            <span class="purchasecost">
+                                                @if(!in_array( $data->id ,$payed_chapters_list))
+                                                <i class="fas fa-shopping-cart addToCartChapter" data-path="{{route('front.topic-cart.topicAddtoCart',['course_id'=>$data->course_id,'topic_id'=>$data->id]) }}" ></i>
+                                                @endif
+                                                ${{$data->topic_price}}</span>    
+                                            @else
+                                            <span class="purchasecost"><i class="fas fa-shopping-cart addToCartChapter" data-path="{{route('front.topic-cart.topicAddtoCart',['course_id'=>$data->course_id,'topic_id'=>$data->id]) }}" ></i>${{$data->topic_price}}</span>    
+                                            @endif
+                                            <strong>{{$count}}</strong> {{$data->topic_name}}
+                                            </a>  
                                           </h4>
-                                       </div>
-                                       <div id="ac1{{$data->id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-                                          <?php foreach ($data->topics as $topic) { ?>
-                                          <div class="panel-body p-0">
-                                             <ul class="mb-0  p-0">
-                                                <li class ="border-bottom">
-                                                   <a class="border-0 courselist" href="#">
-                                                      <div class="topic-title">{{$topic->topic_name}}</div>
-                                                      <span class="duration float-left ml-5">
-                                                      {{$topic->topic_name}}
-                                                      </span>                                 
-                                                   </a>
-                                                </li>
-                                             </ul>
-                                          </div>
-                                          <?php } ?>
+                                        </div>
+                                        <div id="ac1{{$data->id}}" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <?php  foreach ($data->lectures as $lectures) {?>
+                                        <div class="panel-body p-0">
+                                         <ul class="mb-0  p-0">
+                                            <li class ="border-bottom">
+                                                <a class="border-0 courselist" href="#"> 
+                                                  <div class="topic-title">{{$lectures->title}}</div>
+                                                  <span class="duration float-left ml-5">{{$lectures->duration}}</span>
+                                                </a>
+                                            </li>
+                                         </ul>
+                                        </div>
+                                        <?php } ?>
                                        </div>
                                     </div>
                                     <?php } ?>
@@ -170,7 +176,7 @@
                                     </p>
                                     <h5><b>ג'ון סמית</b></h5>
                                  </div>
-                              </div>
+                              </div> 
                               <div class="item">
                                  <div class="thumb">
                                     <img src="{{ asset('/assets/img/team/3.jpg') }}" alt ="Thumb">
@@ -189,7 +195,7 @@
                            </div>
                         </div>
                      </div>
-                     <div id="tab2" class="tab-pane fade">
+                    <!-- <div id="tab2" class="tab-pane fade">
                         <div class="info title">
                            <div class="course-main2">
                               <h2> <span>העלה קבצים</span>
@@ -213,14 +219,14 @@
                               <?php }?>
                            </form>
                         </div>
-                     </div>
+                     </div>-->
                      <!-- End Single Tab -->
                   </div>
                   <!-- End Tab Content -->
                </div>
                <!-- End Tab Info -->
                <div class="whtsbtn">
-                  <ul class="socialshare2">
+                  <ul class="socialshare2">                                                                         
                      <li><a href="" class="social-icon"><i class="fab fa-whatsapp"></i> להצטרפות לקבוצת הלמידה</a></li>
                   </ul>
                </div>
@@ -276,7 +282,6 @@
                            <?php foreach($recommendations as $value){
                               foreach ($users_data as $user_data) {
                                 $image =  asset('/assets/users/' .$user_data->avatar);
-                              
                               ?>
                            <div class="item">
                               <div class="thumb">
@@ -560,6 +565,7 @@
                <?php
                   foreach ($instructors_data as $instructor_data) {
                     $image =  asset('/assets/img/team/' .$instructor_data->avatar);
+            
                    ?>
                <div class="col-md-4">
                   <div class="team-widget">
@@ -649,9 +655,10 @@
 <script type="text/javascript">
    $( document ).ready(function() {
       var video_link = "{{ $courses_data[0]->video_link}}";
+      
       var title = "{{ $courses_data[0]->course_name}}";
       var vid_width = document.getElementById("course-details-panel").offsetWidth;
-      $('#player').videre({
+        $('#player').videre({
          video: {
             quality: [
                {
@@ -661,8 +668,9 @@
             title: title
          },
          width: vid_width
-      });
-      $('#user_university').change(function(){
+        });
+        
+        $('#user_university').change(function(){
             var university_id = $(this).val();
             $.ajax({
               url: '{{ route('front.getdegree') }}',
@@ -677,40 +685,48 @@
                   });
                 }
             });
-          });
-       var sidebar  = new StickySidebar('#sidebarss', {
-          topSpacing: 0,
-      containerSelector: '.sidebar-sec',
-      innerWrapperSelector: '#sidebartop'
-    });
-   
-      $('#uploadfile').change(function() {
-        $('#image_title').text(this.files && this.files.length ? this.files[0].name : '');
-      });
-      $("#upload_docs_btn").click(function(e) {
+        });
+        
+        var sidebar  = new StickySidebar('#sidebarss', {
+            topSpacing: 0,
+            containerSelector: '.sidebar-sec',
+            innerWrapperSelector: '#sidebartop'
+        });
+        
+        $('#uploadfile').change(function() {
+            $('#image_title').text(this.files && this.files.length ? this.files[0].name : '');
+        });
+        
+        /*$("#upload_docs_btn").click(function(e) {
             e.preventDefault();
             var fd = new FormData();
             var files = $('#uploadfile')[0].files;
-             // Check file selected or not
+            
+            // Check file selected or not
             if(files.length > 0 ){
-             fd.append('file',files[0]);
+            fd.append('file',files[0]);
             $.ajax({
-              url: '{{ route('front.upload_docs') }}',
-              type: 'POST',
-               data:new FormData($("#upload-docs-form")[0]),
-               dataType:'JSON',
-               contentType: false,
-               cache: false,
-               processData: false,
-               success: function(data) {
+                url: '{{ route('front.upload_docs') }}',
+                type: 'POST',
+                data:new FormData($("#upload-docs-form")[0]),
+                dataType:'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
                     window.location.reload();
                 }
             });
           }else{
               alert("Please select a file.");
             }
-   
-          });
+        });
+        */
    });
+   
+    $(document).on("click",".addToCartChapter",function(){
+        var data_path = $(this).attr('data-path');
+        window.location.href = data_path;
+    });
 </script>
 @endsection

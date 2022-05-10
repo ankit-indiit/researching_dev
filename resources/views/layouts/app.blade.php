@@ -22,7 +22,7 @@
     <link href="{{ asset('assets/css/responsive.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/chosen.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://dev.indiit.solutions/researching_dev/public/assets/admin/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/admin/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css">
    <link rel="stylesheet" href="{{ asset('assets/css/summernote.css') }}">
   </head>
   <body>
@@ -32,7 +32,7 @@
     <!-- Preloader Ends -->
     <!-- Header -->
     <header id="home">
-      @if(Route::currentRouteName() === 'front.mycourse.show')
+      @if(Route::currentRouteName() === 'front.mycourse.show' || Route::currentRouteName() === 'front.mychapter.show')
         @include('includes.header1')
       @else
         @include('includes.header')
@@ -43,8 +43,8 @@
       @yield('content')
     </main>
     <!-- End content -->
-    @if(Route::currentRouteName() === 'front.mycourse.show')
-        
+    @if(Route::currentRouteName() === 'front.mycourse.show' || Route::currentRouteName() === 'front.mychapter.show')
+
       @else
         @include('includes.footer')
       @endif
@@ -78,18 +78,23 @@
                   <h3 class="mb-0">התחבר לחשבונך </h3>
                   <form  action="{{ route('front.loginpage') }}" class="mt-4" method="POST" id="first_form">
                     @csrf
+                    <span class="text-danger error-text unverify_err 11111">
+                        @if(Session::has('unverify_errmsg')) 
+                        {{ Session::get('unverify_errmsg') }}
+                      @endif
+                    </span>
                     <span class="text-danger error-text credentials_err">
                       @if(Session::has('social_errmsg'))
                         {{ Session::get('social_errmsg') }}
                       @endif
-                    </span> 
+                    </span>
                     <div class="form-group">
                       <input id="email" type="text" class="form-control " name="email" placeholder="שם משתמש או דוא " value="{{ old('email') }}" required autocomplete="email" autofocus multiple>
                       <span class="text-danger error-text email_err"></span>
                     </div>
                     <div class="form-group">
                       <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password" type="password" name="" placeholder="סיסמה ">
-                      <span class="text-danger error-text password_err"></span>  
+                      <span class="text-danger error-text password_err"></span>
                     </div>
                     <div class="form-group checkout-form checkLogin border-0 p-0 mt-0 mb-0">
                       <div class="row  w-100  m-0">
@@ -104,9 +109,9 @@
                              </label>
                              </span>
                           </div>
-                        </div>                        
-                      </div>                      
-                      <span class="checkbox-wrap">                       
+                        </div>
+                      </div>
+                      <span class="checkbox-wrap">
                         <div class="row  w-100  m-0">
                           <div class="col-md-6 p-0 ">
                             <p class="text-left mb-0 signup-txt">לא חבר עדיין ? <a  class="signuptab" href="#signup1"  data-toggle="tab" style="color: #eb871e;">הרשם עכשיו </a></p>
@@ -121,12 +126,12 @@
                               @endif
                                </span>
                             </div>
-                          </div>  
+                          </div>
                         </div>
-                         
+
                       </span>
 
-                     
+
                     </div>
 
                     <div class="form-group">
@@ -171,21 +176,21 @@
                       <input id="password1" type="password" class="form-control" placeholder="סיסמה "  name="password1">
                       <span class="text-danger error-text password1_err"></span>
                     </div>
-                    <?php 
+                    <?php
                     $university_data = DB::table('universities')->get();
                     ?>
                     <div class="form-group">
                       <select id="university" name="university" class="form-control" data-placeholder="שם האוניברסיטה או המכללה "  >
                         <option value = "">שם האוניברסיטה או המכללה</option>
                         @foreach($university_data as $university)
-                        <option value="{{ $university->id }}">{{ $university->university_name }}</option> 
-                        @endforeach               
+                        <option value="{{ $university->id }}">{{ $university->university_name }}</option>
+                        @endforeach
                       </select>
                       <span class="text-danger error-text university_err"></span>
                     </div>
                     <div class="form-group">
                       <select id = "degree" name = "degree" data-placeholder="תוֹאַר " class="form-control"  >
-                        <option value="">וֹאַר </option>        
+                        <option value="">וֹאַר </option>
                       </select>
                       <span class="text-danger error-text degree_err"></span>
                     </div>
@@ -241,7 +246,7 @@
     <script src="{{ asset('assets/js/init.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-    <script src="https://dev.indiit.solutions/researching_dev/public/assets/admin/libs/dropzone/min/dropzone.min.js"></script>
+    <script src="{{ asset('assets/admin/libs/dropzone/min/dropzone.min.js') }}"></script>
       <script src="{{ asset('assets/js/summernote.min.js')}}"></script>
       <script>
     $(document).ready(function() {
@@ -251,6 +256,10 @@
     <script type="text/javascript">
 
       $(document).ready(function() {
+        var verifiedEmail = '{{ Session::get('verified_email') }}';
+        if (verifiedEmail == 1) {
+          document.getElementById("loginModal").style.display = "block";
+        }
         $('.panel-collapse').on('show.bs.collapse', function() {
         $(this).parent('.panel').find('.fa-minus').show();
         $(this).parent('.panel').find('.fa-plus').hide();
@@ -259,12 +268,12 @@
           $(this).parent('.panel').find('.fa-minus').hide();
           $(this).parent('.panel').find('.fa-plus').show();
         })
-        $('#terms').change(function() { 
-          if ($('#terms').is(":checked") == true) { 
-            $('#terms').val('1'); 
-          } else { 
-            $('#terms').val(''); 
-          } 
+        $('#terms').change(function() {
+          if ($('#terms').is(":checked") == true) {
+            $('#terms').val('1');
+          } else {
+            $('#terms').val('');
+          }
         });
         $('#university').change(function(){
            var university_id = $(this).val();
@@ -370,18 +379,18 @@
                 });
             }
         });
-    });  
+    });
     var $inputs = $('.input-wraper  .chosen-container.chosen-container-multi').click(function () {
       $inputs.parent().filter('.focus').removeClass('focus');
       $(this).parent().addClass('focus');
     });
-    $(document).ready(function(){    
+    $(document).ready(function(){
       // $("[href^='#']").click(function() {
       //   id=$(this).attr("href")
       //   $('html, body').animate({
       //       scrollTop: $(id).offset().top
       //   }, 2000);
-      // });    
+      // });
     });
   </script>
 <script>
@@ -397,7 +406,7 @@ function init_vid_player(video_link,title,width){
         title: title
       },
       width: width
-  });  
+  });
 }
 $(document).ready(function(){
   window.user_id = null;
@@ -406,7 +415,7 @@ $(document).ready(function(){
   });
   @if(Session::has('social_errmsg'))
     $('#loginModal').modal('show');
-  @endif 
+  @endif
 
   $('.refferel_code_area input[name=refferel_code]').click(function(){
     if($(this).is(':checked')){
@@ -415,7 +424,7 @@ $(document).ready(function(){
     }else{
         $('.reffere_code_box').remove();
     }
-  }); 
+  });
 });
 </script>
   @yield('scripts')

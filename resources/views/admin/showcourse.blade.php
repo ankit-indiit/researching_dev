@@ -4,14 +4,34 @@
 
 @section('content')
 <?php 
+
 $is_logged_in = session()->get('admin_logged_in');
-        
+
 if(!isset($is_logged_in) && $is_logged_in != '1'){
-            
     return redirect()->route('admin.adminLogin')->send();
         }
-
 ?>
+
+<style>
+.tab-horizontal {
+    text-align: center;
+}
+.tab-horizontal button {
+    display: inline-block;
+    background-color: inherit;
+    color: #0d0d3f;
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+.horizontaltab {
+    color: #eb871e !important;
+}
+</style>
 <div class="content-page">
   <div class="content">
     <div class="container-fluid">
@@ -43,31 +63,42 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
               	<div class="courses-sections-details">
 	                <div class="tab">
 					  <button class="tablinks" onclick="openData(event, 'edit_course')" id="defaultOpen">Edit Course</button>
-					  <button class="tablinks" onclick="openData(event, 'course_lectures')">Course Lectures</button>
 					  <button class="tablinks" onclick="openData(event, 'course_chapters')">Course Chapters</button>
+					  <button class="tablinks" onclick="openData(event, 'course_lectures')">Course Lessson</button>
 					  <!-- <button class="tablinks" onclick="openData(event, 'related_course')">Related Courses</button> -->
 					  <button class="tablinks" onclick="openData(event, 'question_answer')">Question Answers</button>
+					  <button class="tablinks" onclick="openData(event, 'course_materials')">Course Materials</button>
 					  <!-- <button class="tablinks" onclick="openData(event, 'reviews_ratings')" >Reviews/Ratings</button> -->
 					</div>
-
 					<div id="edit_course" class="tabcontent">
 						<h3>Edit Course</h3>
 					  @include('admin.courses.editcourse')
 					</div>
+					<div id="course_materials" class="tabcontent">
+					    
+						<h3>Edit Course Materials</h3>
+					  @include('admin.courses.editcoursematerials')
+					</div>
 
 					<div id="course_lectures" class="tabcontent">
+					    
 						<h3>Course Lectures</h3>
 						<?php $course_id = $courseid;
 						$lectures = $lectures;
 						?>
 						@include('admin.courses.courselectures',compact('course_id','lectures'))
 					</div>
-
 					<div id="course_chapters" class="tabcontent">
+					    <!--<div class="tab-horizontal">
+                              <button class="tablinks horizontaltab" onclick="openData(append_event, '')">Add Quiz</button>
+                              <button class="tablinks horizontaltab" id="add_more_pdf_url">Add PDF</button>
+                              <button class="tablinks horizontaltab add_more_video_url">Add Video</button>
+                        </div>-->
 					  <h3>Course Chapters</h3>
-					  <?php $course_id = $courseid;
-						$topics = $topics;
-						?>
+    				    <?php 
+    				        $course_id = $courseid;
+    				        $topics = $topics;
+    					?>
 					  @include('admin.courses.coursetopics',compact('course_id','topics'))
 					</div>
 					<div id="related_course" class="tabcontent">
@@ -110,7 +141,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
 		    tablinks[i].className = tablinks[i].className.replace(" active", "");
 	  	}
 	  	document.getElementById(cityName).style.display = "block";
-	  		evt.currentTarget.className += " active";
+	  		evt.currentTarget.className += " active"; 
 		}
 		// Get the element with id="defaultOpen" and click on it
 		document.getElementById("defaultOpen").click();
@@ -118,6 +149,12 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
   			$('#bckbtn').click(function(){
       			window.location.href = '{{route("admin.Productslisting").'/'.$degreeid.'/'.$universityid}}';
     		});
+    		
+    		$(document).on("click",".add_lesson",function(){
+    		    var topic_id = $(this).attr("data-id");
+    		    $('.topic_id').val(topic_id);
+    		});
+    		
     		$("#save_lecture").click(function(e) {
       			e.preventDefault();
       			$.ajax({
@@ -201,7 +238,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                 $.ajax({
                     url: '{{ route("admin.savetopic") }}',
                     type: 'POST',
-                    data: new FormData($("#add_topic_form")[0]),
+                    data: new FormData($("#add_topic_form_old")[0]),
                     dataType:'JSON',
                		contentType: false,
            			cache: false,
@@ -216,10 +253,9 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                 });
             });
 
-            $('.edit_topic_btn').click(function(e){
+            /*$('.edit_topic_btn').click(function(e){
           		e.preventDefault();
           		var id = $(this).attr('data-id');
-            	var lecture_id = $(this).attr('data-value');
             	var courseid = $(this).attr('data-course');
             	$.ajax({
           			url: '{{ route("admin.get_topic_data") }}',
@@ -227,7 +263,6 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
 		            dataType: 'json',
 		            data:{
 		              id:id,
-		              lecture_id:lecture_id,
 		              course_id:courseid
 		            },
                 	success: function(response) {
@@ -241,8 +276,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
                     	$('#edittopic').modal('show');
                   	}
               	});
-
-            });
+            });*/
 
             $("#edit_topic").click(function(e) {
                 e.preventDefault();
@@ -288,10 +322,12 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
           		$('.'+key+'_err').text(value);
         	});
       	}
-       	$('.summernote-basic').summernote('fontName', 'Varela Round');
+       	$('.summernote-basic').summernote({fontName:'Varela Round',height: '200'});
         	var baseurl = window.location.origin;
+        	
         	$("div#myAwesomeDropzone").dropzone({
           		url: "{{route('admin.uploadfiles')}}",
+          		
           		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
           		maxFiles: 1,
           		acceptedFiles: ".jpeg,.jpg,.png,.gif",
@@ -322,179 +358,351 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
             return false;
         }
       });
-        	$('.deletebtn').click(function(){
-                var id = $(this).attr('data-id');
-                $('#deleted_id').val(id);
-                $('#deletelecture').modal('show');
+    	$('.deletebtn').click(function(){
+            var id = $(this).attr('data-id');
+            $('#deleted_id').val(id);
+            $('#deletelecture').modal('show');
+        });
 
-            });
-
-            $("#delete_data").click(function(e) {
-                e.preventDefault();
-                var deleted_id = $('#deleted_id').val();
-                $.ajax({
-                    url: '{{ route("admin.deletelecture") }}',
-                    type: 'POST',
-                    dataType: 'json',
-                        data: {
-                        deleted_id:deleted_id
-                    },
-                    success: function (response) {
-                        if(response.status == 1){
-                            window.location.reload();
-                        }else{
-                            alert(response.msg);
-                        }
-                    }
-                });
-            });
-
-            $('.delete_topic').click(function(){
-                var id = $(this).attr('data-id');
-                $('#deleted_id').val(id);
-                $('#deletetopic').modal('show');
-
-            });
-
-            $("#deletedata").click(function(e) {
-                e.preventDefault();
-                var deleted_id = $('#deleted_id').val();
-                $.ajax({
-                    url: '{{ route("admin.deletetopic") }}',
-                    type: 'POST',
-                    dataType: 'json',
-                        data: {
-                        deleted_id:deleted_id
-                    },
-                    success: function (response) {
-                        if(response.status == 1){
-                            window.location.reload();
-                        }else{
-                            alert(response.msg);
-                        }
-                    }
-                });
-            });
-
-            $("#add_qustn_btn").click(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '{{ route("admin.savecourseqstn") }}',
-                    type: 'POST',
-                    data: new FormData($("#add_qustn_form")[0]),
-                    dataType:'JSON',
-                  contentType: false,
-                cache: false,
-                  processData: false,
-                    success: function (response) {
-                        if ($.isEmptyObject(response.error)) {
-                        window.location.reload();
-                    } else {
-                        printErrorMsg(response.error);
-                    }
-                    }
-                });
-            });
-
-            $(".edit_question").click(function(e) {
-              e.preventDefault();
-              var id = $(this).attr('data-id');
-              var courseid = $(this).attr('data-value');
-              $.ajax({
-                url: '{{ route("admin.get_qa_data") }}',
+        $("#delete_data").click(function(e) {
+            e.preventDefault();
+            var deleted_id = $('#deleted_id').val();
+            $.ajax({
+                url: '{{ route("admin.deletelecture") }}',
                 type: 'POST',
                 dataType: 'json',
-                data:{
-                  id:id,
-                  course_id:courseid
+                    data: {
+                    deleted_id:deleted_id
                 },
-                  success: function(response) {
-                    $('#edit_qustn').val(response.data.questions);
-                    $('#edit_answer').val(response.data.answers);
-                    $('#qa_id').val(response.data.id);
-                    $('#qa_course_id').val(response.data.course_id);
-                    $('#editqa').modal('show');
-                    }
-                });
-            });
-
-            $("#edit_qa").click(function(e) {
-          e.preventDefault();
-          var fd = new FormData();
-          $.ajax({
-                url: '{{ route("admin.edit_qa") }}',
-                type: 'POST',
-                data:new FormData($("#edit_qa_form")[0]),
-                   dataType:'JSON',
-                   contentType: false,
-                   cache: false,
-                   processData: false,
-                success: function(response) {
-                    if ($.isEmptyObject(response.error)) {
+                success: function (response) {
+                    if(response.status == 1){
                         window.location.reload();
-                    } else {
-                        printErrorMsg(response.error);
+                    }else{
+                        alert(response.msg);
                     }
-                  }
-              });
+                }
             });
-          function printErrorMsg (msg) {
+        });
+        
+        
+
+        $('.delete_topic').click(function(){
+            var id = $(this).attr('data-id');
+            $('#deleted_id').val(id);
+            $('#deletetopic').modal('show');
+
+        });
+        
+
+        $("#deletedata").click(function(e) {
+            e.preventDefault();
+            var deleted_id = $('#deleted_id').val();
+            $.ajax({
+                url: '{{ route("admin.deletetopic") }}',
+                type: 'POST',
+                dataType: 'json',
+                    data: {
+                    deleted_id:deleted_id
+                },
+                success: function (response) {
+                    if(response.status == 1){
+                        window.location.reload();
+                    }else{
+                        alert(response.msg);
+                    }
+                }
+            });
+        });
+
+        $("#add_qustn_btn").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{{ route("admin.savecourseqstn") }}',
+                type: 'POST',
+                data: new FormData($("#add_qustn_form")[0]),
+                dataType:'JSON',
+              contentType: false,
+            cache: false,
+              processData: false,
+                success: function (response) {
+                    if ($.isEmptyObject(response.error)) {
+                    window.location.reload();
+                } else {
+                    printErrorMsg(response.error);
+                }
+                }
+            });
+        });
+
+        $(".edit_question").click(function(e) {
+          e.preventDefault();
+          var id = $(this).attr('data-id');
+          var courseid = $(this).attr('data-value');
+          $.ajax({
+            url: '{{ route("admin.get_qa_data") }}',
+            type: 'POST',
+            dataType: 'json',
+            data:{
+              id:id,
+              course_id:courseid
+            },
+              success: function(response) {
+                $('#edit_qustn').val(response.data.questions);
+                $('#edit_answer').val(response.data.answers);
+                $('#qa_id').val(response.data.id);
+                $('#qa_course_id').val(response.data.course_id);
+                $('#editqa').modal('show');
+                }
+            });
+        });
+
+        $("#edit_qa").click(function(e) {
+          e.preventDefault();
+      var fd = new FormData();
+      $.ajax({
+            url: '{{ route("admin.edit_qa") }}',
+            type: 'POST',
+            data:new FormData($("#edit_qa_form")[0]),
+               dataType:'JSON',
+               contentType: false,
+               cache: false,
+               processData: false,
+            success: function(response) {
+                if ($.isEmptyObject(response.error)) {
+                    window.location.reload();
+                } else {
+                    printErrorMsg(response.error);
+                }
+              }
+          });
+        });
+        function printErrorMsg (msg) {
             $.each( msg, function( key, value ) {
               $('.'+key+'_err').text(value);
-          });
+            });
         }
-
         $('.delete_qa').click(function(){
                 var id = $(this).attr('data-id');
                 $('#deleted_id').val(id);
                 $('#deleted_qa').modal('show');
+        });
 
-            });
-
-            $("#deletedqa").click(function(e) {
-                e.preventDefault();
-                var deleted_id = $('#deleted_id').val();
-                $.ajax({
-                    url: '{{ route("admin.deleteqa") }}',
-                    type: 'POST',
-                    dataType: 'json',
-                        data: {
-                        deleted_id:deleted_id
-                    },
-                    success: function (response) {
-                        if(response.status == 1){
-                            window.location.reload();
-                        }else{
-                            alert(response.msg);
-                        }
+        $("#deletedqa").click(function(e) {
+            e.preventDefault();
+            var deleted_id = $('#deleted_id').val();
+            $.ajax({
+                url: '{{ route("admin.deleteqa") }}',
+                type: 'POST',
+                dataType: 'json',
+                    data: {
+                    deleted_id:deleted_id
+                },
+                success: function (response) {
+                    if(response.status == 1){
+                        window.location.reload();
+                    }else{
+                        alert(response.msg);
                     }
-                });
+                }
             });
-            
+        });
     });
 </script>
 <script>
+    //var is_pdfhtml_appended = 0;
+    $("#add_more_pdf_url").click(function(){
+        var html = '<div class="col-lg-12">'+
+                '<div class="form-group"> '+
+                  '<label for="Bimage">קובץ מצורף</label>'+
+                      '<div class="dropzone myDropzone" id="myDropzone">'+
+                      '<div class="fallback">'+
+                        '<input style="display:none" type="file"  name="uploadfile"  id="uploadfile"/>'+
+                    '</div>'+
+                      '<div class="dz-message needsclick">'+
+                        '<i class="h3 text-muted dripicons-cloud-upload"></i>'+
+                        '<h4>'+
+                        'גרור ושחרר לוגו לכאן'+
+                        '</h4>'+
+                    '</div>'+
+                    '</div>'+
+                    '<span class="text-danger error-text imageName_err"></span>'+
+                    '<div class="dropzone-previews mt-3" id="file-previews"></div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="col-md-1">'+
+                    '<div class="form-group">'+  
+                    '<label></label>'+
+                        '<span class="btn btn-primary remove_pdf_div" style="margin-top: 10px;">×</span>'+
+                    '</div>'+
+                '</div>';
+                //$(".topic_pdf_control_append").append(html);
+            if($(".topic_pdf_control_append").html().length == 0){
+                    $(".topic_pdf_control_append").append(html);
+                    droupzone_fun();
+            }
+        });
+        $(document).on('click','.remove_pdf_div',function(){
+            $(this).parents('.topic_pdf_control_append').empty();
+        });
+    
+
     $(document).on('click','.add_more_video_url',function(){
-        var html = "<div class='topic_video_url_main'>"+
-                    "<div class='form-group mb-3'>"+
-                        "<label> כותרת סרטון </label>"+
-                        "<input id ='topic_video_title' name='topic_video_title[]' type='text'  class='form-control' placeholder='כותרת סרטון'>"+
-                        "<span class='text-danger error-text topic_video_title_err'></span>"+
-                    "</div>"+
-                    "<div class='form-group mb-3'>"+
-                        "<label>כתובת אתר וידאו</label>"+
-                        "<input id ='topic_video_url' name='topic_video_url[]' type='text'  class='form-control' placeholder='כתובת אתר וידאו'>"+
-                        "<span class='text-danger error-text topic_video_url_err'></span>"+
-                        "<span class='btn btn-primary remove_topic_div' style='margin-top: 10px;'>×</span>"+
-                    "</div>"+
-                    "</div>";
+        var html = 
+        "<span class='row topic_video_url_main'><div class='col-md-1'>"+
+        "<div class='form-group'>"+  
+        "<label></label>"+
+            "<span class='btn btn-primary remove_topic_div' style='margin-top: 10px;'>×</span>"+
+        "</div>"+
+        "</div>"+
+        "<div class='col-md-6'>"+
+        "<div class='form-group'>"+
+            "<label>כתובת אתר וידאו</label>"+
+            "<input id ='topic_video_url' name='topic_video_url[]' type='text'  class='form-control' placeholder='כתובת אתר וידאו'>"+
+            "<span class='text-danger error-text topic_video_url_err'></span>"+
+        "</div>"+
+        "</div>"+
+        "<div class='col-md-5'>"+
+        "<div class='form-group'>"+
+            "<label> כותרת סרטון </label>"+
+            "<input id ='topic_video_title' name='topic_video_title[]' type='text'  class='form-control' placeholder='כותרת סרטון'>"+
+            "<span class='text-danger error-text topic_video_title_err'></span>"+
+        "</div>"+
+        "</div></span>";
         $(".topicvideocontrolappend").append(html);
     });
     $(document).on('click','.remove_topic_div',function(){
         $(this).parents('.topic_video_url_main').remove();
     });
+
+    /*****************************************************/
+        var urll = "{{asset('assets/images/courseMaterials')}}";
+        $("div#myAwesomeDropzones").dropzone({
+      		url: "{{route('admin.uploadCourseMaterialFile')}}",
+      		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      		maxFiles: 1,
+      	    //  acceptedFiles: ".pdf,",
+      	    //  acceptedFiles: ".jpeg,.jpg,.png,.gif",
+      		addRemoveLinks: true,
+      		removedfile: function(file) {
+        		var _ref;
+        		var image = $('#previousimage').val();
+        		$("#uploadnames").text(image);
+        		$("#uploadImages").attr('src',urll+image);
+         		return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+      		},
+    		// autoProcessQueue: false,
+    		init: function() {
+        		this.on("maxfilesexceeded", function(file){
+        		this.removeAllFiles();
+            	this.addFile(file);
+        	});
+        	},
+        success: function (file, response) {
+            var res = JSON.parse(response);
+            if(res.status == 1){
+                $('#imageName').val(res.image_name);
+                $("#courseMaterialimg").val(res.image_name);
+                $("#original_image_name").val(res.original_image_name);
+            }
+            $("#uploadname").html(res.image_name);
+            $("#uploadImage").attr('src',urll.image_name);
+        },
+        error: function (file, response) {
+            return false;
+        }
+      });
+      
+    $('.deleteMaterialfile').click(function(){
+        var id = $(this).attr('data-id');
+        $('#deleted_course_material_id').val(id);
+        $('#deleteMaterialfile').modal('show');
+
+    });
+    $("#deleteMaterial").click(function(e) {
+        e.preventDefault();
+        var deleted_course_material_id = $('#deleted_course_material_id').val();
+        $.ajax({
+            url: '{{ route("admin.deleteCourseMaterial") }}',
+            type: 'POST',
+            dataType: 'json',
+                data: {
+                deleted_course_material_id:deleted_course_material_id
+            },
+            success: function (response) {
+                if(response.status == 1){
+                    window.location.reload();
+                }else{
+                    alert(response.msg);
+                }
+            }
+        });
+    });
+    /*****************************************************/
+    $(document).on("click",".add_video",function(){
+        var chapter_id = $(this).attr('data-id');
+        $("#chapter_id").val(chapter_id);
+    });
     
+    $("#save_video").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '{{ route("admin.saveVideoByTopic") }}',
+            type: 'POST',
+            data: new FormData($("#add_video_by_chapter")[0]),
+            dataType:'JSON',
+       		contentType: false,
+   			cache: false,
+       		processData: false,
+            success: function (response) {
+                if ($.isEmptyObject(response.error)) {
+            		window.location.reload();
+        		} else {
+            		printErrorMsg(response.error);
+        		}
+            }
+        });
+    });
+
+
+
+
+    function droupzone_fun(){
+        
+        $("div#myDropzone").dropzone({
+      		url: "{{route('admin.topic_pdf')}}",
+      		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      		maxFiles: 1,
+      	    //  acceptedFiles: ".pdf,",
+      	    //  acceptedFiles: ".jpeg,.jpg,.png,.gif",
+      		addRemoveLinks: true,
+      		removedfile: function(file) {
+        		var _ref;
+        		var image = $('#previousimage').val();
+        		$("#uploadnames").text(image);
+        		$("#uploadImages").attr('src',urll+image);
+         		return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+      		},
+    		// autoProcessQueue: false,
+    		init: function() {
+        		this.on("maxfilesexceeded", function(file){
+        		this.removeAllFiles();
+            	this.addFile(file);
+        	});
+        	},
+            success: function (file, response) {
+            var res = JSON.parse(response);
+            if(res.status == 1){
+                $('#imageName').val(res.image_name);
+                $("#courseMaterialimg").val(res.image_name);
+                $("#original_image_name").val(res.original_image_name);
+            }
+            $("#uploadname").html(res.image_name);
+            $("#uploadImage").attr('src',urll.image_name);
+        },
+        error: function (file, response) {
+            return false;
+            }
+        });
+    }
 </script>
-
 @endsection
-

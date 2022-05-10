@@ -40,8 +40,8 @@
         <a class="{{ (request()->is('my-courses')) ? 'active' : '' }}" href="{{route('front.my-courses')}}"><i class="ti-book"></i>הקורסים שלי </a>
         </li>
         <li >
-        <a class="{{ (request()->is('home/payment-method')) ? 'active' : '' }}" href="{{route('front.paymethod')}}"><i class="ti-credit-card"></i>אמצעי תשלום </a>
-        </li>
+        {{-- <a class="{{ (request()->is('home/payment-method')) ? 'active' : '' }}" href="{{route('front.paymethod')}}"><i class="ti-credit-card"></i>אמצעי תשלום </a>
+        </li> --}}
         <li >
         <a class="{{ (request()->is('history')) ? 'active' : '' }}" href="{{route('front.history')}}" class="border-0"><i class="ti-timer"></i> היסטוריית רכישות </a>
         </li>

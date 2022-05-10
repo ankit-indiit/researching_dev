@@ -4,6 +4,7 @@
 <?php $courses_id = [];?>
 <?php $course_type = [];?>
 <?php $grand_total = [];?>
+<?php $topic_ids = [];?>
 
 <!-- Start Breadcrumb  -->
 <div class="banner-inner-area2 pt8"></div>
@@ -135,7 +136,7 @@
                         @else
                         @foreach($cart_data as $details)
                         <?php $total += $details->price * $details->quantity; 
-                           $image =  asset('/assets/img/courses/' .$details->image);
+                           $image =  asset('/assets/images/' .$details->image);
                            ?>
                         <div class="table-responsive">
                            <table class="table table-bordered tbfont">
@@ -158,7 +159,7 @@
                                        </div>
                                        <div class="product-info">
                                           <h6>{{ $details->name }}</h6>
-                                          <p>{{ Str::limit($details->description, 25) }}</p>
+                                          <p>{!! Str::limit($details->description, 25) !!}</p>
                                        </div>
                                     </div>
                                  </td>
@@ -266,7 +267,7 @@
                                     אצלנו תוכל ללמוד קורסים המותאמים בדיוק לחומר הלימוד שלך, כפי שהמרצה שלך מלמד 
                                  </p>
                               </div>
-                           </li>
+                           </li> 
                            <li>
                               <i class="ti-signal"></i> 
                               <div class="cart-bullets">
@@ -506,10 +507,15 @@
                               <h4>עֲגָלָה ({{$count}})</h4>
                               @foreach($cart_data as $details)
                               <?php
-                                 $total += $details->price * $details->quantity; 
-                                 $image =  asset('/assets/img/courses/' .$details->image);
-                                 $courses_id[] =$details->course_id; 
-                                 $course_type[] =$details->item_type;
+                                 $total += $details->price * $details->quantity;
+                                 $image =  asset('/assets/images/' .$details->image);
+                                 
+                                 $course_type[] = $details->item_type;
+                                 if(!empty($details->item_type) && $details->item_type =='3'){
+                                    $courses_id[] = $details->topic_id;
+                                 }else{
+                                    $courses_id[] = $details->course_id;
+                                 }
                                  ?>
                               <table class="table order-cart-table">
                                  <tbody>
@@ -1153,7 +1159,7 @@
 </script>
 <script type="text/javascript">
    // Set the date we're counting down to
-   var countDownDate = new Date("Jan 25, 2021 15:37:25").getTime();
+   var countDownDate = new Date("Jan 25, 2022 15:37:25").getTime();
    // Update the count down every 1 second
    var x = setInterval(function() {
      // Get today's date and time
@@ -1178,6 +1184,7 @@
          clearInterval(x);
          demo[key].innerHTML = "EXPIRED";
        }
+       
      });
    }, 1000);
    $(document).ready(function(){
@@ -1315,6 +1322,7 @@
      var grand_total = '<?php echo implode(',',$grand_total); ?>';
      var item_count = $('#item_count').val();
      var courses_data = '<?php echo implode(',',$courses_id); ?>';
+     var topic_ids = '<?php echo implode(',',$topic_ids); ?>';
      var course_type = '<?php echo implode(',',$course_type); ?>';
      var checkout_type = $('#checkout_type').val();
      var agree_terms = $("input[name='agree_terms']").val();
@@ -1335,6 +1343,7 @@
          agree_terms:agree_terms,
          risk_terms:risk_terms,
          coupon_code_hidden:coupon_code_hidden,
+         
          // old_stripe_id:old_stripe_id,
          // card_id : card_id,
          // card_type:card_type,

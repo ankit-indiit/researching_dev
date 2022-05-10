@@ -18,7 +18,7 @@
     <div class="row">
       <div class="col-lg-12 col-md-12">
         <ul class="breadcrumb">
-          <li><a href="#"><i class="fas fa-home"></i> דף הבית</a></li>
+          <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> דף הבית</a></li>
           <li class="active">תארים  </li>
         </ul>
       </div>
@@ -75,18 +75,18 @@
               </a>
             </div>
             <div class="col-md-8">
-              <div class="info"> 
+              <div class="info">
                 <a href="{{route('front.course.show',['id' => $course->course_id])}}"><h4>{{$course->course_name}}</h4></a>
                 <?php 
                 if(strlen($course->description) > 400){ ?>
-                <span>{{ substr($course->description, 0, 400) }}</span>
+                <span>{!! substr($course->description, 0, 400) !!}</span>
                  <span class="read-more-show hide_content">קרא עוד...</span>
                 <span class="read-more-content"> 
-                    {{ substr($course->description, 400,strlen($course->description)) }} 
+                    {!! substr($course->description, 400,strlen($course->description)) !!} 
                     <span class="read-more-hide hide_content">תקרא פחות </span> 
                 </span>
                 <?php }else{?>
-                {{$course->description}}
+                {!! $course->description !!}
                 <?php }?>
                   <div class="footer-meta">
                     <?php 
@@ -261,17 +261,12 @@
 			</div>
 		</div>
 	    <div class="row  justify-content-center mb-20">
-             
-          
-				
 					<div class="col-md-4 col-sm-6 ">
                       <div class="item">
                             <div class="thumb">
                                <img src="{{ asset('/assets/img/courses/1.jpg') }}" alt =""> 
-                               
                             </div>
                             <div class="info">
-                                
                                 <h4>
                                     <a href="#">שיעורי למידה אינטנסיביים</a>
                                 </h4>

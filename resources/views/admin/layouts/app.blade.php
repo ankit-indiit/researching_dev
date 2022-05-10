@@ -455,6 +455,23 @@ $(function() {
     $(".chzn-select").chosen();
 });
 </script>
+<script>
+    $("#upload_docs_btnssss").click(function(e) {
+        e.preventDefault(); 
+        $.ajax({
+            url: '{{ route('admin.stroedata') }}',
+            type: 'POST',
+            data:new FormData($("#upload-docs-form")[0]),
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) { 
+                window.location.reload();
+            }
+        });
+    });
+</script>
 <!--jquery ends-->
 @yield('scripts')
 </body>

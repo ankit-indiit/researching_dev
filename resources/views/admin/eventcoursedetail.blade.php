@@ -222,7 +222,7 @@ if(!isset($is_logged_in) && $is_logged_in != '1'){
 
             $('.delete_group').click(function(){
                 var id = $(this).attr('data-id');
-                $('#deletedid').val(id);
+                $('#deletedid').val(id); 
                 $('#deletegroup').modal('show');
 
             });

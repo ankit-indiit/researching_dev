@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-lg-12 col-md-12">
         <ul class="breadcrumb">
-          <li><a href="#"><i class="fas fa-home"></i> דף הבית</a></li>
+          <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> דף הבית</a></li>
           <li class="active">בלוג </li>
           <li class="category_breadcrumb"> קטגוריות   </li>
         </ul>
@@ -33,7 +33,7 @@
         <div class="ques-options">
           <ul>
             <li>
-		        <a  href="#blogscroll">לא תודה, אני מעדיף לעשות את זה לבד   </a>
+		        <a href="#blogscroll">לא תודה, אני מעדיף לעשות את זה לבד   </a>
 		        </li> 
             <li class="txthigh">
 		           <a class="textglow" href="{{url('/')}}">

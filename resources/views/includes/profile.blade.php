@@ -29,9 +29,9 @@
     <div class="row">
       <div class="col-lg-12 col-md-12">
           <ul class="breadcrumb">
-             <li><a href="#"><i class="fas fa-home"></i> דף הבית</a></li>
+             <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> דף הבית</a></li>
              <li><a href="#">עמודים</a></li>
-             <li class="active">פּרוֹפִיל </li>
+             <li class="active"><a href="{{ route(Route::currentRouteName())}}">התראות </a></li>
           </ul>
        </div>
     </div>

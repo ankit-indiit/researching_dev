@@ -161,6 +161,26 @@ class ProductCategoryController extends Controller
       $university->active = $request->active;
       $university->save();
     }
-
+    
+    public function uploadCourseMaterialFile(Request $request){
+        
+        $file = $request->file('file');
+        if(!empty($file)){
+            $destinationPath = public_path().'/assets/courseMaterials/';
+            $original_name = $file->getClientOriginalName();
+            $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+            
+            if($file->move($destinationPath,$file_name)){
+               $image_name = $file_name;
+               $data['status'] = 1;
+               $data['image_name'] = $image_name;
+               $data['original_image_name'] = $file->getClientOriginalName();
+            }
+            else{
+               $data['status'] = 0;
+            }
+       }
+       return json_encode($data);
+    }
     
 }

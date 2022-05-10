@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Topics;
+use App\Models\Course;
 
 class orders extends Model
 {
@@ -11,7 +13,7 @@ class orders extends Model
     
     protected $appends = ['full_name'];
 
-    protected $with = ['user','course'];
+    protected $with = ['user'];
     
     protected $fillable = [
         'order_number', 'user_id','ordered_courses','course_type', 'status', 'grand_total', 'item_count', 'payment_status', 'payment_method',
@@ -25,8 +27,13 @@ class orders extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class,'ordered_courses','course_id');
+        return $this->belongsTo(Course::class,'ordered_courses','course_id');   
     }
+    
+    public function chapter(){
+        return $this->belongsTo(Topics::class,'ordered_courses','id');
+    }
+    
 
     public function getFullNameAttribute() 
     {

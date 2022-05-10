@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
-
 class RegisterController extends Controller
 {
     //function for creating new user 
@@ -43,7 +42,7 @@ class RegisterController extends Controller
         $user->email = $request->email1;
         $user->password =  Hash::make($request->password1);
         $user->academic_institution = $request->university;
-        $user->student_degree = $request->degree;       
+        $user->student_degree = $request->degree;
         $user->save ();
         if($user){
             $notify = new AdminNotification();
@@ -54,48 +53,69 @@ class RegisterController extends Controller
         }
         $reffer_code = strtolower($user->first_name).$user->id.rand(100,999);
         $user->reffer_code = $reffer_code;
+        $user->verify_email ='0';
+        
         $user->save();
-        if ( ! Newsletter::isSubscribed($request->email1) ) 
+        $name_to = $request->first_name;
+        $email_to = $request->email1;
+        $details = ['verify_link'=>url('/').'/verify_email/'.$reffer_code,'first_name'=>$request->first_name];
+        \Mail::to($email_to)->send(new \App\Mail\MyTestMail($details));
+        if(!Newsletter::isSubscribed($request->email1))
         {
             Newsletter::subscribePending($request->email1);
         }
-        Auth::login($user);
+        //Auth::login($user);
         $cart = session()->get('cart');
         $guest_userid = session()->get('guest_user');
         if(!empty($cart)){
-            DB::table('cart_items')->where('user_id',$guest_userid)->update(['user_id'=> $user->id]);  
+            DB::table('cart_items')->where('user_id',$guest_userid)->update(['user_id'=> $user->id]);
             Auth::login($user);
-            return response()->json(['success'=>' נוסף רשומות חדשות.   ']);
         }
+        redirect()->back()->with('successsignup', 'נוספה רשומה חדשה, אנא בדוק את האימייל שלך כדי לאמת את מזהה הדוא"ל.');
+        //return response()->json(['success'=>' נוסף רשומות חדשות.   ']);
         }else{
             return response()->json(['error'=>$validator->errors()]);
         }
     }
+    
+    public function verify_email($token){
+        
+        $user = User::where('reffer_code',$token)->first();
+        if(!empty($user)){
+            User::where('reffer_code',$token)->update(['verify_email'=>'1']);
+            Session::put('verified_email', 1);
+            // Auth::login($user);
+        }
+        return redirect('/');
+
+    }
 
     //function to check user registered or not.
     public function doLogin(Request $request){
-
+        
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required',
         ]);
         if ($validator->passes()) {
             $credentials = $request->only('email', 'password');
+            $userData = User::where('email',$request->email)->first();
+            if($userData['verify_email'] == '1'){
             if (Auth::attempt($credentials)) {
-                 DB::table('userlogs')->insert(['user_id'=>Auth::user()->id, 'last_login_ip'=> $request->getClientIp(),'last_login_at' => date('d/M/Y h:i:s')]);
+                DB::table('userlogs')->insert(['user_id'=>Auth::user()->id, 'last_login_ip'=> $request->getClientIp(),'last_login_at' => date('d/M/Y h:i:s')]);
                 $this->authenticated($request->password);
                 $cart = session()->get('cart');
                 $guest_userid = session()->get('guest_user');
                 if(!empty($cart)){
-                     DB::table('cart_items')->where('user_id',$guest_userid)->update(['user_id'=> Auth::user()->id]);  
+                     DB::table('cart_items')->where('user_id',$guest_userid)->update(['user_id'=> Auth::user()->id]);
                 }
+                Session::forget('verified_email');
                 return response()->json(['success'=>' נוסף רשומות חדשות.   ']);
             }
-            return response()->json([
-            'error' => [
-                'credentials' => ' אנא בדוק את אישוריך. המשתמש אינו קיים !!  ',
-                ]
-            ]);
+            }else{
+                return response()->json(['error' => ['credentials' =>'נא לאמת את מזהה האימייל שלך',]]);
+            }
+            return response()->json(['error' => ['credentials' => ' אנא בדוק את אישוריך. המשתמש אינו קיים !!  ',]]);
         }
         return response()->json(['error'=>$validator->errors()]);
     }
@@ -105,14 +125,14 @@ class RegisterController extends Controller
         if(Auth::logoutOtherDevices($user))
         { 
             Log::warning('user logged out');
-             } 
+        }
         return redirect('/');
-    } 
+    }
 
     public function logout(){
-        Session::flush();
+        // Session::flush();
         Auth::logout();
-        return redirect()->route('/');
+        // return redirect()->route('/');
     }
 
     public function showforgot()

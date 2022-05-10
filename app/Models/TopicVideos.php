@@ -17,5 +17,8 @@ class TopicVideos extends Model
         'topic_id',
         'topic_video_title',
         'topic_video_url',
+        'topic_video_duration',
+        'order_id',
+        'topic_video_description',
     ];
 }

@@ -3,7 +3,11 @@
 @section('title', ' התראות ')
 
 @section('content')
-      
+<style type="text/css">
+   .notifications-tab ul.nav.nav-pills{
+      display: flex;
+   }
+</style>
 
 <div class="banner-inner-area2 pt8"></div>
 <div class="breadcrumb-inner-area" style="">
@@ -11,9 +15,9 @@
       <div class="row">
          <div class="col-lg-12 col-md-12">
             <ul class="breadcrumb">
-               <li><a href="#"><i class="fas fa-home"></i> דף הבית</a></li>
+               <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> דף הבית</a></li>
                <li><a href="#">עמודים</a></li>
-               <li class="active">התראות </li>
+               <li class="active"><a href="{{ route(Route::currentRouteName())}}">התראות </a></li>
             </ul>
          </div>
       </div>
@@ -67,7 +71,10 @@
                   </ul>
                </div>
                </div> -->
-            <div class="col-md-12">
+            <div class="col-md-4">
+                @include('includes.profile-sidebar')
+            </div>
+            <div class="col-md-8">
                <div class="content-wraper">
                   <div class="sidebar_header-login">
                      <h3>התראות </h3>

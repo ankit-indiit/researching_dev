@@ -8,7 +8,7 @@
       <div class="row">
          <div class="col-lg-12 col-md-12">
             <ul class="breadcrumb">
-               <li><a href="#"><i class="fas fa-home"></i> דף הבית</a></li>
+               <li><a href="{{ url('/') }}"><i class="fas fa-home"></i> דף הבית</a></li>
                <li class="active"> צור קשר   </li>
             </ul>
          </div>

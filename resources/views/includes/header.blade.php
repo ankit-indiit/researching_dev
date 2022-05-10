@@ -17,10 +17,14 @@
                   if (DB::table('cart_items')->where('user_id',Auth::user()->id)->exists()){?>
                     <ul class="dropdown-menu shopping-cart-items">
                       <h2>עגלת קניות</h2>
+                      @php
+                        $cartTotal = 0;
+                      @endphp
                       @foreach($cart_data as $details)
                       <?php
                         $total = 0; 
                         $total += $details->price * $details->quantity;
+                        $cartTotal = $cartTotal + $total; 
                         $viewimage =  asset('/assets/images/' .$details->image); ?>
                           <li class="clearfix">
                             <img src="{{ $viewimage }}">
@@ -33,12 +37,16 @@
                               <a  class ="removecart" data-id="{{ $details->course_id }}"><i class="ti-close"></i></a>
                             </div>
                           </li>
-                          <div class="carttotal">
+                          {{-- <div class="carttotal">
                             <p>סך הכל</p>
                             <h4><b>₪{{$total}}</b></h4>
-                          </div>
+                          </div> --}}
                         @endforeach
                         <div class="cartbtn">
+                          <div class="carttotal">
+                            <p>סך הכל</p>
+                            <h4><b>₪{{$cartTotal}}</b></h4>
+                          </div>                          
                         <a class="btn btn-join effect btn-sm" href="{{route('front.display.cart',['id' => Auth::user()->id,'type' => 0])}}"> צפו בסל   </a>   
                           <!-- <button class="btn btn-join">צפה בסל</button> -->   
                         </div>
@@ -168,20 +176,27 @@
 					<a href="{{route('front.my-courses')}}">קורסים   </a>
 				</li>
 			   @endif
-                   <li class="{{ Request::is('about-us') ? 'active' : '' }}">
+                <li class="{{ Request::is('about-us') ? 'active' : '' }}">
                   <a href="{{url('about-us')}}">  אודות</a>
-               </li>
-               <li class="{{ Request::is('Blogs') ? 'active' : '' }}">
+                </li>
+                <li class="{{ Request::is('Blogs') ? 'active' : '' }}">
                   <a href="{{route('front.Blogs')}}">בלוג</a>
-               </li>
+                </li>
               
-               <li class="{{ Request::is('contact-us') ? 'active' : '' }}">
+                <li class="{{ Request::is('contact-us') ? 'active' : '' }}">
                    <a href="{{route('front.contact.show')}}">צור קשר </a>
-               </li>
-                  </ul>
+                </li>
+                </ul>
+                @if(session()->has('successsignup'))
+                    <div class="alert alert-success">
+                        {{ session()->get('successsignup') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                </div>
                <!-- /.navbar-collapse -->
-
             </div>
          </nav>
          <!-- End Navigation -->

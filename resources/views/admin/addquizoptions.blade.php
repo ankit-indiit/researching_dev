@@ -30,7 +30,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
                 <li class="breadcrumb-item"><a href="javascript: void(0);">
                   ערוך מוצרים
                 </a></li>
-                <li class="breadcrumb-item"><a href="{{route('admin.quizlisting').'/'.$topic_id . '/' .$lecture_id . '/' . $course_id}}">חִידוֹן</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin.listquizquestions').'/'.$quizid}}">חִידוֹן</a></li>
                 <li class="breadcrumb-item active">
                   הוסף שאלות על חידון
                 </li>
@@ -51,19 +51,32 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
                   <h4 class="header-title mb-3">הוסף חידון</h4>
                 </div>
                 <div class="col-md-6 text-left">
-                  <a href="{{route('admin.addquizquestions').'/'.$quizid}}" class="btn btn-primary  mb-3">חזרה לחידון</a>
+                  <a href="{{route('admin.listquizquestions').'/'.$quizid}}" class="btn btn-primary  mb-3">חזרה לחידון</a>
                 </div>
               </div>
-<form method="POST" id = "add_quiz_questions_form" action="{{ route('admin.savequizquestions') }}" enctype="multipart/form-data">
-@csrf()
-<input type="hidden" name="topic_id" id="topic_id" value="{{$topic_id}}">
-<input type="hidden" name="lecture_id" id="lecture_id" value="{{$lecture_id}}">
-<input type="hidden" name="course_id" id="course_id" value="{{$course_id}}">
-<input type="hidden" name="quiz_id" id="quiz_id" value="{{$quizid}}">
-
+            <form method="POST" id = "add_quiz_questions_form" action="{{ route('admin.savequizquestions') }}" enctype="multipart/form-data">
+            @csrf()
+            <input type="hidden" name="quiz_id" id="quiz_id" value="{{$quizid}}">
+            <input type="hidden" name="chapter_id" id="chapter_id" value="{{ $topic_id}}">
               <div class="row">
                 <div class="col-lg-12">
                   <div class="row">
+                  <div class="col-md-12">
+                        <div class="form-group">
+                        <label for="quizlist">סבחר חידון</label>
+                        <select  id="quiz_id" name="quiz_id" class="form-control quiz_id" placeholder="בחבחר חידון">
+                          <?php 
+                            if(!empty($allQuiz)){
+                                foreach($allQuiz as $key=>$val){
+                            ?>
+                            <option  value="{{ $val['id'] }}">{{ $val['quiz_title'] }}</option>
+                            <?php
+                                }
+                            }
+                          ?>
+                        </select>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="questiontype">סוג שאלה</label>
@@ -71,10 +84,10 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
                           <option value ="">
                             בחר סוג
                           </option>
-                          <option value="0">
+                          <option value="1">
                             שאלות מסוג טקסט
                           </option>
-                          <option value="1">
+                          <option value="2">
                             שאלות מסוג תמונה
                           </option>
                         </select>
@@ -213,7 +226,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
       $('#questiontype').on('change', function() {
         {
           var inputBox = document.getElementsByClassName('quizoption');
-          if(this.value == '1'){
+          if(this.value == '2'){
             $('#text_options').css('display','none');
             $('#image_options').css('display','block');
           }else{
@@ -224,7 +237,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
       });
 
       $('#back_btn').click(function(){
-            window.location.href = "{{route('admin.addquizquestions').'/'.$quizid}}";
+            window.location.href = "{{route('admin.listquizquestions').'/'.$quizid}}";
 
         });
 
@@ -232,7 +245,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
         e.preventDefault();
          
         $.ajax({
-            url: '{{ route("admin.savequizquestions") }}',
+            url: '{{ route("admin.savetopicquestions") }}',
             type: 'POST',
             data:new FormData($("#add_quiz_questions_form")[0]),
                dataType:'JSON',
@@ -241,7 +254,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
                processData: false,
             success: function(response) {
                 if ($.isEmptyObject(response.error)) {
-                    window.location.href = "{{route('admin.addquizquestions').'/'.$quizid}}";
+                    window.location.href = "{{route('admin.listquizquestions').'/'.$quizid}}";
                 } else {
                     printErrorMsg(response.error);
                 }

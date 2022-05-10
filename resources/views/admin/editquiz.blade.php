@@ -150,7 +150,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
     });
         
         $('#edit_bck').click(function(){
-            window.location.href = "{{route('admin.quizlisting').'/'.$topic_id . '/' . $lecture_id . '/' . $course_id}}";
+            window.location.href = "{{route('admin.quizlisting').'/'.$lecture_id . '/' . $topic_id . '/' . $course_id}}";
 
         });
 
@@ -168,7 +168,7 @@ if(Session :: has ('quiz_data') || !empty (Session :: get ('quiz_data'))){
                processData: false,
             success: function(response) {
                 if ($.isEmptyObject(response.error)) {
-                    window.location.href = "{{route('admin.quizlisting').'/'.$topic_id . '/' . $lecture_id . '/' . $course_id}}";
+                    window.location.href = "{{route('admin.quizlisting').'/'.$lecture_id . '/' . $topic_id . '/' . $course_id}}";
                 } else {
                     printErrorMsg(response.error);
                 }

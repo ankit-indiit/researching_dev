@@ -19,6 +19,7 @@ class Lectures extends Model
         'title',
         'duration',
         'course_id',
+        'topic_id',
         'price'
     ];
     

@@ -3,7 +3,7 @@ body *, * {
   margin: 0;
   outline: none;
   box-sizing: border-box;
-  font-family: "Proxima Nova"; }
+  /*font-family: "Proxima Nova";*/ }
 
 .flex {
   display: -webkit-flex;

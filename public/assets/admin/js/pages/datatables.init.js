@@ -15,6 +15,21 @@ $(document).ready(function(){
 	},
 	
 });
+	$("#basic-datatable12").DataTable({
+		buttons: [
+		 	{extend:"excel",className:"btn-light"}
+	],
+	language:{
+		paginate:{
+			previous:"<i class='mdi mdi-chevron-left'>",
+			next:"<i class='mdi mdi-chevron-right'>"
+		}
+	},
+	drawCallback:function(){
+		$(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+	},
+	
+});
 
 
 var a=$("#datatable-buttons").DataTable({lengthChange:!1,
@@ -64,13 +79,24 @@ $("#scroll-horizontal-datatable").DataTable({
 $("#complex-header-datatable").DataTable({language:{paginate:{previous:"<i class='mdi mdi-chevron-left'>",next:"<i class='mdi mdi-chevron-right'>"}},drawCallback:function(){$(".dataTables_paginate > .pagination").addClass("pagination-rounded")},columnDefs:[{visible:!1,targets:-1}]}),$("#row-callback-datatable").DataTable({language:{paginate:{previous:"<i class='mdi mdi-chevron-left'>",next:"<i class='mdi mdi-chevron-right'>"}},drawCallback:function(){$(".dataTables_paginate > .pagination").addClass("pagination-rounded")},createdRow:function(a,e,i){15e4<+e[5].replace(/[\$,]/g,"")&&$("td",a).eq(5).addClass("text-danger")}}),$("#state-saving-datatable").DataTable({stateSave:!0,language:{paginate:{previous:"<i class='mdi mdi-chevron-left'>",next:"<i class='mdi mdi-chevron-right'>"}},drawCallback:function(){$(".dataTables_paginate > .pagination").addClass("pagination-rounded")}})});
 
 	$(document).ready(function() {
-				 $('#basic-datatable2 ').DataTable( {
-					dom: 'Bfrtip', 
-					
-					buttons: [
-						 'excel'
-					]
-				} )
+			$('#basic-datatable2 ').DataTable( {
+				dom: 'Bfrtip', 
+				buttons: [
+					 'excel'
+				]
+			}); 
+			/*$('').DataTable( {
+				dom: 'Bfrtip', 
+				buttons: [
+				//	 'excel'
+				],
+				language:{
+        		paginate:{
+        			previous:"<i class='mdi mdi-chevron-left'>",
+        			next:"<i class='mdi mdi-chevron-right'>"
+        		}
+        	},
+			});*/
 		}); 
 		$(document).ready(function() {
 		var t =	$('#basic-datatable1 ').DataTable( {
@@ -86,8 +112,8 @@ $("#complex-header-datatable").DataTable({language:{paginate:{previous:"<i class
 					]
 				} ); 
 		});
-			$(document).ready(function() {
-			$('.basic-datatable11 ').DataTable( {
+		$(document).ready(function() {
+			$('.basic-datatable11').DataTable( {
 				columnDefs: [ {
             			"searchable": true,
             			"orderable": true,
@@ -100,7 +126,3 @@ $("#complex-header-datatable").DataTable({language:{paginate:{previous:"<i class
 					]
 				} )
 		});
-
-		
-
-			
