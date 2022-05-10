@@ -1254,7 +1254,13 @@ html[lang="en"] .popular-courses-area.weekly-top-items.tag-lists:before {
 <script type="text/javascript">
 
   $(document).on('click', '#termAndConditions', function(){
-    $('#whatsappJoinBtn').css("display", "block");
+    if ($(this).val() == 1) {
+      $('#whatsappJoinBtn').css("display", "block");
+      $(this).val(0);
+    } else {
+      $('#whatsappJoinBtn').css("display", "none");
+      $(this).val(1);
+    }
   });
 
    $('#simulation_terms').change(function() { 

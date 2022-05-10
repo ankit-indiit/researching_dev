@@ -293,12 +293,12 @@ class MyCoursesController extends Controller
                 ->pluck('is_repeat')->first();
 
             $watched_topic_element = DB::table('last_watch_element')
-               ->where('course_id', $id)
-               ->where('topic_id', $topic->topic_id)
-               ->where('user_id',Auth::user()->id)
-               ->where('element_type', $topicType)
-               ->where('element_id', $topic->id)
-               ->exists();            
+                ->where('course_id', $id)
+                ->where('topic_id', $topic->topic_id)
+                ->where('user_id',Auth::user()->id)
+                ->where('element_type', $topicType)
+                ->where('element_id', $topic->id)
+                ->exists();            
             
             $flagCls = $elementFlag == 1 ? 'fa fa-flag' : 'far fa-flag';
 

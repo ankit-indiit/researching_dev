@@ -3,7 +3,12 @@
 @section('title', ' בלוג ')
 
 @section('content')
-
+<style type="text/css">
+  .blog-article .tab-pane.fade.in.fiximgHeight.active {
+      display: flex !important;
+      flex-wrap: wrap;
+  }
+</style>
 <div class="banner-inner-area2 inimg">
   <img src="{{ asset('/assets/img/blog/banner.jpg') }}"/>
 </div>
