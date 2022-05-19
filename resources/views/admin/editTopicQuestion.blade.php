@@ -199,7 +199,7 @@
                                       אפשרות A
                                     </label>
                                     <img src="{{ @$value1_url }}" alt="image">
-                                    <input name = "option[]"  type="file" class="form-control quizoption" placeholder=" הזן אפשרות ראשונה " required>
+                                    <input name = "optionA"  type="file" class="form-control quizoption" placeholder=" הזן אפשרות ראשונה " required>
                                     <span class="text-danger error-text option_a_err"></span>
                                   </div>
                                   <div class="form-group">
@@ -207,7 +207,7 @@
                                       אפשרות B
                                     </label>
                                      <img src="{{ @$value2_url }}" alt="image">
-                                    <input name = "option[]"  type="file" class="form-control quizoption" placeholder=" הזן אפשרות שנייה " required>
+                                    <input name = "optionB"  type="file" class="form-control quizoption" placeholder=" הזן אפשרות שנייה " required>
                                     <span class="text-danger error-text option_b_err"></span>
                                   </div>
                                   <div class="form-group">
@@ -215,7 +215,7 @@
                                       אפשרות C
                                     </label>
                                     <img src="{{ @$value3_url }}" alt="image">
-                                    <input name = "option[]" type="file" class="form-control quizoption" placeholder=" הזן אפשרות שלישית " required>
+                                    <input name = "optionC" type="file" class="form-control quizoption" placeholder=" הזן אפשרות שלישית " required>
                                     <span class="text-danger error-text option_c_err"></span>
                                   </div>
                                   <div class="form-group">
@@ -223,7 +223,7 @@
                                       אפשרות D
                                     </label>
                                      <img src="{{ @$value4_url }}" alt="image">
-                                    <input name = "option[]" type="file" class="form-control quizoption" placeholder=" הזן את האפשרות הרביעית " required>
+                                    <input name = "optionD" type="file" class="form-control quizoption" placeholder=" הזן את האפשרות הרביעית " required>
                                     <span class="text-danger error-text option_d_err"></span>
                                   </div>
                                 </div>
@@ -268,7 +268,6 @@
     @section('scripts')
     
     <script>
-        
         $('#questiontype').on('change', function() {
         {
           var inputBox = document.getElementsByClassName('quizoption');
@@ -295,7 +294,8 @@
                processData: false,
             success: function(response) {
                 if ($.isEmptyObject(response.error)) {
-                    window.location.href = "{{ route('admin.editChapter').'/'.$chapterId }}";
+                    {{-- window.location.href = "{{ route('admin.editChapter').'/'.$chapterId }}"; --}}
+                    window.location.href = "{{ route('admin.listquizquestions').'/'.$question_data->quiz_id }}";
                 } else {
                     printErrorMsg(response.error);
                 }

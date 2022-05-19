@@ -1193,7 +1193,7 @@ html[lang="en"] .popular-courses-area.weekly-top-items.tag-lists:before {
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header border-bottom-0">
-            <h4 class="modal-title"><span><img src="{{ asset('/assets/img/icon/simulation.png') }}"></span> מצא את מסלולי המרתון שלך </h4>
+              <h4 class="modal-title"><span><img src="{{ asset('/assets/img/icon/simulation.png') }}"></span> מצא את מסלולי המרתון שלך </h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
          </div>
          <!-- Modal body -->
@@ -1309,11 +1309,11 @@ html[lang="en"] .popular-courses-area.weekly-top-items.tag-lists:before {
                 terms:terms
             },
             success: function(data) {
-                if ($.isEmptyObject(data.error)) {
-                     stepnext(3);
-                } else {
-                    printErrorMsgnew(data.error);
-                }
+              if ($.isEmptyObject(data.error)) {
+                   stepnext(3);
+              } else {
+                  printErrorMsgnew(data.error);
+              }
             }
         });
     });

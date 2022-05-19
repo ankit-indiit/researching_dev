@@ -84,11 +84,16 @@
           <?php } ?>
         </ul>
 		  </div>
-			<div class="blog-content col-md-12">
+			<div class="col-md-12 blogflex">
+         <div class="ajax-load text-center" style="display:none">
+            <i class="fa fa-spinner fa-spin" style="color: #dd4b39; font-size:36px"></i>
+          </div>
+        <div class="row blog-content">
+
+        </div>
+         
 		  </div>
-      <div class="ajax-load text-center" style="display:none">
-        <i class="fa fa-spinner fa-spin" style="color: #dd4b39; font-size:36px"></i>
-      </div>
+    
     </div>
     <?php
       foreach ($categories as $category) {

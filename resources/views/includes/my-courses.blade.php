@@ -88,6 +88,9 @@
                               </div>
                           @endforeach
                       @endforeach
+                      <br>
+                      <hr style="border: 1px solid #eb871e; background-color: #eb871e;">
+                      <p class="text-center">קורסים נוספים שמותאמים עבורך</p> 
                       @if ($courses_data->lastPage() > 1)
                         <ul class="pagination pagMob">
                           <li class="{{ ($courses_data->currentPage() == 1) ? ' disabled' : '' }}">
@@ -143,10 +146,7 @@
                                       </ul>
                                   </div>
                               </div>
-                          </div>
-                          <br>
-                          <hr style="border: 1px solid #eb871e; background-color: #eb871e;">
-                          <p class="text-center">קורסים נוספים שמותאמים עבורך</p>                
+                          </div>                                         
                         </div>
                       @endforeach                      
                   @endif

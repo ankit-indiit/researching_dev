@@ -47,16 +47,16 @@
           </div>
          @if(count($all_refferels) > 0)
             @foreach ($all_refferels as $user)
-            <div class="col-md-4 referraluser  wow fadeInLeftBig  mt-30" >
+            <div class="col-md-3 referraluser  wow fadeInLeftBig  mt-30" >
                <div class="referraluser-main text-center">
                   <div class="referraluser-img text-center">
                      <a href="#">
-                     <img src="{{ asset('assets/users') }}/{{$user->affiliateUser->avatar}}">
+                     <img src="{{ asset('assets/users') }}/{{@$user->affiliateUser->avatar}}">
                      </a>
                      <span class="userdiscount">₪{{ $user->discount }}</span>
                   </div>
                   <div class="referraluser-info text-center">
-                     <h2 class="mb-0"> {{ $user->affiliateUser->full_name }} </h2>
+                     <h2 class="mb-0"> {{ @$user->affiliateUser->full_name }} </h2>
                      <span class="userdate"><i class="ti-calendar"></i> {{ $user->created_at->format('d M Y') }} </span>
                   </div>
                </div>

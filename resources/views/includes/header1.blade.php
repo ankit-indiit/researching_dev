@@ -23,16 +23,18 @@
                      <!-- <li class="search"><a href="#"><i class="ti-search"></i></a></li> -->
                       <li class="dropdown search progressdrop">
                         <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="progressiveloader" style="
-                          @if (userProgress() < 25)
+                          @if (userProgress() == 0)
+                          
+                          @elseif (userProgress() <= 25)
                             border-top: 5px solid #eb871e;
-                          @elseif (userProgress() < 50)
+                          @elseif (userProgress() <= 50)
                             border-top: 5px solid #eb871e;
                             border-right: 5px solid #eb871e;
-                          @elseif (userProgress() < 75)
+                          @elseif (userProgress() <= 75 || userProgress() <= 85)
                             border-top: 5px solid #eb871e;
                             border-right: 5px solid #eb871e;
                             border-bottom: 5px solid #eb871e;
-                          @else
+                          @elseif (userProgress() == 100)
                             border-top: 5px solid #eb871e;
                             border-right: 5px solid #eb871e;
                             border-bottom: 5px solid #eb871e;
@@ -124,14 +126,19 @@
                         אירועים קרובים
                               </a>
                            </li>
+                           <li>
+                              <a data-toggle="tab" class="tab3 " href="#tab4" aria-expanded="false">
+                                הוספת המלצה
+                              </a>
+                           </li>
                            <!-- <li>
                               <a data-toggle="tab" class="tab4 " href="#tab4" aria-expanded="false">
                       המלצת המשתמש
                               </a>
                            </li> -->
-                           <a class=" btn-theme effect btn-md btn-lt-ht recommentbtn" href="#tab4" data-toggle="tab">
+                           {{-- <a class=" btn-theme effect btn-md btn-lt-ht recommentbtn" href="#tab4" data-toggle="tab">
                              הוספת המלצה
-                           </a>
+                           </a> --}}
                         </ul>
                </div>
                <!-- /.navbar-collapse -->

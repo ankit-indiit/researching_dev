@@ -345,44 +345,80 @@ class QuizController extends Controller
              'ans_option' => 'required'
         ]);
         if ($validator->passes()) {
-            if($request->hasfile('option'))
+            if($request->hasfile('optionA'))
             {
-                foreach($request->file('option') as $file)
-                {
-                    $destinationPath = public_path().'/assets/topic_question_images/';
-                    $original_name = $file->getClientOriginalName();
-                    $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
-                    $thumb_img = Image::make($file->getRealPath())->resize(null,50,function ($constraint) {
+                $file = $request->optionA;
+                $destinationPath = public_path().'/assets/topic_question_images/';
+                $original_name = $file->getClientOriginalName();
+                $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+                $thumb_img = Image::make($file->getRealPath())->resize(250,250,function ($constraint) {
                     $constraint->aspectRatio();
                 });
                 if($thumb_img->save($destinationPath.'/'.$file_name,100)){
-                    $image_name[] = $file_name;
+                    $quiz_questions->optionA = $file_name;
+               }                
+            }
+
+            if($request->hasfile('optionB'))
+            {
+                $file = $request->optionB;
+                $destinationPath = public_path().'/assets/topic_question_images/';
+                $original_name = $file->getClientOriginalName();
+                $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+                $thumb_img = Image::make($file->getRealPath())->resize(250,250,function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                if($thumb_img->save($destinationPath.'/'.$file_name,100)){
+                   $quiz_questions->optionB = $file_name;
+               }
+                
+            }
+
+            if($request->hasfile('optionC'))
+            {
+                $file = $request->optionC;
+                $destinationPath = public_path().'/assets/topic_question_images/';
+                $original_name = $file->getClientOriginalName();
+                $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+                $thumb_img = Image::make($file->getRealPath())->resize(250,250,function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                if($thumb_img->save($destinationPath.'/'.$file_name,100)){
+                    $quiz_questions->optionC = $file_name;
                }
             }
-        }
-        if($request->questiontype == '1'){
-            $quiz_questions->optionA = $request->option_a;
-            $quiz_questions->optionB = $request->option_b;
-            $quiz_questions->optionC = $request->option_c;
-            $quiz_questions->optionD = $request->option_d;
+
+            if($request->hasfile('optionD'))
+            {
+                $file = $request->optionD;
+                $destinationPath = public_path().'/assets/topic_question_images/';
+                $original_name = $file->getClientOriginalName();
+                $file_name = str_replace(' ','_',time().$file->getClientOriginalName());
+                $thumb_img = Image::make($file->getRealPath())->resize(250,250,function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                if($thumb_img->save($destinationPath.'/'.$file_name,100)){
+                   $quiz_questions->optionD = $file_name;
+               }                
+            }
+            if($request->questiontype == '1'){
+                $quiz_questions->optionA = $request->option_a;
+                $quiz_questions->optionB = $request->option_b;
+                $quiz_questions->optionC = $request->option_c;
+                $quiz_questions->optionD = $request->option_d;
+            }
+            $quiz_questions->topic_id = $request->topic_id;
+            $quiz_questions->quiz_id = $request->quiz_id;
+            $quiz_questions->question = $request->questionarea;
+            $quiz_questions->answer = $request->ans_option;
+            $quiz_questions->questionImage = $request->quest_image;
+            $quiz_questions->questionLink = $request->quest_video;
+            $quiz_questions->questionType = $request->questiontype;
+            $quiz_questions->save();
+            Session::flash('message', ' המשתמש נוסף בהצלחה. ');
+            return response()->json(['success' => true]);
         }else{
-            $quiz_questions->optionA = (isset($image_name[0]) && !empty($image_name[0]))?$image_name[0]:$old_question_data['optionA'];
-            $quiz_questions->optionB = (isset($image_name[1]) && !empty($image_name[1]))?$image_name[1]:$old_question_data['optionB'];
-            $quiz_questions->optionC = (isset($image_name[2]) && !empty($image_name[2]))?$image_name[2]:$old_question_data['optionC'];
-            $quiz_questions->optionD = (isset($image_name[3]) && !empty($image_name[3]))?$image_name[3]:$old_question_data['optionD'];
-        }
-        $quiz_questions->topic_id = $request->topic_id;
-        $quiz_questions->quiz_id = $request->quiz_id;
-        $quiz_questions->question = $request->questionarea;
-        $quiz_questions->answer = $request->ans_option;
-        $quiz_questions->questionImage = $request->quest_image;
-        $quiz_questions->questionLink = $request->quest_video;
-        $quiz_questions->questionType = $request->questiontype;
-        $quiz_questions->save();
-        Session::flash('message', ' המשתמש נוסף בהצלחה. ');
-        return response()->json(['success' => true]);
-         }else{
-        return response()->json(['error'=>$validator->errors()]);
+            return response()->json(['error'=>$validator->errors()]);
     }
 }
 

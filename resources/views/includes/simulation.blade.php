@@ -145,7 +145,7 @@
                                           <circle cx="10" cy="10" r="9"></circle>
                                           <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor3{{ @$val['id'] }}"></path>
                                        </svg>
-                                       <span class="checkmark">ג  </span>
+                                       <span class="checkmark">ג</span>
                                        {{ \Illuminate\Support\Str::limit($val['optionC'], 15, $end='') }}
                                     </label>
                                     <label id="label_4{{ $val['id']}}" for="rdo-34{{ $i }}" class="btn-radio selectedAnswer">
@@ -162,43 +162,43 @@
                                     }else{ ?>
                                  <div class="answer-type-choice checkout-form imgquizflex">
                                     <div class="w20">
-                                       <label for="rdo-1{{ $i }}" class="btn-radio selectedAnswer">
+                                       <label for="rdo-1{{ $i }}" id="label_1{{ $val['id']}}" class="btn-radio selectedAnswer">
                                           <input type="radio" id="rdo-1{{ $i }}" name="radio-grp{{ $val['id']}}" class="mcq_answer" option='1' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
-                                          <svg width="30px" height="30px" viewBox="0 0 20 20">
+                                          <svg width="30px" height="30px" viewBox="0 0 20 20" style="margin-bottom: 68px;">
                                              <circle cx="10" cy="10" r="9"></circle>
                                              <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor1{{ @$val['id'] }}"></path>
                                           </svg>
                                           <span class="checkmark">א</span>
-                                          <img src="{{ asset('/assets/images/') }}/{{$val['optionA']}}" class="quizimg" />
+                                          <img src="{{ asset('/assets/topic_question_images/') }}/{{$val['optionA']}}" class="quizimg" />
                                        </label>
-                                       <label for="rdo-2{{ $i }}" class="btn-radio selectedAnswer" >
+                                       <label for="rdo-2{{ $i }}" id="label_2{{ $val['id']}}" class="btn-radio selectedAnswer" >
                                           <input type="radio" id="rdo-2{{ $i }}" name="radio-grp{{ $val['id']}}" class="mcq_answer" option='2' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
-                                          <svg width="30px" height="30px" viewBox="0 0 20 20">
+                                          <svg width="30px" height="30px" viewBox="0 0 20 20" style="margin-bottom: 68px;">
                                              <circle cx="10" cy="10" r="9"></circle>
                                              <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor2{{ @$val['id'] }}"></path>
                                           </svg>
                                           <span class="checkmark">ב </span>
-                                          <img src="{{ asset('/assets/images/') }}/{{$val['optionB']}}" class="quizimg" />
+                                          <img src="{{ asset('/assets/topic_question_images/') }}/{{$val['optionB']}}" class="quizimg" />
                                        </label>
                                     </div>
                                     <div  class="w20">
-                                       <label for="rdo-3{{ $i }}" class="btn-radio selectedAnswer">
+                                       <label for="rdo-3{{ $i }}" id="label_3{{ $val['id']}}" class="btn-radio selectedAnswer">
                                           <input type="radio" id="rdo-3{{ $i }}" name="radio-grp{{ $val['id']}}" class="mcq_answer" option='3' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
-                                          <svg width="30px" height="30px" viewBox="0 0 20 20">
+                                          <svg width="30px" height="30px" viewBox="0 0 20 20" style="margin-bottom: 68px;">
                                              <circle cx="10" cy="10" r="9"></circle>
                                              <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor3{{ @$val['id'] }}"></path>
                                           </svg>
                                           <span class="checkmark">ג  </span>
-                                          <img src="{{ asset('/assets/images/')}}/{{$val['optionC']}}" class="quizimg" />
+                                          <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionC']}}" class="quizimg" />
                                        </label>
-                                       <label for="rdo-4{{ $i }}" class="btn-radio selectedAnswer">
+                                       <label for="rdo-4{{ $i }}" id="label_4{{ $val['id']}}" class="btn-radio selectedAnswer">
                                           <input type="radio" id="rdo-4{{ $i }}" name="radio-grp{{ $val['id']}}" class="mcq_answer" option='4' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
-                                          <svg width="30px" height="30px" viewBox="0 0 20 20">
+                                          <svg width="30px" height="30px" viewBox="0 0 20 20" style="margin-bottom: 68px;">
                                              <circle cx="10" cy="10" r="9"></circle>
                                              <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor4{{ @$val['id'] }}"></path>
                                           </svg>
                                           <span class="checkmark">ד  </span>
-                                          <img src="{{ asset('/assets/images/')}}/{{$val['optionD']}}" class="quizimg" />
+                                          <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionD']}}" class="quizimg" />
                                        </label>
                                     </div>
                                  </div>

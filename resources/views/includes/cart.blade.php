@@ -1,11 +1,66 @@
 @extends('layouts.app')
 @section('title', ' עֲגָלָה ')
 @section('content')
+<style type="text/css">
+   #private_university_chosen , #marathon_university_chosen {
+       border: 2px solid #ddd;
+       border-radius: 50px;
+   }
+
+   #private_university_chosen ul.chosen-choices , #marathon_university_chosen ul.chosen-choices {
+       border: 0 !important;
+   }
+
+   #private_university_chosen ul.chosen-results li.active-result , #marathon_university_chosen ul.chosen-results li.active-result{
+       display: flex !important;
+       min-height: 40px;
+       align-items: center;
+       padding: 2px 12px !important;
+       color: #000;
+       cursor: pointer !important;
+       justify-content: flex-end;
+       font-family: 'Varela Round', sans-serif;
+       text-transform: uppercase;
+       font-weight: 600;
+   }
+
+   #private_university_chosen  .chosen-choices li.search-choice , #marathon_university_chosen  .chosen-choices li.search-choice {
+       padding: 6px 26px 6px 10px;
+       margin: 13px 5px 14px 0;
+   }
+
+   #private_university_chosen .chosen-choices li.search-choice .search-choice-close , #marathon_university_chosen .chosen-choices li.search-choice .search-choice-close {
+       top: 7px;
+   }
+
+
+   #private_university_chosen .chosen-drop , #marathon_university_chosen .chosen-drop {
+       position: absolute;
+       top: 110%;
+       z-index: 1010;
+       width: 100%;
+       border: 1px solid #aaa;
+       background: #fff;
+       -webkit-box-shadow: 0 21px 30px 0 rgb(59 59 59 / 50%);
+       padding: 10px;
+       border-radius: 12px;
+       box-shadow: 0 21px 30px 0 rgb(59 59 59 / 50%);
+   }
+   #private_university_chosen ul.chosen-results li.result-selected , #marathon_university_chosen ul.chosen-results li.result-selected {
+       text-align: right;
+   }
+   div#private_university_chosen {
+    width: 100% !important;
+        direction: ltr;
+}
+div#private_university_chosen input.chosen-search-input.default {
+    padding-right: 15px;
+}
+</style>
 <?php $courses_id = [];?>
 <?php $course_type = [];?>
 <?php $grand_total = [];?>
 <?php $topic_ids = [];?>
-
 <!-- Start Breadcrumb  -->
 <div class="banner-inner-area2 pt8"></div>
 <div class="breadcrumb-inner-area mb50" style="">
@@ -57,24 +112,24 @@
             <h1 class="chaticon">תיבת צ'אט</h1>
             <div class="chatbody">
                <div class="chatoptions">
-                <ul class="chat-lists">
-                    @if (Auth::check())
-                    @foreach($ticketData as $ticket_data)
-                        <li  class="btn-radio ticket_cls" data-id="{{ $ticket_data->id }}">{{ $ticket_data->subject }}</li>
-                    @endforeach
-                    @endif
-                    <!--<li  class="btn-radio">יש לי תקלה בתהליך הרכישה</li>
-                    <li  class="btn-radio">אני מעוניין בחבילת קורסים שלא קיימת</li>
-                    <li  class="btn-radio btn-other-subject">אחר</li>-->
-                </ul>
+                  <ul class="chat-lists">
+                     @if (Auth::check())
+                     @foreach($ticketData as $ticket_data)
+                     <li  class="btn-radio ticket_cls" data-id="{{ $ticket_data->id }}">{{ $ticket_data->subject }}</li>
+                     @endforeach
+                     @endif
+                     <!--<li  class="btn-radio">יש לי תקלה בתהליך הרכישה</li>
+                        <li  class="btn-radio">אני מעוניין בחבילת קורסים שלא קיימת</li>
+                        <li  class="btn-radio btn-other-subject">אחר</li>-->
+                  </ul>
                </div>
                <div class="chatform" style="display:none;">
                   <div class="form-wraper">
                      <!--<form method="POST" class="mt-0" id="upload-chats" action="{{ route('front.chatbox') }}" enctype="multipart/form-data">-->
                      <form method="POST" class="mt-0" id="upload_chats"  enctype="multipart/form-data">
                         <div class="alert alert-success alert-block alertMessage" style="display:none;">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <strong>השאילתה שלך נשלחה!  </strong>
+                           <button type="button" class="close" data-dismiss="alert">×</button>
+                           <strong>השאילתה שלך נשלחה!  </strong>
                         </div>
                         @csrf
                         <input type="hidden" name="ticket_id" id="ticket_id"  value="">
@@ -108,7 +163,7 @@
                               <p id="image_title"> אנא בחר בקובץ  </p>
                            </label>
                            <input type="file" id="uploadfile" name="uploadfile" style="display:none">
-                        </div>-->
+                           </div>-->
                         <div class="form-group mb-0 text-center">
                            <button type="submit" id = "upload_chat_btn"class="btn btn-theme btn-md ">לשלוח הודעה</button>
                         </div>
@@ -117,17 +172,14 @@
                </div>
             </div>
          </div>
-         
-        @if (Auth::check())
-        <a href="#" id = "support_button" class="fixed-msg-icon btn btn-theme btn-md">תמיכה <img style="width:auto" height="24px" src="{{ asset('/assets/img/tools.png') }}"/></a>
-        @else
-        @endif
-         
+         @if (Auth::check())
+         <a href="#" id = "support_button" class="fixed-msg-icon btn btn-theme btn-md">תמיכה <img style="width:auto" height="24px" src="{{ asset('/assets/img/tools.png') }}"/></a>
+         @else
+         @endif
          <!--- Chat Box Ends--->
          <div class="tab-pane  active  pb-70" id="step-1" >
             <div class="container">
                <div class="row">
-                  
                   <div class="col-md-7">
                      <form class="cart-table">
                         <?php $total = 0 ?>
@@ -140,42 +192,42 @@
                            ?>
                         <div class="table-responsive">
                            <table class="table table-bordered tbfont">
-                           <!--thead>
-                              <tr>
-                                 <th  width="35%">פרטי מוצר </th>
-                                 <th>חבילה</th>
-                                 <th>מחיר מלא</th>
-                                 <th>אחרי הנחה</th>
-                                 
-                                 <th></th>
-                              </tr>
-                              </thead-->
-                           <tbody>
-                              <tr>
-                                 <td width="35%">
-                                    <div class="product-details-wrap">
-                                       <div class="product-image">
-                                          <img src="{{ $image }}">
+                              <!--thead>
+                                 <tr>
+                                    <th  width="35%">פרטי מוצר </th>
+                                    <th>חבילה</th>
+                                    <th>מחיר מלא</th>
+                                    <th>אחרי הנחה</th>
+                                    
+                                    <th></th>
+                                 </tr>
+                                 </thead-->
+                              <tbody>
+                                 <tr>
+                                    <td width="35%">
+                                       <div class="product-details-wrap">
+                                          <div class="product-image">
+                                             <img src="{{ $image }}">
+                                          </div>
+                                          <div class="product-info">
+                                             <h6>{{ $details->name }}</h6>
+                                             <p>{!! Str::limit($details->description, 25) !!}</p>
+                                          </div>
                                        </div>
-                                       <div class="product-info">
-                                          <h6>{{ $details->name }}</h6>
-                                          <p>{!! Str::limit($details->description, 25) !!}</p>
-                                       </div>
-                                    </div>
-                                 </td>
-                                 <?php if($details->item_type == 1){?> 
+                                    </td>
+                                    <?php if($details->item_type == 1){?> 
                                     <td  class="br-none text-center" style="overflow: hidden;"  rowspan="2">
                                        <!-- <img src="{{ asset('/assets/img/package.png') }}" alt=""> -->
                                        <div class="couponfix ribbon-top-left"><span>חבילות </span></div>
                                     </td>
-                                 <?php }?>
-                                 <td  rowspan="2"  class="br-none text-center finalprice">₪32.00</td>
-                                 <td  rowspan="2"  class="br-none text-center">₪{{ $details->price }}</td>
-                                 <td  rowspan="2"  class="br-none text-center">
-                                    <a  class ="removecart" data-id="{{ $details->course_id }}"><i class="ti-close"></i></a>
-                                 </td>
-                              </tr>
-                           </tbody>
+                                    <?php }?>
+                                    <td  rowspan="2"  class="br-none text-center finalprice">₪32.00</td>
+                                    <td  rowspan="2"  class="br-none text-center">₪{{ $details->price }}</td>
+                                    <td  rowspan="2"  class="br-none text-center">
+                                       <a  class ="removecart" data-id="{{ $details->course_id }}"><i class="ti-close"></i></a>
+                                    </td>
+                                 </tr>
+                              </tbody>
                            </table>
                         </div>
                         @endforeach
@@ -189,7 +241,7 @@
                         <div class="shipping-infopanel">
                            <table class="totalcart-table">
                               <?php $shipping_total = 0;
-                               ?>
+                                 ?>
                               @foreach($cart_data as $details)
                               <?php $shipping_total += $details->price 
                                  ?>
@@ -210,17 +262,17 @@
                                        </span>
                                     </div>
                                     <form action = "{{ url('apply_coupon') }}" method="POST">
-                                    @csrf
-                                    <div class="couponshow" style="display:none">
-                                       <div class="coupon mt-0">
-                                          <div class="coupon-form">
-                                             <input type="text" id = "coupon_name" name="coupon_name" class="input-text mt-0 mb-0" placeholder="קוּפּוֹן">
-                                             <button id="apply" type="submit" class="button" name="" value="">שלח</button>
+                                       @csrf
+                                       <div class="couponshow" style="display:none">
+                                          <div class="coupon mt-0">
+                                             <div class="coupon-form">
+                                                <input type="text" id = "coupon_name" name="coupon_name" class="input-text mt-0 mb-0" placeholder="קוּפּוֹן">
+                                                <button id="apply" type="submit" class="button" name="" value="">שלח</button>
+                                             </div>
                                           </div>
                                        </div>
-                                    </div>
-                                 </form>
-                                 <div class="coupon-alert"></div>
+                                    </form>
+                                    <div class="coupon-alert"></div>
                                  </td>
                               </tr>
                               <tr>
@@ -231,7 +283,6 @@
                                  <th width="40%">חסכת!  :</th>
                                  <td width="60%"><span id="saved" style="color:#016B06;">₪0</span></td>
                               </tr>
-                              
                               <tr>
                                  <td class="border-0" colspan="2">
                                     @if (Auth::check())
@@ -251,23 +302,22 @@
                         </div-->
                   </div>
                   <div class="col-md-5">
-                     
                      <div class="cartsidebar">
                         <div class="title">
                            <h4>למה אנחנו</h4>
                         </div>
                         <ul>
-                            <li>
+                           <li>
                               <i class="ti-book"></i> 
                               <div class="cart-bullets">
                                  <h3>
                                     התאמה אישית לחומרי הלימוד שלך
                                  </h3>
                                  <p>
-                                    אצלנו תוכל ללמוד קורסים המותאמים בדיוק לחומר הלימוד שלך, כפי שהמרצה שלך מלמד 
+                                    אצלנו תוכל ללמוד קורסים המותאמים בדיוק לחומר הלימוד שלך, כפי שהמרצה שלך מלמד 
                                  </p>
                               </div>
-                           </li> 
+                           </li>
                            <li>
                               <i class="ti-signal"></i> 
                               <div class="cart-bullets">
@@ -287,14 +337,11 @@
                                  </h3>
                                  <p>
                                     אצלנו תלמד את החומר בצורה קלה וברורה באמצעות שיטות ייחודיות שפיתחו המורים הטובים והמנוסים ביותר בתחום
- 
                                  </p>
                               </div>
                            </li>
-                          
                         </ul>
                      </div>
-                     
                      <?php if(count($recommendations) != 0){?>
                      <div class="cartsidebar">
                         <div class="title">
@@ -314,13 +361,12 @@
                                  <p> {{$value->description}}</p>
                               </div>
                               <?php }}?>
-                              
                            </div>
                            <a href="{{url('/recommend')}}" class="btn-recomend btn btn-join btn-block"> ראה את כל ההמלצות </a>
                         </div>
                      </div>
-                  <?php }?>
-                  <div class="cartsidebar">
+                     <?php }?>
+                     <div class="cartsidebar">
                         <div class="title">
                            <h4>הוסף גם</h4>
                         </div>
@@ -359,7 +405,7 @@
                         <div class="alert alert-danger print-loginerror-msg" style="display:none">
                            <ul></ul>
                         </div>
-                       <h3 class=" dir-ltr"> ? כבר יש לך חשבון </h3>
+                        <h3 class=" dir-ltr"> ? כבר יש לך חשבון </h3>
                         <form  action="{{ route('front.loginpage') }}" class="mt-4" method="POST" id="first_form">
                            @csrf
                            <div class="form-group">
@@ -482,7 +528,7 @@
             <div class="container">
                @if(Auth::check())
                <form id="payment_form" class="checkout-form">
-                   <input type="hidden" id="coupon_code_hidden"  >
+                  <input type="hidden" id="coupon_code_hidden"  >
                   <div class="row checkoutmain">
                      <div class="col-md-4 ">
                         <div class="checkoutside">
@@ -540,11 +586,11 @@
                               <table class="totalprice-table">
                                  <?php $shipping_total = 0;
                                     $orignal_total = 100;
-
+                                    
                                     ?>
                                  @foreach($cart_data as $details)
                                  <?php $shipping_total += $details->price;
-                                 $grand_total[] = $details->price; ?>
+                                    $grand_total[] = $details->price; ?>
                                  @endforeach
                                  <tr>
                                     <!--th>סך הכל :</th-->
@@ -560,7 +606,6 @@
                                     <th>מחיר סופי   :</th>
                                     <td id="finalP">{{$shipping_total}}</td>
                                  </tr>
-                                 
                                  @if(sizeof($cart_data) != 0)
                                  <input type="hidden" id = "checkout_type" name="checkout_type" value ="{{$details->item_type}}">
                                  @endif
@@ -641,34 +686,34 @@
                         <h3  class="head-cart">פרטי תשלום </h3>
                         <div class="row">
                            <div class="col-md-6">
-                               <div class="form-group mb-0">
-                              <label>שם משפחה  </label>
-                              <input id="payment_last_name" type="text" class="form-control @error('payment_last_name') is-invalid @enderror" placeholder="
-                              שם משפחה  " name="payment_last_name" value="{{$user_detail->last_name}}"autocomplete="payment_last_name"  />
-                              <i class="fa fa-user"></i>
+                              <div class="form-group mb-0">
+                                 <label>שם משפחה  </label>
+                                 <input id="payment_last_name" type="text" class="form-control @error('payment_last_name') is-invalid @enderror" placeholder="
+                                    שם משפחה  " name="payment_last_name" value="{{$user_detail->last_name}}"autocomplete="payment_last_name"  />
+                                 <i class="fa fa-user"></i>
                               </div>
                            </div>
                            <div class="col-md-6">
-                             <div class="form-group mb-0">
-                              <label>שם פרטי </label>
-                              <input id="payment_first_name" type="text" class="form-control @error('payment_first_name') is-invalid @enderror" placeholder=" שם פרטי " name="payment_first_name" value="{{$user_detail->first_name}}"autocomplete="first_name" />
-                          <i class="fa fa-user"></i>
-                           </div>
-                           </div>
-                           <div class="col-md-6">
-                                  <div class="form-group mb-0">
-                              <label>אימייל </label>
-                              <input type="email" id="payment_email" class="form-control @error('payment_email') is-invalid @enderror" placeholder=" אימייל " name="payment_email" value="{{$user_detail->email}}"autocomplete="email"  />
-                         <i class="fa fa-envelope"></i>
-                           </div>
+                              <div class="form-group mb-0">
+                                 <label>שם פרטי </label>
+                                 <input id="payment_first_name" type="text" class="form-control @error('payment_first_name') is-invalid @enderror" placeholder=" שם פרטי " name="payment_first_name" value="{{$user_detail->first_name}}"autocomplete="first_name" />
+                                 <i class="fa fa-user"></i>
+                              </div>
                            </div>
                            <div class="col-md-6">
-                             <div class="form-group mb-0">
-                              <label>מספר טלפון </label>
-                              <input type="text" id="payment_phone_number" class="form-control @error('payment_phone_number') is-invalid @enderror" placeholder="
-                               מספר איש קשר " name="payment_phone_number" value="{{$user_detail->contact_number}}"  />
-                            <i class="fa fa-phone"></i>
+                              <div class="form-group mb-0">
+                                 <label>אימייל </label>
+                                 <input type="email" id="payment_email" class="form-control @error('payment_email') is-invalid @enderror" placeholder=" אימייל " name="payment_email" value="{{$user_detail->email}}"autocomplete="email"  />
+                                 <i class="fa fa-envelope"></i>
+                              </div>
                            </div>
+                           <div class="col-md-6">
+                              <div class="form-group mb-0">
+                                 <label>מספר טלפון </label>
+                                 <input type="text" id="payment_phone_number" class="form-control @error('payment_phone_number') is-invalid @enderror" placeholder="
+                                    מספר איש קשר " name="payment_phone_number" value="{{$user_detail->contact_number}}"  />
+                                 <i class="fa fa-phone"></i>
+                              </div>
                            </div>
                         </div>
                         <h3 class="head-cart mt-20">אמצעי תשלום </h3>
@@ -687,14 +732,14 @@
                                        <option value = "debit_card"> Debit Card </option>
                                        <option value = "credit_card">  Credit Card  </option>
                                     </select>
-                                     <i class="fa fa-credit-card"></i>
+                                    <i class="fa fa-credit-card"></i>
                                  </div>
                               </div>
                               <div class="col-md-6">
                                  <div class="form-group">
                                     <label>הוסף שם בעל כרטיס </label>
                                     <input type="text" id = "holder_name" name="holder_name" class="form-control" value="">
-                                     <i class="fa fa-user"></i>
+                                    <i class="fa fa-user"></i>
                                  </div>
                               </div>
                               <div class="col-md-12">
@@ -722,7 +767,7 @@
                                        <option value = '11'>11</option>
                                        <option value = '12'>12</option>
                                     </select>
-                                     <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-calendar"></i>
                                  </div>
                               </div>
                               <div class="col-md-4">
@@ -740,14 +785,14 @@
                                           }
                                           ?>
                                     </select>
-                                     <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-calendar"></i>
                                  </div>
                               </div>
                               <div class="col-md-4">
                                  <div class="form-group">
                                     <label>הוסף CVV </label>
                                     <input type="text" name="cvv_value" id = "cvv_value" class="form-control">
-                                     <i class="fa fa-code"></i>
+                                    <i class="fa fa-code"></i>
                                  </div>
                               </div>
                            </div>
@@ -799,58 +844,54 @@
                                                 <a  id ="delete_card" class="btndel" data-id="{{ $value->id }}"><i class="ti-close"></i></a>
                                              </td>
                                           </tr>
-                                
                                        </tbody>
-                                    <?php  }?>
+                                       <?php  }?>
                                     </table>
                                  </div>
                               </div>
                            </div>
                            @endif
                         </div>
-
                         <div class="checkout-payment mobile_view">
-                                 <img src="{{ asset('/assets/img/stamp.png') }}"/>
-                                 <!--div class="form-check">
-                                    <div class="radio-wraper">
-                                       <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                                       <label class="form-check-label" for="exampleRadios1">
-                                       העברה בנקאית ישירה
-                                       </label>
-                                    </div>
-                                    <p>בצע את התשלום ישירות לחשבון הבנק שלנו. אנא השתמש במזהה ההזמנה שלך כהפניה לתשלום. ההזמנה שלך לא תישלח עד אשר הכספים יוסרו בחשבוננו. </p>
-                                    </div>
-                                    <div class="form-check">
-                                    <div class="radio-wraper">
-                                       <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                                       <label class="form-check-label" for="exampleRadios2">
-                                       מזומן במשלוח
-                                       </label>
-                                    </div>
-                                    <p>הנתונים האישיים שלך ישמשו לעיבוד הזמנתך, לתמיכה בחווייתך ברחבי אתר זה ולמטרות אחרות המתוארות במדיניות הפרטיות שלנו. </p>
-                                    </div-->
-                                 <div class="checkout-form termsagree">
-                                    <label class="container">קראתי ואני מסכים לתנאי השימוש
-                                    <input type="checkbox" name="agree_terms" id ="agree_terms" value="">
-                                    <span class="checkmark"></span>
-                                    </label>
-                                    <label class="container">אני מודע לסיכון שבהעתקת ו/או העברת חומרי הלימוד המוגנים באתר לרבות הקלטות הקורסים
-                                    <input type="checkbox" name="risk_terms" id ="risk_terms" value="">
-                                    <span class="checkmark"></span>
-                                    </label>
-                                 </div>
-                                 <!-- <button type = 'submit' class="place-orderbtn mt-0">שצע הזמנה </button> -->
-                                 <button type = "submit" class="place-orderbtn mt-0">בצע הזמנה </button>
-                                 <p class="checkoutnote">כשתלחץ על לחצן הרכישה אתה תצטרף גם לרשימת הניוזלטר שלנו כדי לקבל חומרי לימוד שנפרסם, עדכונים והטבות. </p>
+                           <img src="{{ asset('/assets/img/stamp.png') }}"/>
+                           <!--div class="form-check">
+                              <div class="radio-wraper">
+                                 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                                 <label class="form-check-label" for="exampleRadios1">
+                                 העברה בנקאית ישירה
+                                 </label>
+                              </div>
+                              <p>בצע את התשלום ישירות לחשבון הבנק שלנו. אנא השתמש במזהה ההזמנה שלך כהפניה לתשלום. ההזמנה שלך לא תישלח עד אשר הכספים יוסרו בחשבוננו. </p>
+                              </div>
+                              <div class="form-check">
+                              <div class="radio-wraper">
+                                 <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                                 <label class="form-check-label" for="exampleRadios2">
+                                 מזומן במשלוח
+                                 </label>
+                              </div>
+                              <p>הנתונים האישיים שלך ישמשו לעיבוד הזמנתך, לתמיכה בחווייתך ברחבי אתר זה ולמטרות אחרות המתוארות במדיניות הפרטיות שלנו. </p>
+                              </div-->
+                           <div class="checkout-form termsagree">
+                              <label class="container">קראתי ואני מסכים לתנאי השימוש
+                              <input type="checkbox" name="agree_terms" id ="agree_terms" value="">
+                              <span class="checkmark"></span>
+                              </label>
+                              <label class="container">אני מודע לסיכון שבהעתקת ו/או העברת חומרי הלימוד המוגנים באתר לרבות הקלטות הקורסים
+                              <input type="checkbox" name="risk_terms" id ="risk_terms" value="">
+                              <span class="checkmark"></span>
+                              </label>
+                           </div>
+                           <!-- <button type = 'submit' class="place-orderbtn mt-0">שצע הזמנה </button> -->
+                           <button type = "submit" class="place-orderbtn mt-0">בצע הזמנה </button>
+                           <p class="checkoutnote">כשתלחץ על לחצן הרכישה אתה תצטרף גם לרשימת הניוזלטר שלנו כדי לקבל חומרי לימוד שנפרסם, עדכונים והטבות. </p>
                         </div>
                      </div>
-                     
                   </div>
                </form>
                @endif
             </div>
          </div>
-       
          <div class="tab-pane   fade " id="step-4" >
             <div class="thankyou-sec video-box">
                <div class="thankmsg">
@@ -873,26 +914,26 @@
                   </div>
                </div>
                <div class="referfriend pt-80 pb-80">
-			    <div class="container">
-                  <div class="row">
-				  <div class="referimg">
-				    <img src="{{ asset('/assets/img/Refer.png') }}">
-				  </div>
-				  <div class="site-heading text-center mb-20">
-                  
-                      <h2>הפנה חבר</h2>
-                     <p>שתף קוד הפניה עם חבריך, חברך יקבל 10% הנחה ברכישה ותקבל 10% הנחה ברכישה הבאה שלך לקורסים</p>
+                  <div class="container">
+                     <div class="row">
+                        <div class="referimg">
+                           <img src="{{ asset('/assets/img/Refer.png') }}">
+                        </div>
+                        <div class="site-heading text-center mb-20">
+                           <h2>הפנה חבר</h2>
+                           <p>שתף קוד הפניה עם חבריך, חברך יקבל 10% הנחה ברכישה ותקבל 10% הנחה ברכישה הבאה שלך לקורסים</p>
+                        </div>
+                        <div class="form-group mb-0">
+                           <div class="input-group">
+                              <input id = "refer_code" type="text" class="form-control"value="{{ Auth::user()->reffer_code }}" readonly autocomplete="off" />
+                              <a id ="refer_button" class="input-group-addon">
+                              העתק קישור
+                              </a> 
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                </div>
-				  <div class="form-group mb-0">
-    <div class="input-group">
-				    <input id = "refer_code" type="text" class="form-control" value="@if(Auth::check()){{Auth::user()->reffer_code}}@endif" readonly/>
-					<a id ="refer_button" class="input-group-addon">
-					 העתק קישור
-					</a> </div>
-				  </div>
-				  </div>
-				  </div>
-		 </div>
                <div class="intensivellesson pt-40 pb-40">
                   <div class="container">
                      <div class="row">
@@ -900,139 +941,41 @@
                            <h2> מרתון </h2>
                         </div>
                         <div class="top-course-items courses-carousel owl-carousel owl-theme" style="    direction: ltr;">
-                           <div class="item text-right">
-                              <a class="thumb">
-                                 <span class="cartdiscount">-40%</span>
-                                 <img src="{{ asset('/assets/img/courses/course_economics_portfolio_feat.jpg') }}" alt="Thumb">
-                                 <div class="countertimer" id="countertimer"></div>
-                              </a>
-                              <div class="info">
-                                 <h4>
-                                    <a href="#">כַּלכָּלָנוּת  </a>
-                                 </h4>
-                                 <div class="meta">
-                                    <ul>
-                                       <li>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                       </li>
-                                    </ul>
-                                 </div>
-                                 <p>
-                                    המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                                 </p>
-                                 <div class="footer-meta">
-                                    <h4>$23.00</h4>
-                                    <div class="btn-btm">
-                                       <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                       <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
+                          @if (count($marathons) > 0)
+                           @foreach ($marathons as $marathon)
+                              <div class="item text-right">
+                                 <a class="thumb">
+                                    <span class="cartdiscount">-40%</span>
+                                    <img src='{{ asset("/assets/images/$marathon->image") }}' alt="Thumb">
+                                    <div class="countertimer" id="countertimer"></div>
+                                 </a>
+                                 <div class="info">
+                                    <h4>
+                                       <a href="{{route('front.course.show',['id' => $marathon->course_id])}}">{{ $marathon->course_name }}</a>
+                                    </h4>
+                                    <div class="meta">
+                                       <ul>
+                                          <li>
+                                             <i class="fas fa-star"></i>
+                                             <i class="fas fa-star"></i>
+                                             <i class="fas fa-star"></i>
+                                             <i class="fas fa-star"></i>
+                                             <i class="fas fa-star"></i>
+                                          </li>
+                                       </ul>
+                                    </div>
+                                    <p>{{ $marathon->description }}</p>
+                                    <div class="footer-meta">
+                                       <h4>${{ $marathon->price }}</h4>
+                                       <div class="btn-btm">
+                                          <a class="btn btn-theme effect btn-sm" href="{{route('front.display.cart',['id' => Auth::user()->id])}}">קנה עכשיו  </a>
+                                          <a class="btn btn-theme btnoutline effect btn-sm" href="{{route('front.cart.show',['type' => 0 ,'id' => $marathon->course_id])}}">הוסף לעגלה    </a>
+                                       </div>
                                     </div>
                                  </div>
                               </div>
-                           </div>
-                           <div class="item text-right">
-                              <a class="thumb">
-                                 <span class="cartdiscount">-40%</span>
-                                 <img src="{{ asset('/assets/img/courses/course_biology_portfolio_feat.jpg') }}" alt="Thumb">
-                                 <div class="countertimer" id="countertimer"></div>
-                              </a>
-                              <div class="info">
-                                 <h4>
-                                    <a href="#">עביולוגיה </a>
-                                 </h4>
-                                 <div class="meta">
-                                    <ul>
-                                       <li>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                       </li>
-                                    </ul>
-                                 </div>
-                                 <p>
-                                    המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                                 </p>
-                                 <div class="footer-meta">
-                                    <h4>$23.00</h4>
-                                    <div class="btn-btm">
-                                       <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                       <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <!-- Single Item -->
-                           <div class="item text-right">
-                              <a class="thumb">
-                                 <span class="cartdiscount">-40%</span>
-                                 <img src="{{ asset('/assets/img/courses/course_graphic_design_portfolio_feat.jpg') }}" alt="Thumb">
-                                 <div class="countertimer" id="countertimer"></div>
-                              </a>
-                              <div class="info">
-                                 <h4>
-                                    <a href="#">עיצוב גרפי  </a>
-                                 </h4>
-                                 <div class="meta">
-                                    <ul>
-                                       <li>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                       </li>
-                                    </ul>
-                                 </div>
-                                 <p>
-                                    המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                                 </p>
-                                 <div class="footer-meta">
-                                    <h4>$23.00</h4>
-                                    <div class="btn-btm">
-                                       <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                       <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="item text-right">
-                              <a class="thumb">
-                                 <span class="cartdiscount">-40%</span>
-                                 <img src="{{ asset('/assets/img/courses/course_music_portfolio_feat.jpg') }}" alt="Thumb">  
-                                 <div class="countertimer" id="countertimer"></div>
-                              </a>
-                              <div class="info">
-                                 <h4>
-                                    <a href="#">הפקה מוזיקלית </a>
-                                 </h4>
-                                 <div class="meta">
-                                    <ul>
-                                       <li>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                          <i class="fas fa-star"></i>
-                                       </li>
-                                    </ul>
-                                 </div>
-                                 <p>
-                                    המוסד המודרני שלנו מעוניין לטפח סביבה בה סטודנטים צעירים יכולים להתכנס וללמוד בסביבה יצירתית וגמישה. אנו עובדים בשיתוף פעולה עם תלמידינו כדי להשיג תוצאות יוצאות מן הכלל.
-                                 </p>
-                                 <div class="footer-meta">
-                                    <h4>$23.00</h4>
-                                    <div class="btn-btm">
-                                       <a class="btn btn-theme effect btn-sm" href="#">קנה עכשיו  </a>
-                                       <a class="btn btn-theme btnoutline effect btn-sm" href="#">הוסף לעגלה    </a>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
+                           @endforeach
+                          @endif
                         </div>
                      </div>
                   </div>
@@ -1085,48 +1028,107 @@
                </div>
             </div>
          </div>
-</div>
-</div>
-</div>
-</div>
-
-
-   <div class="modal loginModal in" id="marthonpopup" >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <!-- modal header -->
-          <div class="modal-header border-bottom-0">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-          </div>
-          <!-- modal header ends -->
-          <!-- Modal body -->
-          <div class="modal-body"> 
-               <div class="after_login" style="direction: rtl;">
-                  <div class="form-wraper">
-                     <h3 class="mb-0">מֵידָע </h3>
-                     <form action="#" class="mt-4" method="POST" id="marathon_form">                
-                        <span class="text-danger error-text credentials_err"></span> 
-                        <div class="form-group">
-                           <input id="search" type="text" class="form-control " name="marathon_course" placeholder="הזן את החיפוש שלך" value="" required=""  multiple="">
-                           <span class="text-danger error-text marathon_course_err"></span>
-                        </div>
-                        <div class="form-group">
-                           <input id="date" type="date" class="form-control " name="marathon_email" placeholder="שם משתמש או דוא " value="" required=""  multiple="">
-                           <span class="text-danger error-text marathon_email_err"></span>
-                        </div>
-                        <div class="form-group text-center">
-                           <button type="submit" id="submitMarathon" class="log-btn form-btn wdt-30">שלח</button>
-                        </div>
-                     </form>
-                  </div>
-               </div>
-          </div>
-        </div>
       </div>
    </div>
+</div>
+</div>
+<div class="modal loginModal in" id="marthonpopup" >
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <!-- modal header -->
+         <div class="modal-header border-bottom-0">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+         </div>
+         <!-- modal header ends -->
+         <!-- Modal body -->
+         <div class="modal-body">
+            <div class="after_login" style="direction: rtl;">
+               <div class="form-wraper">
+                  <h3 class="mb-0">מֵידָע </h3>
+                  <form action="#" class="mt-4" method="POST" id="marathon_form">
+                     <span class="text-danger error-text credentials_err"></span> 
+                     <div class="form-group">
+                        <select id="private_university" name="private_university" class="form-control  chosen-select" data-placeholder="לחפש " multiple="" style="display: none;">
+                           @foreach($universities as $university)
+                           <option data-id = "{{ $university->id}}" data-type = "0" value="{{ $university->university_name }}">{{ $university->university_name }}</option>
+                           @endforeach                           
+                        </select>                  
+                     </div>                     
+                     <div class="form-group">
+                        <input id="date" type="date" class="form-control " name="marathon_email" placeholder="שם משתמש או דוא " value="" required=""  multiple="">
+                        <span class="text-danger error-text marathon_email_err"></span>
+                     </div>
+                     <div class="form-group text-center">
+                        <button type="submit" id="submitMarathon" class="log-btn form-btn wdt-30">שלח</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 @endsection
 @section('scripts')
 <script type ="text/javascript">
+   $('#private_university').change(function(){
+      var baseurl = window.location.origin+window.location.pathname;
+      var university1 = [];
+      var type1 = 0;
+      $(this).find('option:selected').each(function(){
+         university1.push({university_name:$(this).val(),university_id:$(this).data('id'),type:$(this).data('type')});
+         type1 = $(this).data('type');
+   
+         }); 
+           $.ajax({
+            url: '{{ route('front.get_private_degree') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                university: university1,
+                type:type1
+            },
+            success: function(data) {
+               if(data.degrees.length != 0){
+                  var degrees_list = data.degrees;
+                  var selected_type = data.type;
+                  
+                  $("#private_university").chosen("destroy");
+                  $('#private_university').html('');
+                  $('#private_university').html(data.html);
+                  $('#private_university').chosen();
+               
+               }
+               if(data.courses.length != 0){
+                  var degrees_list = data.courses;
+                  var selected_type = data.type;
+                  $("#private_university").chosen("destroy");
+                  $('#private_university').html('');
+                  $('#private_university').html(data.html);
+                  $('#private_university').chosen();
+               }
+               if(data.instructor_id != ''){
+                  var instructor_id = data.instructor_id;
+                  var selected_type = data.type;
+                  var url = baseurl + "instructor-details";
+                  var link = $("<a>");
+                  link.attr("href", url);
+                  link.text(" למצוא מדריך  ");
+                  link.addClass("btn btn-theme btn-md btn-lt-ht mt-20");
+                  $("#get_instructor_detail").html(link);
+   
+               }
+               if(data.selected_universities.length != 0){
+                   $("#private_university").chosen("destroy");
+                   $('#private_university').html('');
+                   $('#private_university').html(data.html);
+                   $('#private_university').chosen();
+                }              
+                // $('#private_university_chosen').addClass('chosen-with-drop chosen-container-active');
+              }
+          });
+        
+        });
    function stepnext(n){
      if(n != 0){
        //$(".stepwizard-row a").switchClass('btn-primary','btn-default');
@@ -1262,7 +1264,7 @@
        $("#cart_errors").find("ul").append('<li>'+value+'</li>');
      });
    }
-
+   
    /* Marathon form submit */
    $("#submitMarathon").click(function(e) {
       e.preventDefault();
@@ -1365,7 +1367,7 @@
            $('#step-3').attr("style", "display: none;");
            window.scrollTo({ top: 0, behavior: 'smooth' });
            $('.stepwizard a[href="#step-4"]').tab('show');
-           $('#refer_code').val(data.code);
+           // $('#refer_code').val(data.code);
            $('.stepwizard-row a[href="#step-4"]').removeClass('btn-default');
             $('.stepwizard-row a[href="#step-4"]').addClass('btn-primary');
             $('.stepwizard-row a[href="#step-3"]').addClass('btn-primary');
@@ -1392,7 +1394,7 @@
      $('#uploadfile').change(function() {
        $('#image_title').text(this.files && this.files.length ? this.files[0].name : '');
      });
-/*     $("#upload_chat_btn").click(function(e) {
+   /*     $("#upload_chat_btn").click(function(e) {
            e.preventDefault();
            var fd = new FormData();
            var files = $('#uploadfile')[0].files;
@@ -1518,13 +1520,14 @@
      $("#refer_button").click(function(){
       /* Get the text field */
       var copyText = document.getElementById("refer_code");
-
+   
       /* Select the text field */
       copyText.select();
       copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
+   
       /* Copy the text inside the text field */
       document.execCommand("copy");
+      $('#refer_button').html('Copied');
    });
       });
       

@@ -14132,3 +14132,10 @@ label.btn-radio.selectedAnswer.wrongSelectedAns:before {
     font-size: 18px;
     top: 2px;
 }
+
+.blogflex .row
+{
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}

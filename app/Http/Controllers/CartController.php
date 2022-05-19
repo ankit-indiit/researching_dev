@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Mail;
+use App\Mail\ReferralCoupon;
 
 class CartController extends Controller
 {
@@ -230,9 +232,25 @@ class CartController extends Controller
         }else{
             $cart_data = cartItems::select('*')->where('user_id',$id)->get();
         }
+
+        $courseId = [];
         foreach ($cart_data as $value) {
             $recommendations = recommendations::select('*')->where('course_id',$value->course_id)->where('status',1)->get();
+            $courseId[] = $value->course_id;
         }
+        $relatedMarathons = DB::table('courses')
+            ->select('university_id', 'degree_id')
+            ->whereIn('course_id', $courseId)            
+            ->get();
+        $marathons = [];
+        foreach ($relatedMarathons as $marathon) {
+            $marathons = DB::table('courses')
+                ->where('university_id', $marathon->university_id)
+                ->orWhere('degree_id', $marathon->degree_id)
+                ->where('course_id', '!=', $courseId)
+                ->get();
+        }
+        $universities = DB::table('universities')->get();
         foreach ($recommendations as $recommendation) {
             $user_ids[] = $recommendation->user_id;
         }
@@ -245,14 +263,17 @@ class CartController extends Controller
 
               }
         }
+        // echo '<pre>';
+        // print_r($marathons);
+        // die;
         $urls = joinus::select('*')->pluck('url');
         if(Auth::check()){
             $user_id = Auth::user()->id;
             $user_detail = User::find($user_id);
             $ticketData = DB::table('tickets')->where('user_id',$user_id)->get()->toArray();
-            return view('includes.cart',compact('cart_data','user_detail','recommendations','users_data','questions','urls','current_user_id','code','ticketData'));
+            return view('includes.cart',compact('cart_data','user_detail','recommendations','users_data','questions','urls','current_user_id','code','ticketData', 'marathons', 'universities'));
         }else{
-            return view('includes.cart',compact('cart_data','recommendations','users_data','questions','urls','current_user_id','code'));
+            return view('includes.cart',compact('cart_data','recommendations','users_data','questions','urls','current_user_id','code', 'marathons', 'universities'));
         }
     }
 
@@ -323,19 +344,37 @@ class CartController extends Controller
                 $data['status'] = 0;
                 $data['msg'] ='קוד קופון כבר בשימוש!';
             }else{
-                $percent = 10;
-                $reffer_data = array(
-                    'reffered_by'=> $reffer_code->id,
-                    'refferal_code' => $coupon_code,
-                    'discount_value' => $percent
-                );
-                session()->put('cart.refer', $reffer_data);            
-                $discount_value = $actual_price*$percent/100;
-                $final_amount = $actual_price -$discount_value;            
-                $data['status'] = 1;
-                $data['discount_value'] = $discount_value;
-                $data['final_amount'] = $final_amount;
-                $data['msg'] ='הוחל על הקופון!';  
+                /* put logic here to make this 50/50/100/150*/
+
+                $checkAffiliateReffral = Affiliate::where('user_id', $reffer_code->id)
+                    ->count();
+                if ($checkAffiliateReffral < 4) {
+                    if ($checkAffiliateReffral == 0) {
+                        $percent = 50;
+                    } elseif ($checkAffiliateReffral == 1) {
+                        $percent = 50;
+                    } elseif ($checkAffiliateReffral == 2) {
+                        $percent = 100;
+                    } elseif ($checkAffiliateReffral == 3) {
+                        $percent = 150;
+                    }
+
+                    $reffer_data = array(
+                        'reffered_by'=> $reffer_code->id,
+                        'refferal_code' => $coupon_code,
+                        'discount_value' => $percent
+                    );
+                    session()->put('cart.refer', $reffer_data);                          
+                    $discount_value = $actual_price*$percent/100;
+                    $final_amount = $actual_price -$discount_value;            
+                    $data['status'] = 1;
+                    $data['discount_value'] = $discount_value;
+                    $data['final_amount'] = $final_amount;
+                    $data['msg'] ='הוחל על הקופון!';  
+                } else {
+                    $data['status'] = 0;
+                    $data['msg'] ='לקופון זה אין זמינות הפניה!';
+                }
             }
         }
         else{
@@ -441,6 +480,14 @@ class CartController extends Controller
                         $affiliate->discount = $card_reffer['discount_value'];
                         $affiliate->status = '0';
                         $affiliate->save();
+
+                        $user = User::findOrFail($card_reffer['reffered_by']);
+                        $data = [
+                            'title' => 'דואר הפניה ממחקר',
+                            'body' => 'היי, '.$user->first_name.', אתה מקבל '.$card_reffer['discount_value'].' מ '.Auth::user()->first_name
+                        ];
+
+                        Mail::to($user)->send(new ReferralCoupon($data));
                     }
                     
                     $notify = new AdminNotification();
