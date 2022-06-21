@@ -98,7 +98,7 @@
                 $quiz_questions_chunk = array_chunk($quiz_questions1,5);
             @endphp 
             @foreach($quiz_questions_chunk as $k => $quiz_questions)
-                @php
+                @php                  
                     $j= $k + 1;
                 @endphp
                 <div class="tab-content">
@@ -111,18 +111,18 @@
                         }
                     @endphp
                     
-                    <div class="tab-pane {{$class}}" dataid="{{ $val['id'] }}" class="viewSolution questionMainDiv{{ @$val['id'] }} tab-pane tabpanel{{ $k.$key }} <?php echo ($key==0)?'active':'';  ?>" id="ques{{$k.$key}}">
+                    <div class="tab-pane {{$class}} viewSolution questionMainDiv{{ @$val['id'] }} tabpanel{{ $k.$key }}" dataid="{{ $val['id'] }}" id="ques{{$k.$key}}">
                     <a href="#showAllAns" role="tab" data-toggle="tab" class="btn btn-them my-btn">צפה בפתרון כל השאלות</a>
                         <div class="ques-cov">
                             {{-- <div class="ques-nam">{{ $val['question'] }}</div> --}}
                             <div class="ques-option">                        
                               <div class=""><b>{{ $val['question'] }}</b></div>           
-                                    <?php
-                                    if($val['questionType'] == 1){
-                                    ?>
+                                <?php
+                                  if($val['questionType'] == 1){
+                                ?>
                                  <div class="answer-type-choice checkout-form">
                                     <label for="rdo-31{{ $i }}" id="label_1{{ $val['id']}}" class="btn-radio selectedAnswer">
-                                       <input type="radio" id="rdo-31{{ $i }}"  name="radio-grp{{ $val['id']}}" class="mcq_answer"  option='1' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
+                                       <input type="radio" id="rdo-31{{ $i }}"  name="radio-grp{{ $val['id']}}" class="mcq_answer" option='1' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
                                        <svg width="30px" height="30px" viewBox="0 0 20 20">
                                           <circle cx="10" cy="10" r="9"></circle>
                                           <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor1{{ @$val['id'] }}"></path>
@@ -159,7 +159,7 @@
                                     </label>
                                  </div>
                                  <?php
-                                    }else{ ?>
+                                }else{ ?>
                                  <div class="answer-type-choice checkout-form imgquizflex">
                                     <div class="w20">
                                        <label for="rdo-1{{ $i }}" id="label_1{{ $val['id']}}" class="btn-radio selectedAnswer">
@@ -202,9 +202,9 @@
                                        </label>
                                     </div>
                                  </div>
-                                 <?php
-                                    }
-                                    ?>
+                               <?php
+                                  }
+                                  ?>
                                 <span class="hide correct{{ $val['id'] }}" style="color:green;font-size:15px;font-weight:600;">התשובה שלך נכונה.</span>
                                 <span class="hide incorrect{{ $val['id'] }}" style="color:red;font-size:15px;font-weight:600;">התשובה שלך לא נכונה.</span>
                             </div>
@@ -242,7 +242,11 @@
                                                       <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor1{{ @$val['id'] }}"></path>
                                                    </svg>
                                                    <span class="checkmark">א  </span>
-                                                   {{ \Illuminate\Support\Str::limit($val['optionA'], 15, $end='') }}
+                                                   @if ($val['questionType'] == 1)
+                                                    {{ \Illuminate\Support\Str::limit($val['optionA'], 15, $end='') }}
+                                                   @else
+                                                    <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionA']}}" class="quizimg" />
+                                                   @endif
                                                 </label>
                                                 <label for="rdo-32{{ $i }}" class="btn-radio selectedAnswer {{showCorrectAns($val['id']) == 2 ? 'correctSelectedAns' : ''}}">
                                                    <svg width="30px" height="30px" viewBox="0 0 20 20">
@@ -250,7 +254,11 @@
                                                       <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor2{{ @$val['id'] }}"></path>
                                                    </svg>
                                                    <span class="checkmark">ב </span>
-                                                   {{ \Illuminate\Support\Str::limit($val['optionB'], 15, $end='') }}
+                                                    @if ($val['questionType'] == 1)
+                                                    {{ \Illuminate\Support\Str::limit($val['optionB'], 15, $end='') }}
+                                                   @else
+                                                    <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionB']}}" class="quizimg" />
+                                                   @endif
                                                 </label>
                                                 <label for="rdo-33{{ $i }}" class="btn-radio selectedAnswer {{showCorrectAns($val['id']) == 3 ? 'correctSelectedAns' : ''}}">
                                                    <svg width="30px" height="30px" viewBox="0 0 20 20">
@@ -258,7 +266,11 @@
                                                       <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor3{{ @$val['id'] }}"></path>
                                                    </svg>
                                                    <span class="checkmark">ג  </span>
-                                                   {{ \Illuminate\Support\Str::limit($val['optionC'], 15, $end='') }}
+                                                    @if ($val['questionType'] == 1)
+                                                    {{ \Illuminate\Support\Str::limit($val['optionC'], 15, $end='') }}
+                                                   @else
+                                                    <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionC']}}" class="quizimg" />
+                                                   @endif
                                                 </label>
                                                 <label id="label_rd_{{ $i }}" for="rdo-34{{ $i }}" class="btn-radio selectedAnswer {{showCorrectAns($val['id']) == 4 ? 'correctSelectedAns' : ''}}">
                                                    <input type="radio" id="rdo-34{{ $i }}" name="radio-grp{{ $val['id']}}" class="mcq_answer" option='4' question-id="{{ $val['id']}}" topic_id="{{ $val['topic_id']}}" quiz_id="{{ $val['quiz_id'] }}">
@@ -267,7 +279,11 @@
                                                       <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer roundcolor4{{ @$val['id'] }}"></path>
                                                    </svg>
                                                    <span class="checkmark">ד  </span>
-                                                   {{ \Illuminate\Support\Str::limit($val['optionD'], 15, $end='') }}
+                                                    @if ($val['questionType'] == 1)
+                                                    {{ \Illuminate\Support\Str::limit($val['optionD'], 15, $end='') }}
+                                                   @else
+                                                    <img src="{{ asset('/assets/topic_question_images/')}}/{{$val['optionD']}}" class="quizimg" />
+                                                   @endif
                                                 </label>
                                              </div>
                                             @php
@@ -732,47 +748,47 @@
                }
            });
        });
-   
-   
-       $(document).on("click",".mcq_answer",function(){ 
-   
-           let question_id = $(this).attr("question-id");
-           let topic_id = $(this).attr("topic_id");
-           let quiz_id = $(this).attr("quiz_id");
-           let choose_option = $(this).attr("option");           
-           let token = $('meta[name=csrf-token]').attr('content');
-           $.ajax({
-                   url: '{{ route("front.chooseAnswer") }}',
-                   type: 'POST',
-                   dataType:'JSON',
-                   data: {choose_option:choose_option,question_id:question_id,topic_id:topic_id,quiz_id:quiz_id},
-                   headers: {
-                       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                   },
-                   success: function (response) {
-                       if ($.isEmptyObject(response.error)) {
-                           console.log(response.message);                           
-                           if(response.message == 1){
-                              // $('.selectedAnswer').removeClass('wrongSelectedAns');
-                              $('#label_'+choose_option+''+question_id).addClass('correctSelectedAns');
-                              $(".correct"+question_id).removeClass('hide');
-                              $(".incorrect"+question_id).addClass('hide');
-                              $('.sideways .active a i').removeClass('fa-times');
-                              $('.sideways .active a i').addClass('fa-check');
-                           }else{                            
-                              // $('.selectedAnswer').removeClass('correctSelectedAns');
-                              $('#label_'+choose_option+''+question_id).addClass('wrongSelectedAns');
-                              $('.sideways .active a i').addClass('fa-times');
-                              $('.sideways .active a i').removeClass('fa-check');
-                              $(".incorrect"+question_id).removeClass('hide');
-                              $(".correct"+question_id).addClass('hide');
-                           }
-                    } else {
-                        printErrorMsg(response.error);
-                    }
-                   }
-               });
-       });
+      
+    $(document).on("click",".mcq_answer",function(){
+        var question_id = $(".tab-pane.active").attr('dataid');
+        let topic_id = $(this).attr("topic_id");
+        let quiz_id = $(this).attr("quiz_id");
+        let choose_option = $(this).attr("option");       
+        let token = $('meta[name=csrf-token]').attr('content');          
+        $.ajax({
+            url: '{{ route("front.chooseAnswer") }}',
+            type: 'POST',
+            dataType:'JSON',
+            data: {
+                choose_option : choose_option,
+                question_id : question_id,
+                topic_id : topic_id,
+                quiz_id : quiz_id
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+            if ($.isEmptyObject(response.error)) {
+                if(response.message == 1){
+                    $('#label_'+choose_option+''+question_id).addClass('correctSelectedAns');
+                    $(".correct"+question_id).removeClass('hide');
+                    $(".incorrect"+question_id).addClass('hide');
+                    $('.sideways .active a i').removeClass('fa-times');
+                    $('.sideways .active a i').addClass('fa-check');
+                }else{                            
+                    $('#label_'+choose_option+''+question_id).addClass('wrongSelectedAns');
+                    $('.sideways .active a i').addClass('fa-times');
+                    $('.sideways .active a i').removeClass('fa-check');
+                    $(".incorrect"+question_id).removeClass('hide');
+                    $(".correct"+question_id).addClass('hide');
+                }
+            } else {
+                    printErrorMsg(response.error);
+            }
+            }
+        });
+    });
    
    
        $( window ).load(function() {

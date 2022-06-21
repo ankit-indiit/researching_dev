@@ -14139,3 +14139,10 @@ label.btn-radio.selectedAnswer.wrongSelectedAns:before {
   flex-wrap: wrap;
   position: relative;
 }
+
+.userspurchased .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-bottom: 20px;
+}

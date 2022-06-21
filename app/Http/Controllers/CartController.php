@@ -263,6 +263,7 @@ class CartController extends Controller
 
               }
         }
+        // $discountCoupon = Affiliate::where('user_id',Auth::user()->id)->orderBy('id', 'DESC')->first();
         // echo '<pre>';
         // print_r($marathons);
         // die;
@@ -305,6 +306,8 @@ class CartController extends Controller
         $coupons = couponcode::select('*')->where('coupon_code',$coupon_code)->get();
         $reffer_code = User::where('reffer_code',$coupon_code)->first();
         if (count($coupons) > 0){
+            echo 'first condition';
+            die;
             if(Auth::check()){
                 $user_id = Auth::user()->id;
             }else{
@@ -335,49 +338,56 @@ class CartController extends Controller
         }
         elseif($reffer_code)
         {
-            $is_used = '';
-            if(Auth::check()){
-                $user_id = Auth::user()->id;
-                $is_used = referrals::where('refferal_code',$coupon_code)->where('reffered_to',$user_id)->first();
-            }
-            if($is_used){
-                $data['status'] = 0;
-                $data['msg'] ='קוד קופון כבר בשימוש!';
-            }else{
-                /* put logic here to make this 50/50/100/150*/
-
-                $checkAffiliateReffral = Affiliate::where('user_id', $reffer_code->id)
-                    ->count();
-                if ($checkAffiliateReffral < 4) {
-                    if ($checkAffiliateReffral == 0) {
-                        $percent = 50;
-                    } elseif ($checkAffiliateReffral == 1) {
-                        $percent = 50;
-                    } elseif ($checkAffiliateReffral == 2) {
-                        $percent = 100;
-                    } elseif ($checkAffiliateReffral == 3) {
-                        $percent = 150;
-                    }
-
-                    $reffer_data = array(
-                        'reffered_by'=> $reffer_code->id,
-                        'refferal_code' => $coupon_code,
-                        'discount_value' => $percent
-                    );
-                    session()->put('cart.refer', $reffer_data);                          
-                    $discount_value = $actual_price*$percent/100;
-                    $final_amount = $actual_price -$discount_value;            
-                    $data['status'] = 1;
-                    $data['discount_value'] = $discount_value;
-                    $data['final_amount'] = $final_amount;
-                    $data['msg'] ='הוחל על הקופון!';  
-                } else {
-                    $data['status'] = 0;
-                    $data['msg'] ='לקופון זה אין זמינות הפניה!';
+            if ($reffer_code->id != Auth::user()->id) {
+                $is_used = '';
+                if(Auth::check()){                
+                    $user_id = Auth::user()->id;
+                    $is_used = referrals::where('refferal_code',$coupon_code)->where('reffered_to',$user_id)->first();
                 }
+                if($is_used){               
+                    $data['status'] = 0;
+                    $data['msg'] ='קוד קופון כבר בשימוש!';
+                }else{               
+                    /* put logic here to make this 50/50/100/150*/
+
+                    $checkAffiliateReffral = Affiliate::where('user_id', $reffer_code->id)
+                        ->count();
+                    if ($checkAffiliateReffral < 4) {
+                        if ($checkAffiliateReffral == 0) {
+                            $percent = 50;
+                        } elseif ($checkAffiliateReffral == 1) {
+                            $percent = 100;
+                        } elseif ($checkAffiliateReffral == 2) {
+                            $percent = 200;
+                        } elseif ($checkAffiliateReffral == 3) {
+                            $percent = 350;
+                        }
+
+                        $reffer_data = array(
+                            'reffered_by'=> $reffer_code->id,
+                            'refferal_code' => $coupon_code,
+                            'discount_value' => $percent
+                        );
+                        session()->put('cart.refer', $reffer_data);                          
+                        $discount_value = $percent;
+                        $final_amount = $actual_price - $discount_value;            
+                        $saved_value = $actual_price - $final_amount;  
+                        $data['status'] = 1;
+                        $data['discount_value'] = $discount_value > $actual_price ? $actual_price : $saved_value;
+                        $data['final_amount'] = $final_amount < $discount_value ? 0 : $final_amount;
+                        $data['msg'] ='הוחל על הקופון!';  
+                    } else {
+                        $data['status'] = 0;
+                        $data['msg'] ='לקופון זה אין זמינות הפניה!';
+                    }
+                }               
+            } else {
+                $data['status'] = 0;
+                $data['msg'] ='אתה לא יכול להשתמש בקופון משלך!';
             }
+
         }
-        else{
+        else{            
             $data['status'] = 0;
             $data['msg'] ='קוד קופון לא חוקי.';
         }
@@ -484,7 +494,9 @@ class CartController extends Controller
                         $user = User::findOrFail($card_reffer['reffered_by']);
                         $data = [
                             'title' => 'דואר הפניה ממחקר',
-                            'body' => 'היי, '.$user->first_name.', אתה מקבל '.$card_reffer['discount_value'].' מ '.Auth::user()->first_name
+                            'userNameFirst' => $user->first_name.' '.$user->last_name,
+                            'userNameSecond' => Auth::user()->first_name.' '.Auth::user()->last_name,
+                            'discount' => $card_reffer['discount_value'],
                         ];
 
                         Mail::to($user)->send(new ReferralCoupon($data));

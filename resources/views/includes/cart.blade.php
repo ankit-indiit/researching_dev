@@ -275,6 +275,21 @@ div#private_university_chosen input.chosen-search-input.default {
                                     <div class="coupon-alert"></div>
                                  </td>
                               </tr>
+                              {{-- @if (@$discountCoupon)
+                              <tr>
+                                 <td  colspan="2">
+                                    <div class="form-group checkout-form border-0 p-0 mt-0 mb-10">
+                                       <span class="checkbox-wrap d-block">
+                                       <label class="container w-100 mb-0">השתמש בהנחה  {{$discountCoupon->discount}}
+                                       <input class="discount_coupon" value="{{$discountCoupon->id}}" name="discount_coupon" type="checkbox" onclick="discountCoupon({{$discountCoupon->id}});">
+                                       <span class="checkmark"></span>
+                                       </label>
+                                       </span>
+                                    </div>
+                                    <div class="coupon-alert"></div>
+                                 </td>
+                              </tr>
+                              @endif --}}
                               <tr>
                                  <th width="40%">מחיר סופי :</th>
                                  <td width="60%"><span id="after_apply" style="color:#016B06; ">₪{{$shipping_total}}</span></td>
@@ -1071,6 +1086,11 @@ div#private_university_chosen input.chosen-search-input.default {
 @endsection
 @section('scripts')
 <script type ="text/javascript">
+  $('.discount_coupon').on('change', function() {
+      var val = this.checked ? this.value : '';
+      alert(val);
+  });
+
    $('#private_university').change(function(){
       var baseurl = window.location.origin+window.location.pathname;
       var university1 = [];

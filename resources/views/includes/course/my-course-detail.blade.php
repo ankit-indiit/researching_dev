@@ -405,10 +405,12 @@
                   <div class="col-md-12" id="signup">
                      <div class="form-wraper">
                         <h3>המלצת משתמשים </h3>
-                        <form method="POST" action="https://dev.indiit.solutions/researching_dev/public/add_recommend" id="add_recommend_form">
-                           <input type="hidden" name="_token" value="hz4m0Cf8YRYcThPAZXerAcp4s82aQbC7DBlqrWys">                        <input type="hidden" name="user_id" id="user_id" value="22">
-                           <input type="hidden" name="course_id" id="course_id" value="30">
-                           <div class="form-group">
+                        <form action="{{ route('front.add_recommend') }}" method="POST" id="add_recommend_form">
+                          @csrf
+                          {{-- <input type="hidden" name="_token" value="hz4m0Cf8YRYcThPAZXerAcp4s82aQbC7DBlqrWys"> --}}
+                          <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
+                          <input type="hidden" name="course_id" id="course_id" value="30">
+                          <div class="form-group">
                               <div class="site-heading text-center">
                                  <p> לורם איפסום הוא פשוט טקסט דמה של תעשיית ההדפסה והכתיבה. לורם איפסום היה טקס הדמה הסטנדרטי בתעשייה. </p>
                                  <h3>
@@ -459,7 +461,7 @@
                                     <button id="addrecommend" class="log-btn form-btn">שלח המלצה </button>
                                  </div>
                               </div>
-                           </div>
+                          </div> 
                         </form>
                      </div>
                   </div>
@@ -546,7 +548,32 @@
 @section('scripts')
 <script src="{{ asset('assets/js/videre.js') }}"></script>
 <script src="https://embed.videodelivery.net/embed/sdk.latest.js"></script>
-<script type="text/javascript">    
+<script type="text/javascript">
+  $("#addrecommend").click(function(e) {
+       e.preventDefault();
+       var user_id = $('#user_id').val();
+       var course_id = $('#course_id').val();
+       var recommendation = $('#recommendation').val();
+       var fd = new FormData();
+       var type = 'course';
+       fd.append('type',type);
+       fd.append('user_id',user_id);
+       fd.append('course_id',course_id);
+       fd.append('recommendation',recommendation);
+        $.ajax({
+            url: '{{ route("front.add_recommend") }}',
+            type: 'POST',
+            data: fd,
+            dataType:'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+             window.location.href = '{{route("front.userrecommend")}}' + '/' + user_id + '/' + course_id;
+            }
+        });     
+  });
+
    $(document).on('click', '.flagCls', function(){
       if($(this).hasClass("far")){
          $(this).addClass("fa");

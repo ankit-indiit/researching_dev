@@ -23,8 +23,8 @@ use App\Notifications\contactsnew;
 class RecommendController extends Controller
 {
 
-    public function addrecommend(Request $request){
-
+    public function addrecommend(Request $request)
+    {
         $recommendations = new recommendations;
         $user_id = Auth::user()->id;
 
